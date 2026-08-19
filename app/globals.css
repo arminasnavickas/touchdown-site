@@ -1,0 +1,127 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: "Switzer";
+  src: url("/fonts/Switzer-Extralight.woff2") format("woff2");
+  font-weight: 200;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Switzer";
+  src: url("/fonts/Switzer-Light.woff2") format("woff2");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Switzer";
+  src: url("/fonts/Switzer-LightItalic.woff2") format("woff2");
+  font-weight: 300;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Switzer";
+  src: url("/fonts/Switzer-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Switzer";
+  src: url("/fonts/Switzer-Medium.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Switzer";
+  src: url("/fonts/Switzer-Semibold.woff2") format("woff2");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Switzer";
+  src: url("/fonts/Switzer-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+html {
+  scroll-behavior: smooth;
+  /* Shrinks every rem-based Tailwind utility site-wide in one place - text
+     sizes (text-sm, text-xl, etc.) and spacing (padding, gaps, margins) are
+     all defined in rem, which is relative to this root font-size. 90% here
+     means everything renders ~10% smaller without touching any component.
+     Only affects rem-based classes - explicit pixel values like text-[10px]
+     or h-[300px] are unaffected since they don't scale with root font-size. */
+  font-size: 80%;
+}
+
+@keyframes bubble-rise {
+  0% {
+    transform: translate(0, 0) scale(1, 1);
+    border-radius: 50%;
+    opacity: 0;
+  }
+  8% {
+    opacity: var(--peak, 0.4);
+  }
+  18% {
+    transform: translate(calc(var(--wobble) * 0.6), calc(var(--rise) * 0.12)) scale(1.06, 0.94);
+    border-radius: 46% 54% 60% 40% / 55% 45% 60% 40%;
+  }
+  34% {
+    transform: translate(calc(var(--wobble) * -0.8 + var(--drift) * 0.25), calc(var(--rise) * 0.32)) scale(0.95, 1.06);
+    border-radius: 54% 46% 42% 58% / 48% 52% 42% 58%;
+  }
+  50% {
+    transform: translate(calc(var(--wobble) * 0.5 + var(--drift) * 0.45), calc(var(--rise) * 0.52)) scale(1.05, 0.95);
+    border-radius: 48% 52% 55% 45% / 52% 48% 56% 44%;
+  }
+  68% {
+    transform: translate(calc(var(--wobble) * -0.6 + var(--drift) * 0.7), calc(var(--rise) * 0.7)) scale(0.96, 1.05);
+    border-radius: 52% 48% 45% 55% / 46% 54% 44% 56%;
+  }
+  85% {
+    transform: translate(calc(var(--drift) * 0.9), calc(var(--rise) * 0.87)) scale(1.02, 0.98);
+    opacity: calc(var(--peak, 0.4) * 0.55);
+  }
+  100% {
+    transform: translate(var(--drift, 20px), var(--rise, -1100px)) scale(1, 1);
+    border-radius: 50%;
+    opacity: 0;
+  }
+}
+
+body {
+  background-color: #003354;
+  color: white;
+}
+
+/* Custom scrollbar - slim, on-brand, instead of the default OS scrollbar.
+   Firefox uses scrollbar-color/width; everything else uses the webkit
+   pseudo-elements below. */
+html {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(18, 123, 181, 0.5) transparent;
+}
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background-color: rgba(18, 123, 181, 0.5);
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background-color: #00bfff;
+}
