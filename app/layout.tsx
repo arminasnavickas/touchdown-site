@@ -1,11 +1,5 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import Navigation from "@/components/Navigation";
-import Footer from "@/components/Footer";
-import PageBlobs from "@/components/PageBlobs";
-import LightboxProvider from "@/components/LightboxContext";
-import BookingProvider from "@/components/BookingContext";
-import { getSiteContent, getPricingTiers } from "@/lib/content";
 
 export const viewport = {
   themeColor: "#003354",
@@ -52,16 +46,14 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function RootLayout({
+// Bare root layout: only <html>/<body>, global CSS, and metadata.
+// Site chrome (nav/footer) lives in app/(site)/layout.tsx so that
+// /studio (outside that route group) renders with no chrome at all.
+export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const [siteContent, pricingTiers] = await Promise.all([
-    getSiteContent(),
-    getPricingTiers(),
-  ]);
-
   return (
     <html lang="en">
       <head>
@@ -73,41 +65,7 @@ export default async function RootLayout({
           crossOrigin="anonymous"
         />
       </head>
-      <body className="font-switzer antialiased">
-        <BookingProvider tiers={pricingTiers}>
-          <LightboxProvider>
-            <Navigation
-              email={siteContent.footerEmail}
-              telegram={siteContent.socialTelegram}
-              whatsapp={siteContent.socialWhatsapp}
-              navLinks={siteContent.headerNavLinks}
-            />
-            <div className="relative z-0">
-              <PageBlobs />
-              <div className="relative z-10">
-                {children}
-                <Footer
-                  email={siteContent.footerEmail}
-                  phone={siteContent.footerPhone}
-                  location={siteContent.footerLocation}
-                  tagline={siteContent.footerTagline}
-                  instagram={siteContent.socialInstagram}
-                  telegram={siteContent.socialTelegram}
-                  facebook={siteContent.socialFacebook}
-                  whatsapp={siteContent.socialWhatsapp}
-                  aboutTitle={siteContent.footerAboutTitle}
-                  aboutLinks={siteContent.footerAboutLinks}
-                  experienceTitle={siteContent.footerExperienceTitle}
-                  experienceLinks={siteContent.footerExperienceLinks}
-                  legalTitle={siteContent.footerLegalTitle}
-                  legalLinks={siteContent.footerLegalLinks}
-                  contactTitle={siteContent.footerContactTitle}
-                />
-              </div>
-            </div>
-          </LightboxProvider>
-        </BookingProvider>
-      </body>
+      <body className="font-switzer antialiased">{children}</body>
     </html>
   );
 }
