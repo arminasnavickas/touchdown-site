@@ -626,7 +626,7 @@ export const fallbackSiteContent: SiteContent = {
   notFoundSubtext:
     "We couldn't find the page you were looking for. It may have moved, or the link might be out of date.",
   notFoundImage: "/images/404-diver.jpg",
-  footerEmail: "info@touchdown-space.com",
+  footerEmail: "info@touchdownfreediving.com",
   footerPhone: "+20XXXXXXXXX",
   footerLocation: "Dahab, Egypt",
   footerTagline: "Ready to Dive In?",
@@ -862,7 +862,7 @@ export const fallbackPrivacyPolicy: LegalPage = {
     {
       heading: "8. Contact",
       body: [
-        "If you have any questions about this Privacy Policy or how we handle your information, please contact us at info@touchdown-space.com.",
+        "If you have any questions about this Privacy Policy or how we handle your information, please contact us at info@touchdownfreediving.com.",
       ],
     },
   ],
@@ -929,7 +929,7 @@ export const fallbackTermsAndConditions: LegalPage = {
     {
       heading: "9. Contact",
       body: [
-        "If you have any questions about these Terms, please contact us at info@touchdown-space.com.",
+        "If you have any questions about these Terms, please contact us at info@touchdownfreediving.com.",
       ],
     },
   ],

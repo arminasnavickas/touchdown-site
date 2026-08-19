@@ -121,7 +121,7 @@ export default defineType({
       name: "footerEmail",
       title: "Footer email",
       type: "string",
-      initialValue: "info@touchdown-space.com",
+      initialValue: "info@touchdownfreediving.com",
     }),
     defineField({
       name: "footerPhone",

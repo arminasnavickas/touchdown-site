@@ -6,7 +6,7 @@ export const viewport = {
 };
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://touchdown-space.com"),
+  metadataBase: new URL("https://touchdownfreediving.com"),
   title: {
     default: "Touchdown Freediving School — Dahab, Egypt",
     template: "%s | Touchdown Freediving School",
@@ -33,7 +33,7 @@ export const metadata: Metadata = {
     title: "Touchdown Freediving School — Dahab, Egypt",
     description:
       "Freediving school founded by Gus Kreivenas in Dahab, Egypt. World-class coaching, depth training, and tailored courses at the legendary Blue Hole.",
-    url: "https://touchdown-space.com",
+    url: "https://touchdownfreediving.com",
     siteName: "Touchdown Freediving School",
     locale: "en_US",
     type: "website",

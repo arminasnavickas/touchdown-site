@@ -7,6 +7,6 @@ export default function robots(): MetadataRoute.Robots {
       allow: "/",
       disallow: "/studio",
     },
-    sitemap: "https://touchdown-space.com/sitemap.xml",
+    sitemap: "https://touchdownfreediving.com/sitemap.xml",
   };
 }
