@@ -51,14 +51,14 @@ export default function BlogPostCard({ post }: { post: BlogPost }) {
           {post.title}
         </h2>
         {post.excerpt && (
-          <p className="mb-4 mt-2 line-clamp-3 font-switzer text-lg font-light leading-relaxed text-dark-ocean-blue/60">
+          <p className="mb-4 mt-2 line-clamp-3 font-switzer text-lg font-normal leading-relaxed text-dark-ocean-blue/70">
             {post.excerpt}
           </p>
         )}
         <span className="mt-auto inline-block w-fit rounded-[6px] border border-dark-ocean-blue/20 px-8 py-4 font-switzer text-sm font-medium uppercase tracking-wide text-dark-ocean-blue/70 transition group-hover:border-cta group-hover:text-cta">
           Read more
         </span>
-        <div className="mt-6 flex flex-wrap items-center gap-2 border-t border-dark-ocean-blue/10 pt-4 font-switzer text-sm font-light text-dark-ocean-blue/45">
+        <div className="mt-6 flex flex-wrap items-center gap-2 border-t border-dark-ocean-blue/10 pt-4 font-switzer text-base font-normal text-dark-ocean-blue/60">
           {avatar && (
             // eslint-disable-next-line @next/next/no-img-element
             <img src={avatar} alt="" className="size-5 rounded-full object-cover" />

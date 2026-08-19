@@ -187,9 +187,19 @@ export default function Navigation({
         </button>
       </div>
 
+      {/* Backdrop behind the mobile menu, so the open panel reads clearly
+          against the page content instead of sitting flush on top of it. */}
+      <div
+        onClick={() => setOpen(false)}
+        aria-hidden="true"
+        className={`fixed inset-0 z-40 bg-dark-ocean-blue/50 backdrop-blur-sm transition-opacity duration-300 md:hidden ${
+          open ? "opacity-100" : "pointer-events-none opacity-0"
+        }`}
+      />
+
       {/* Mobile menu */}
       <div
-        className={`overflow-hidden border-t border-danish-blue/20 transition-all duration-300 md:hidden ${
+        className={`relative z-50 overflow-hidden border-t border-danish-blue/20 bg-white transition-all duration-300 md:hidden ${
           open ? "max-h-[600px]" : "max-h-0 border-t-0"
         }`}
       >

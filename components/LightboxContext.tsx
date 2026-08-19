@@ -119,7 +119,7 @@ export default function LightboxProvider({ children }: { children: React.ReactNo
 
       {state && (
         <div
-          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 p-6"
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-dark-ocean-blue/50 p-6 backdrop-blur-sm"
           onClick={onOverlayClick}
           onTouchStart={onTouchStart}
           onTouchEnd={onTouchEnd}
