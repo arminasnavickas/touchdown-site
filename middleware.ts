@@ -159,8 +159,14 @@ function loginPage(redirectTo: string, failed: boolean): NextResponse {
 </body>
 </html>`;
 
+  // Serving this as 200 (not 401) is deliberate: since there's no
+  // WWW-Authenticate challenge involved anymore, a 401 here just means
+  // "not-quite-normal response to a page navigation" to some browsers/
+  // security layers, which can behave unpredictably. Nothing protected is
+  // ever in this response body regardless of status code, so 200 is both
+  // simpler and more compatible.
   return new NextResponse(html, {
-    status: 401,
+    status: 200,
     headers: {
       "Content-Type": "text/html; charset=utf-8",
       "Cache-Control": NO_STORE,
