@@ -1,6 +1,17 @@
 import type { Metadata } from "next";
 import "./globals.css";
 
+// Preview deployments are password-gated by middleware.ts. Vercel's edge
+// CDN caches statically-rendered pages independent of middleware's
+// Cache-Control headers, which let a single cached (authenticated) 200
+// response get served to unauthenticated visitors too. Forcing every route
+// to render dynamically on preview deployments means there is never a
+// static asset for the CDN to cache in the first place, so every request
+// re-runs the middleware auth check. Production is untouched (stays
+// statically optimized) since VERCEL_ENV is only "preview" on previews.
+export const dynamic =
+  process.env.VERCEL_ENV === "preview" ? "force-dynamic" : "auto";
+
 export const viewport = {
   themeColor: "#003354",
 };
