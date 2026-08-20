@@ -157,7 +157,13 @@ export default function Navigation({
   return (
     <header
       className={`sticky top-0 z-50 transition-all duration-300 ${
-        scrolled ? "bg-white shadow-sm" : "bg-white/80 shadow-none backdrop-blur-md"
+        // Solid background (no backdrop-blur) whenever the mobile menu is
+        // open - Safari has a rendering bug where a sticky element's own
+        // content (the logo, the close icon) can render blurred when the
+        // element also has backdrop-filter applied, and the menu is about
+        // to sit on solid white below it anyway, so translucency here
+        // wasn't buying anything visually.
+        scrolled || open ? "bg-white shadow-sm" : "bg-white/80 shadow-none backdrop-blur-md"
       }`}
     >
       <div className="relative flex items-center gap-8 px-6 py-4 md:gap-12 md:px-16">
@@ -220,15 +226,18 @@ export default function Navigation({
       <div
         onClick={() => setOpen(false)}
         aria-hidden="true"
-        className={`fixed inset-0 z-40 bg-dark-ocean-blue/50 backdrop-blur-sm transition-opacity duration-300 md:hidden ${
+        className={`fixed inset-0 z-40 bg-dark-ocean-blue/50 backdrop-blur-md transition-opacity duration-300 md:hidden ${
           open ? "opacity-100" : "pointer-events-none opacity-0"
         }`}
       />
 
-      {/* Mobile menu */}
+      {/* Mobile menu - absolutely positioned (relative to the sticky
+          header) so it floats as an overlay on top of the page instead of
+          pushing the rest of the content down as it opens. Scrolls
+          internally if it's taller than the viewport. */}
       <div
-        className={`relative z-50 overflow-hidden border-t border-danish-blue/20 bg-white transition-all duration-300 md:hidden ${
-          open ? "max-h-[600px]" : "max-h-0 border-t-0"
+        className={`absolute inset-x-0 top-full z-50 overflow-y-auto overscroll-contain border-t border-danish-blue/20 bg-white transition-all duration-300 md:hidden ${
+          open ? "max-h-[calc(100vh-5rem)]" : "max-h-0 border-t-0"
         }`}
       >
         <nav className="flex flex-col px-6 py-2">
@@ -247,7 +256,7 @@ export default function Navigation({
           <BookInButton className="mt-4 w-full rounded-[6px] bg-cta px-8 py-4 font-switzer text-base font-medium uppercase tracking-wide text-white transition hover:bg-aquatic hover:text-dark-ocean-blue">
             Book in
           </BookInButton>
-          <div className="mt-4 flex items-center justify-center gap-8 border-t border-danish-blue/20 pt-6 text-dark-ocean-blue">
+          <div className="mt-4 flex items-center justify-center gap-8 border-t border-danish-blue/20 pb-8 pt-6 text-dark-ocean-blue">
             <a href={`mailto:${email}`} aria-label="Email" className="transition hover:text-horizon">
               <EnvelopeIcon className="size-9" />
             </a>
