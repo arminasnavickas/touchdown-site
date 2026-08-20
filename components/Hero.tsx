@@ -5,11 +5,6 @@ import FadeImage from "./FadeImage";
 import Bubbles from "./Bubbles";
 import BookInButton from "./BookInButton";
 
-// Object-position tuning is a visual/technical concern, not content, so it
-// stays in code even though the actual photos come from Sanity. Any slide
-// beyond these two (e.g. a third photo added later in the Studio) falls
-// back to plain object-center.
-const slidePositions = ["object-[center_65%]", "object-[center_38%]"];
 const logoBadge = "/images/touchdown-stamp.svg";
 
 export default function Hero({
@@ -22,9 +17,13 @@ export default function Hero({
   slides: string[];
 }) {
   const [offset, setOffset] = useState(0);
-  const [activeSlide, setActiveSlide] = useState(0);
   const headlineLines = headline.split("\n");
   const subcopyLines = subcopy.split(". ").filter(Boolean);
+  // Carousel removed - always just the first photo from Sanity. Cycling
+  // through multiple full-size background photos meant every extra slide
+  // competed for bandwidth and kept causing loading/rendering issues,
+  // especially on mobile.
+  const heroImage = slides[0];
 
   useEffect(() => {
     const onScroll = () => setOffset(window.scrollY * 0.3);
@@ -32,45 +31,22 @@ export default function Hero({
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // Auto-advance the background carousel every 6s, pausing implicitly
-  // whenever the tab isn't in the foreground since rAF/timers throttle then.
-  useEffect(() => {
-    if (slides.length <= 1) return;
-    const interval = setInterval(() => {
-      setActiveSlide((i) => (i + 1) % slides.length);
-    }, 6000);
-    return () => clearInterval(interval);
-  }, [slides.length]);
-
   return (
     <section className="relative h-[500px] w-full overflow-hidden bg-dark-ocean-blue md:h-[700px]">
-      {/* Background underwater image carousel (parallax) */}
+      {/* Background underwater image (parallax) */}
       <div
         className="absolute inset-0"
         style={{ transform: `translateY(${offset}px)`, willChange: "transform" }}
       >
-        {slides.map((src, i) => (
-          <div
-            key={src}
-            className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
-              i === activeSlide ? "opacity-100" : "opacity-0"
-            }`}
-          >
-            <FadeImage
-              src={src}
-              alt="Freediver underwater in Dahab"
-              // Only the first slide is visible on initial load - loading
-              // every other slide eagerly too just makes them all compete
-              // for bandwidth with the one people are actually looking at,
-              // which is the whole reason this feels slow on mobile data.
-              // The rest lazy-load in the background well before the
-              // carousel needs them (it switches every 6s).
-              eager={i === 0}
-              wrapperClassName="absolute inset-0 h-[calc(100%+150px)]"
-              className={`h-full w-full object-cover ${slidePositions[i] ?? "object-center"}`}
-            />
-          </div>
-        ))}
+        {heroImage && (
+          <FadeImage
+            src={heroImage}
+            alt="Freediver underwater in Dahab"
+            eager
+            wrapperClassName="absolute inset-0 h-[calc(100%+150px)]"
+            className="h-full w-full object-cover object-[center_65%]"
+          />
+        )}
         <div
           className="absolute inset-0"
           style={{
@@ -80,23 +56,6 @@ export default function Hero({
           }}
         />
       </div>
-
-      {/* Carousel dot indicators */}
-      {slides.length > 1 && (
-        <div className="absolute bottom-24 left-1/2 z-10 flex -translate-x-1/2 gap-2 rounded-full bg-[#023048]/40 px-3 py-2 backdrop-blur-sm md:bottom-32">
-          {slides.map((src, i) => (
-            <button
-              key={src}
-              type="button"
-              onClick={() => setActiveSlide(i)}
-              aria-label={`Show background image ${i + 1}`}
-              className={`h-2 rounded-full transition-all duration-300 ${
-                i === activeSlide ? "w-6 bg-white" : "w-2 bg-white/40 hover:bg-white/60"
-              }`}
-            />
-          ))}
-        </div>
-      )}
 
       <Bubbles />
 

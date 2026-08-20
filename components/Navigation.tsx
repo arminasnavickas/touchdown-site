@@ -156,13 +156,21 @@ export default function Navigation({
 
   return (
     <header
-      className={`sticky top-0 z-50 transition-all duration-300 ${
+      className={`sticky top-0 z-50 transition-shadow duration-300 ${
         // Solid background (no backdrop-blur) whenever the mobile menu is
         // open - Safari has a rendering bug where a sticky element's own
         // content (the logo, the close icon) can render blurred when the
         // element also has backdrop-filter applied, and the menu is about
         // to sit on solid white below it anyway, so translucency here
         // wasn't buying anything visually.
+        //
+        // Only `shadow` transitions here (not `transition-all`) on
+        // purpose: background-color and backdrop-filter used to be
+        // included, which meant switching from translucent+blurred to
+        // solid white animated over 300ms instead of happening instantly -
+        // so the header was genuinely still rendering blurred for a beat
+        // every time the menu opened. That was the real bug, not a
+        // z-index or Safari compositing issue.
         scrolled || open ? "bg-white shadow-sm" : "bg-white/80 shadow-none backdrop-blur-md"
       }`}
     >
