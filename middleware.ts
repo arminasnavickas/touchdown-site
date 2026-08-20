@@ -242,5 +242,5 @@ export const config = {
   // authenticated. Everything else — including the rest of /images — is
   // still gated as before.
   matcher:
-    "/((?!_next/static|_next/image|favicon.ico|fonts/|images/logo(-white)?\\.svg).*)",
+    "/((?!_next/static|_next/image|favicon.ico|fonts/|images/logo(?:-white)?\\.svg).*)",
 };
