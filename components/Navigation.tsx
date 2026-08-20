@@ -166,7 +166,12 @@ export default function Navigation({
         scrolled || open ? "bg-white shadow-sm" : "bg-white/80 shadow-none backdrop-blur-md"
       }`}
     >
-      <div className="relative flex items-center gap-8 px-6 py-4 md:gap-12 md:px-16">
+      {/* z-50 here matters: the mobile backdrop below is z-40, and without
+          an explicit z-index this row defaults to stacking level 0 - which
+          put the backdrop's dark blur ON TOP of the logo and close button
+          instead of behind them, which is what actually made them look
+          blurred/faded (not the header's own backdrop-blur). */}
+      <div className="relative z-50 flex items-center gap-8 px-6 py-4 md:gap-12 md:px-16">
         <Link
           href="/"
           className="absolute left-1/2 top-1/2 shrink-0 -translate-x-1/2 -translate-y-1/2 md:static md:left-auto md:top-auto md:translate-x-0 md:translate-y-0"
