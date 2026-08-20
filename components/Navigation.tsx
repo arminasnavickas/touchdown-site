@@ -227,11 +227,16 @@ export default function Navigation({
       </div>
 
       {/* Backdrop behind the mobile menu, so the open panel reads clearly
-          against the page content instead of sitting flush on top of it. */}
+          against the page content instead of sitting flush on top of it.
+          No backdrop-blur here on purpose: Safari has a rendering bug
+          where backdrop-filter on an element inside a position:sticky
+          ancestor (the header) can blur nearby content unpredictably -
+          that's what was making the logo/close icon look blurred, not a
+          z-index issue. Plain tint avoids the whole bug. */}
       <div
         onClick={() => setOpen(false)}
         aria-hidden="true"
-        className={`fixed inset-0 z-40 bg-dark-ocean-blue/50 backdrop-blur-md transition-opacity duration-300 md:hidden ${
+        className={`fixed inset-0 z-40 bg-dark-ocean-blue/70 transition-opacity duration-300 md:hidden ${
           open ? "opacity-100" : "pointer-events-none opacity-0"
         }`}
       />
