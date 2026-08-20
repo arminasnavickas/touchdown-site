@@ -32,25 +32,25 @@ const slugById: Record<string, string> = {
   faq: "faq",
 };
 
-function WhatsappIcon() {
+function WhatsappIcon({ className = "size-6" }: { className?: string }) {
   return (
-    <svg viewBox="0 0 24 24" fill="currentColor" className="size-6">
+    <svg viewBox="0 0 24 24" fill="currentColor" className={className}>
       <path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.39 1.26 4.81L2 22l5.42-1.36a9.9 9.9 0 0 0 4.62 1.14h.01c5.46 0 9.9-4.45 9.9-9.91C21.96 6.45 17.5 2 12.04 2Zm5.72 14.02c-.24.68-1.4 1.3-1.94 1.38-.5.08-1.13.11-1.82-.11-.42-.13-.96-.32-1.66-.62-2.92-1.26-4.82-4.19-4.97-4.38-.15-.2-1.19-1.58-1.19-3.01 0-1.43.75-2.13 1.02-2.42.27-.29.58-.36.78-.36.2 0 .39 0 .56.01.18.01.42-.07.66.5.24.58.82 2 .89 2.15.07.15.11.32.02.52-.09.2-.14.32-.28.5-.14.17-.29.38-.42.51-.14.14-.28.29-.12.57.16.28.71 1.17 1.53 1.9 1.05.94 1.94 1.23 2.22 1.37.28.14.44.11.6-.07.16-.18.68-.79.87-1.06.18-.27.36-.22.6-.13.24.09 1.55.73 1.81.86.27.14.45.2.51.31.06.12.06.68-.18 1.35Z" />
     </svg>
   );
 }
 
-function TelegramIcon() {
+function TelegramIcon({ className = "size-6" }: { className?: string }) {
   return (
-    <svg viewBox="0 0 24 24" fill="currentColor" className="size-6">
+    <svg viewBox="0 0 24 24" fill="currentColor" className={className}>
       <path d="M21.05 3.53 2.9 10.6c-1.24.5-1.24 1.2-.23 1.5l4.66 1.46 1.79 5.5c.22.6.11.85.75.85.5 0 .72-.23 1-.5l2.4-2.34 4.98 3.68c.92.51 1.58.25 1.81-.85l3.28-15.46c.34-1.35-.5-1.96-1.29-1.65Z" />
     </svg>
   );
 }
 
-function EnvelopeIcon() {
+function EnvelopeIcon({ className = "size-6" }: { className?: string }) {
   return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="size-6">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className={className}>
       <rect x="2.5" y="4.5" width="19" height="15" rx="2" />
       <path d="m3 6 9 6.5L21 6" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
@@ -59,7 +59,7 @@ function EnvelopeIcon() {
 
 function MenuIcon({ open }: { open: boolean }) {
   return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="size-7">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="size-9">
       {open ? (
         <path d="M6 6l12 12M18 6 6 18" strokeLinecap="round" />
       ) : (
@@ -94,6 +94,31 @@ export default function Navigation({
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  // Lock background scroll while the mobile menu is open. `overflow:
+  // hidden` alone does NOT prevent touch-scrolling on iOS Safari - the
+  // page behind still scrolls, dragging this sticky header (logo + close
+  // button) off-screen with it. Pinning the body at its current scroll
+  // position via `position: fixed` is the reliable cross-browser fix, then
+  // we restore the exact scroll position on close.
+  useEffect(() => {
+    if (!open) return;
+    const scrollY = window.scrollY;
+    const { style } = document.body;
+    style.position = "fixed";
+    style.top = `-${scrollY}px`;
+    style.left = "0";
+    style.right = "0";
+    style.overflow = "hidden";
+    return () => {
+      style.position = "";
+      style.top = "";
+      style.left = "";
+      style.right = "";
+      style.overflow = "";
+      window.scrollTo(0, scrollY);
+    };
+  }, [open]);
 
   // Scroll-spy: highlight whichever homepage section is currently in view.
   // Only relevant on the homepage itself - other pages (like /blog) don't
@@ -135,10 +160,13 @@ export default function Navigation({
         scrolled ? "bg-white shadow-sm" : "bg-white/80 shadow-none backdrop-blur-md"
       }`}
     >
-      <div className="flex items-center gap-8 px-6 py-4 md:gap-12 md:px-16">
-        <Link href="/" className="shrink-0">
+      <div className="relative flex items-center gap-8 px-6 py-4 md:gap-12 md:px-16">
+        <Link
+          href="/"
+          className="absolute left-1/2 top-1/2 shrink-0 -translate-x-1/2 -translate-y-1/2 md:static md:left-auto md:top-auto md:translate-x-0 md:translate-y-0"
+        >
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={logo} alt="Touchdown" className="h-5 w-auto" />
+          <img src={logo} alt="Touchdown" className="h-10 w-auto md:h-5" />
         </Link>
 
         <nav className="hidden flex-1 items-center justify-end gap-6 md:flex">
@@ -209,7 +237,7 @@ export default function Navigation({
               key={link.id}
               href={hrefById[link.id] ?? "#"}
               onClick={() => setOpen(false)}
-              className={`py-4 font-switzer text-2xl font-medium transition hover:text-horizon ${
+              className={`py-4 font-switzer text-lg font-medium uppercase tracking-wide transition hover:text-horizon ${
                 i > 0 ? "border-t border-danish-blue/20" : ""
               } ${isActive(link.id) ? "text-horizon" : "text-dark-ocean-blue"}`}
             >
@@ -219,15 +247,15 @@ export default function Navigation({
           <BookInButton className="mt-4 w-full rounded-[6px] bg-cta px-8 py-4 font-switzer text-base font-medium uppercase tracking-wide text-white transition hover:bg-aquatic hover:text-dark-ocean-blue">
             Book in
           </BookInButton>
-          <div className="mt-4 flex items-center gap-4 border-t border-danish-blue/20 pt-4 text-dark-ocean-blue">
+          <div className="mt-4 flex items-center justify-center gap-8 border-t border-danish-blue/20 pt-6 text-dark-ocean-blue">
             <a href={`mailto:${email}`} aria-label="Email" className="transition hover:text-horizon">
-              <EnvelopeIcon />
+              <EnvelopeIcon className="size-9" />
             </a>
             <a href={telegram} target="_blank" rel="noopener noreferrer" aria-label="Telegram" className="transition hover:text-horizon">
-              <TelegramIcon />
+              <TelegramIcon className="size-9" />
             </a>
             <a href={whatsapp} target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" className="transition hover:text-horizon">
-              <WhatsappIcon />
+              <WhatsappIcon className="size-9" />
             </a>
           </div>
         </nav>

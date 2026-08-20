@@ -59,7 +59,13 @@ export default function Hero({
             <FadeImage
               src={src}
               alt="Freediver underwater in Dahab"
-              eager
+              // Only the first slide is visible on initial load - loading
+              // every other slide eagerly too just makes them all compete
+              // for bandwidth with the one people are actually looking at,
+              // which is the whole reason this feels slow on mobile data.
+              // The rest lazy-load in the background well before the
+              // carousel needs them (it switches every 6s).
+              eager={i === 0}
               wrapperClassName="absolute inset-0 h-[calc(100%+150px)]"
               className={`h-full w-full object-cover ${slidePositions[i] ?? "object-center"}`}
             />

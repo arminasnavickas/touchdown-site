@@ -81,6 +81,12 @@ function escapeHtml(value: string): string {
 }
 
 function loginPage(redirectTo: string, failed: boolean): NextResponse {
+  // Matches the site's own design tokens (tailwind.config.ts) and mirrors
+  // the booking modal's card treatment (dark header strip + white logo,
+  // white body) so the gate feels like part of the site, not a generic
+  // auth wall. Font and logo are loaded from /fonts and /images, which are
+  // carved out of the middleware matcher below so they load even before
+  // the visitor is authenticated.
   const html = `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -88,6 +94,27 @@ function loginPage(redirectTo: string, failed: boolean): NextResponse {
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Touchdown Preview</title>
 <style>
+  @font-face {
+    font-family: "Switzer";
+    src: url("/fonts/Switzer-Regular.woff2") format("woff2");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: "Switzer";
+    src: url("/fonts/Switzer-Medium.woff2") format("woff2");
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: "Switzer";
+    src: url("/fonts/Switzer-Light.woff2") format("woff2");
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
+  }
   * { box-sizing: border-box; }
   body {
     margin: 0;
@@ -96,66 +123,101 @@ function loginPage(redirectTo: string, failed: boolean): NextResponse {
     align-items: center;
     justify-content: center;
     background: #003354;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-family: "Switzer", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     padding: 24px;
   }
-  form {
+  .card {
     background: #ffffff;
-    border-radius: 12px;
-    padding: 32px 28px;
+    border-radius: 8px;
     width: 100%;
-    max-width: 360px;
+    max-width: 380px;
+    overflow: hidden;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+  }
+  .card-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #023048;
+    padding: 40px 32px;
+  }
+  .card-header img {
+    height: 24px;
+    width: auto;
+  }
+  form {
+    padding: 32px 28px 36px;
   }
   h1 {
     margin: 0 0 8px;
-    font-size: 20px;
-    color: #003354;
+    font-size: 22px;
+    font-weight: 300;
+    letter-spacing: -0.01em;
+    color: #023048;
   }
   p.sub {
     margin: 0 0 20px;
     font-size: 14px;
-    color: #55677a;
+    font-weight: 400;
+    color: rgba(2, 48, 72, 0.7);
   }
   input[type="password"] {
     width: 100%;
-    padding: 12px 14px;
-    border: 1px solid #cbd5e1;
-    border-radius: 8px;
+    padding: 12px 16px;
+    border: 1px solid rgba(2, 48, 72, 0.2);
+    border-radius: 6px;
+    font-family: inherit;
     font-size: 16px;
+    color: #023048;
     margin-bottom: 16px;
+  }
+  input[type="password"]::placeholder {
+    color: rgba(2, 48, 72, 0.4);
   }
   input[type="password"]:focus {
     outline: none;
-    border-color: #f97316;
+    border-color: #00bfff;
   }
   button {
     width: 100%;
-    padding: 12px 14px;
+    padding: 14px 16px;
     border: none;
-    border-radius: 8px;
-    background: #f97316;
+    border-radius: 6px;
+    background: #00bfff;
     color: #ffffff;
-    font-size: 15px;
-    font-weight: 600;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
     cursor: pointer;
+    transition: background 0.2s ease, color 0.2s ease;
+  }
+  button:hover {
+    background: #65cee6;
+    color: #023048;
   }
   p.error {
     color: #dc2626;
     font-size: 13px;
-    margin: -10px 0 16px;
+    margin: -8px 0 16px;
   }
 </style>
 </head>
 <body>
-  <form method="POST" action="${LOGIN_PATH}">
-    <h1>Touchdown Preview</h1>
-    <p class="sub">This is a private preview. Enter the password to continue.</p>
-    ${failed ? '<p class="error">Wrong password — try again.</p>' : ""}
-    <input type="hidden" name="redirectTo" value="${escapeHtml(redirectTo)}" />
-    <input type="password" name="password" placeholder="Password" autofocus required />
-    <button type="submit">Enter</button>
-  </form>
+  <div class="card">
+    <div class="card-header">
+      <img src="/images/logo-white.svg" alt="Touchdown" />
+    </div>
+    <form method="POST" action="${LOGIN_PATH}">
+      <h1>Private preview</h1>
+      <p class="sub">This is a private preview. Enter the password to continue.</p>
+      ${failed ? '<p class="error">Wrong password — try again.</p>' : ""}
+      <input type="hidden" name="redirectTo" value="${escapeHtml(redirectTo)}" />
+      <input type="password" name="password" placeholder="Password" autofocus required />
+      <button type="submit">Enter</button>
+    </form>
+  </div>
 </body>
 </html>`;
 
@@ -175,5 +237,10 @@ function loginPage(redirectTo: string, failed: boolean): NextResponse {
 }
 
 export const config = {
-  matcher: "/((?!_next/static|_next/image|favicon.ico).*)",
+  // /fonts and the logo files stay ungated so the login page itself can
+  // render with the site's real font and branding before anyone has
+  // authenticated. Everything else — including the rest of /images — is
+  // still gated as before.
+  matcher:
+    "/((?!_next/static|_next/image|favicon.ico|fonts/|images/logo(-white)?\\.svg).*)",
 };

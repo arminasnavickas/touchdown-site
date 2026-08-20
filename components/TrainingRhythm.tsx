@@ -33,7 +33,7 @@ export default function TrainingRhythm({
           return (
             <Reveal key={day} delay={i * 70} className="flex flex-1">
               <div className="flex flex-1 cursor-default flex-col items-center gap-2 rounded-lg bg-white/5 px-4 py-6 text-center text-white transition-colors duration-300 hover:bg-white/10 hover:text-cta">
-                <div className="size-16">
+                <div className="size-16 text-white/70">
                   <Icon className="size-full" strokeWidth={1.5} />
                 </div>
                 <p className="font-switzer text-3xl font-light tracking-tight">
@@ -43,16 +43,16 @@ export default function TrainingRhythm({
                   {label}
                 </p>
                 {time ? (
-                  <p className="flex w-fit items-center gap-1.5 rounded-full bg-dark-ocean-blue/80 px-3 py-1.5 font-switzer text-sm font-medium tracking-wide text-aquatic">
-                    <Clock className="size-4" strokeWidth={1.5} />
+                  <p className="flex w-fit items-center gap-1.5 whitespace-nowrap rounded-full bg-dark-ocean-blue/80 px-3 py-1.5 font-switzer text-sm font-medium tracking-wide text-aquatic">
+                    <Clock className="size-4 shrink-0" strokeWidth={1.5} />
                     {time}
                   </p>
                 ) : (
                   <p
                     aria-hidden="true"
-                    className="invisible flex w-fit items-center gap-1.5 rounded-full px-3 py-1.5 font-switzer text-sm font-medium tracking-wide"
+                    className="invisible flex w-fit items-center gap-1.5 whitespace-nowrap rounded-full px-3 py-1.5 font-switzer text-sm font-medium tracking-wide"
                   >
-                    <Clock className="size-4" strokeWidth={1.5} />
+                    <Clock className="size-4 shrink-0" strokeWidth={1.5} />
                     00:00 - 00:00
                   </p>
                 )}

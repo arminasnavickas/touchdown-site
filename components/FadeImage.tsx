@@ -66,6 +66,12 @@ export default function FadeImage({
         src={src}
         alt={alt}
         loading={eager ? "eager" : "lazy"}
+        // Hints the browser to fetch this ahead of lower-priority requests
+        // (fonts, non-visible images, etc.) - matters most for `eager`
+        // images like the hero background, which visitors are staring at
+        // an empty placeholder for until this loads, especially on slower
+        // mobile connections.
+        fetchPriority={eager ? "high" : "auto"}
         onLoad={() => setLoaded(true)}
         onError={() => setErrored(true)}
         className={`transition-opacity duration-500 ${loaded ? "opacity-100" : "opacity-0"} ${className}`}
