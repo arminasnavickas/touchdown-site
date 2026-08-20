@@ -8,6 +8,8 @@ type FadeImageProps = {
   className?: string;
   wrapperClassName?: string;
   eager?: boolean;
+  srcSet?: string;
+  sizes?: string;
 };
 
 /**
@@ -23,6 +25,8 @@ export default function FadeImage({
   className = "",
   wrapperClassName = "",
   eager = false,
+  srcSet,
+  sizes,
 }: FadeImageProps) {
   const [loaded, setLoaded] = useState(false);
   const [errored, setErrored] = useState(false);
@@ -64,6 +68,8 @@ export default function FadeImage({
       <img
         ref={imgRef}
         src={src}
+        srcSet={srcSet}
+        sizes={sizes}
         alt={alt}
         loading={eager ? "eager" : "lazy"}
         // Hints the browser to fetch this ahead of lower-priority requests

@@ -157,23 +157,35 @@ export default function Navigation({
   return (
     <header
       className={`sticky top-0 z-50 transition-shadow duration-300 ${
-        // Solid background (no backdrop-blur) whenever the mobile menu is
-        // open - Safari has a rendering bug where a sticky element's own
-        // content (the logo, the close icon) can render blurred when the
-        // element also has backdrop-filter applied, and the menu is about
-        // to sit on solid white below it anyway, so translucency here
-        // wasn't buying anything visually.
-        //
-        // Only `shadow` transitions here (not `transition-all`) on
-        // purpose: background-color and backdrop-filter used to be
-        // included, which meant switching from translucent+blurred to
-        // solid white animated over 300ms instead of happening instantly -
-        // so the header was genuinely still rendering blurred for a beat
-        // every time the menu opened. That was the real bug, not a
-        // z-index or Safari compositing issue.
-        scrolled || open ? "bg-white shadow-sm" : "bg-white/80 shadow-none backdrop-blur-md"
+        scrolled || open ? "shadow-sm" : "shadow-none"
       }`}
     >
+      {/* Two background layers, crossfaded by opacity instead of by
+          switching backdrop-blur on/off on the header itself. iOS Safari
+          has a known bug where a `position: sticky` element doesn't
+          reliably repaint when its backdrop-filter is added or removed
+          dynamically - it can keep showing the old blurred/translucent
+          layer indefinitely, not just for a brief mid-transition moment
+          (that was the earlier, different bug we already fixed by
+          switching from transition-all to transition-shadow). Chrome
+          repaints this correctly either way, which is why it looked fine
+          there but stayed stuck blurred on an actual iPhone.
+          Keeping backdrop-blur permanently applied to its own layer and
+          only crossfading opacity sidesteps the bug, since Safari does
+          reliably repaint opacity transitions on compositor layers. */}
+      <div
+        aria-hidden="true"
+        className={`absolute inset-0 bg-white transition-opacity duration-300 ${
+          scrolled || open ? "opacity-100" : "opacity-0"
+        }`}
+      />
+      <div
+        aria-hidden="true"
+        className={`absolute inset-0 bg-white/80 backdrop-blur-md transition-opacity duration-300 ${
+          scrolled || open ? "opacity-0" : "opacity-100"
+        }`}
+      />
+
       {/* z-50 here matters: the mobile backdrop below is z-40, and without
           an explicit z-index this row defaults to stacking level 0 - which
           put the backdrop's dark blur ON TOP of the logo and close button

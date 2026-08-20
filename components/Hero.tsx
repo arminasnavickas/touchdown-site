@@ -24,6 +24,12 @@ export default function Hero({
   // competed for bandwidth and kept causing loading/rendering issues,
   // especially on mobile.
   const heroImage = slides[0];
+  // Only the bundled local fallback photo has a pre-generated mobile-sized
+  // variant sitting next to it in /public/images. A Sanity-hosted image
+  // comes from their CDN under a different URL entirely, so there's no
+  // matching "-mobile" file to point at - in that case we just fall back to
+  // serving the single `heroImage` URL at every width, same as before.
+  const isLocalHeroImage = heroImage === "/images/hero.jpg";
 
   useEffect(() => {
     const onScroll = () => setOffset(window.scrollY * 0.3);
@@ -41,6 +47,12 @@ export default function Hero({
         {heroImage && (
           <FadeImage
             src={heroImage}
+            srcSet={
+              isLocalHeroImage
+                ? "/images/hero-mobile.jpg 800w, /images/hero.jpg 1600w"
+                : undefined
+            }
+            sizes={isLocalHeroImage ? "100vw" : undefined}
             alt="Freediver underwater in Dahab"
             eager
             wrapperClassName="absolute inset-0 h-[calc(100%+150px)]"
