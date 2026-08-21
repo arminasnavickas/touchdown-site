@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import BookInButton from "./BookInButton";
@@ -101,7 +101,16 @@ export default function Navigation({
   // button) off-screen with it. Pinning the body at its current scroll
   // position via `position: fixed` is the reliable cross-browser fix, then
   // we restore the exact scroll position on close.
-  useEffect(() => {
+  //
+  // useLayoutEffect (not useEffect) matters here now that the menu's
+  // open/close no longer animates: a plain useEffect's cleanup runs AFTER
+  // the browser paints the closed menu, so there was a visible beat where
+  // the menu had already vanished but the page was still pinned at the old
+  // scroll position - then it suddenly snapped down to the real one,
+  // reading as content "pushing down" on close. useLayoutEffect's cleanup
+  // runs before that paint, so the unpin and the menu closing happen in
+  // the same frame.
+  useLayoutEffect(() => {
     if (!open) return;
     const scrollY = window.scrollY;
     const { style } = document.body;
@@ -172,17 +181,29 @@ export default function Navigation({
           there but stayed stuck blurred on an actual iPhone.
           Keeping backdrop-blur permanently applied to its own layer and
           only crossfading opacity sidesteps the bug, since Safari does
-          reliably repaint opacity transitions on compositor layers. */}
+          reliably repaint opacity transitions on compositor layers.
+
+          On mobile the header is now always solid white - no translucent/
+          blurred state at all - so the base (unprefixed) opacity is forced
+          and only the md: variant still crossfades with scroll.
+
+          z-45 here matters: these layers were previously unpositioned
+          (z-index: auto), which put them BELOW the mobile menu's z-40
+          backdrop in the stacking order. With the menu open, that dark
+          backdrop was showing through as a blue tint behind the logo and
+          close button instead of this white background. z-45 sits above
+          the z-40 backdrop but below the z-50 content row/menu, so the
+          header's own background always wins over the page backdrop. */}
       <div
         aria-hidden="true"
-        className={`absolute inset-0 bg-white transition-opacity duration-300 ${
-          scrolled || open ? "opacity-100" : "opacity-0"
+        className={`absolute inset-0 z-[45] bg-white opacity-100 transition-opacity duration-300 ${
+          scrolled || open ? "md:opacity-100" : "md:opacity-0"
         }`}
       />
       <div
         aria-hidden="true"
-        className={`absolute inset-0 bg-white/80 backdrop-blur-md transition-opacity duration-300 ${
-          scrolled || open ? "opacity-0" : "opacity-100"
+        className={`absolute inset-0 z-[45] bg-white/80 opacity-0 backdrop-blur-md transition-opacity duration-300 ${
+          scrolled || open ? "md:opacity-0" : "md:opacity-100"
         }`}
       />
 
@@ -263,7 +284,7 @@ export default function Navigation({
           pushing the rest of the content down as it opens. Scrolls
           internally if it's taller than the viewport. */}
       <div
-        className={`absolute inset-x-0 top-full z-50 overflow-y-auto overscroll-contain border-t border-danish-blue/20 bg-white md:hidden ${
+        className={`absolute inset-x-0 top-full z-50 overflow-y-auto overscroll-contain rounded-b-2xl border-t border-danish-blue/20 bg-white md:hidden ${
           open ? "max-h-[calc(100vh-5rem)]" : "max-h-0 border-t-0"
         }`}
       >
