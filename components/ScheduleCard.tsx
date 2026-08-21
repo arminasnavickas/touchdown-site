@@ -52,7 +52,7 @@ export default function ScheduleCard({
         active ? "-translate-y-0.5 border-cta/60 shadow-lg shadow-cta/10" : "border-transparent"
       }`}
     >
-      <div className="relative h-[350px] w-full overflow-hidden">
+      <div className="relative h-[280px] w-full overflow-hidden">
         <button
           type="button"
           onClick={() => openLightbox([image], 0)}

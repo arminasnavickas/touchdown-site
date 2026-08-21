@@ -41,16 +41,16 @@ function StepCard({
             "linear-gradient(180deg, #FFFFFF 24.83%, rgba(208,235,242,0.1) 98.162%), linear-gradient(#FFFFFF, #FFFFFF)",
         }}
       >
-        <p className="font-switzer text-3xl font-light tracking-tight text-navy">
+        <p className="font-switzer text-lg font-light tracking-tight text-navy md:text-3xl">
           {title}
         </p>
-        <p className="line-clamp-3 font-switzer text-xl font-light leading-relaxed text-dark-ocean-blue/80">
+        <p className="line-clamp-3 font-switzer text-sm font-light leading-relaxed text-dark-ocean-blue/80 md:text-xl">
           {paragraphs[0]}
         </p>
         <button
           type="button"
           onClick={onReadMore}
-          className="mt-auto w-fit self-start rounded-[6px] border border-cta bg-transparent px-8 py-4 font-switzer text-sm font-medium uppercase tracking-wide text-cta transition-all duration-200 ease-out hover:bg-cta hover:text-white hover:scale-105 hover:shadow-lg hover:shadow-cta/40 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cta focus-visible:ring-offset-2"
+          className="mt-auto w-fit self-start rounded-[6px] border border-cta bg-transparent px-10 py-5 font-switzer text-sm font-medium uppercase tracking-wide text-cta transition-all duration-200 ease-out hover:bg-cta hover:text-white hover:scale-105 hover:shadow-lg hover:shadow-cta/40 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cta focus-visible:ring-offset-2"
         >
           Read more
         </button>

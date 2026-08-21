@@ -121,7 +121,7 @@ export default function Hero({
       </div>
 
       {/* Logo badge */}
-      <div className="absolute right-6 top-[270px] block h-[150px] w-[150px] md:right-24 md:top-[380px]">
+      <div className="absolute right-6 top-[270px] block h-[128px] w-[128px] md:right-24 md:top-[380px]">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src={logoBadge} alt="Touchdown space badge" className="h-full w-full object-contain" />
       </div>

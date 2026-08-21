@@ -192,12 +192,9 @@ export default function Navigation({
           instead of behind them, which is what actually made them look
           blurred/faded (not the header's own backdrop-blur). */}
       <div className="relative z-50 flex items-center gap-8 px-6 py-4 md:gap-12 md:px-16">
-        <Link
-          href="/"
-          className="absolute left-1/2 top-1/2 shrink-0 -translate-x-1/2 -translate-y-1/2 md:static md:left-auto md:top-auto md:translate-x-0 md:translate-y-0"
-        >
+        <Link href="/" className="shrink-0">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={logo} alt="Touchdown" className="h-10 w-auto md:h-5" />
+          <img src={logo} alt="Touchdown" className="h-[34px] w-auto md:h-5" />
         </Link>
 
         <nav className="hidden flex-1 items-center justify-end gap-6 md:flex">

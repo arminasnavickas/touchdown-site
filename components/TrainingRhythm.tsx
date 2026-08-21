@@ -1,13 +1,7 @@
 import Blob from "./Blob";
-import { Clock, Sunrise, Waves, TreePalm } from "lucide-react";
+import { Clock } from "lucide-react";
 import Reveal from "./Reveal";
 import type { ScheduleDay } from "@/lib/content";
-
-const icons = {
-  "Dry Day": Sunrise,
-  "Water day": Waves,
-  "Day off": TreePalm,
-};
 
 export default function TrainingRhythm({
   days,
@@ -29,13 +23,9 @@ export default function TrainingRhythm({
       </Reveal>
       <div className="relative z-10 flex w-full flex-wrap items-start justify-center gap-6 md:flex-nowrap">
         {days.map(({ day, label, time }, i) => {
-          const Icon = icons[label];
           return (
             <Reveal key={day} delay={i * 70} className="flex flex-1">
               <div className="flex flex-1 cursor-default flex-col items-center gap-2 rounded-lg bg-white/5 px-4 py-6 text-center text-white transition-colors duration-300 hover:bg-white/10 hover:text-cta">
-                <div className="size-16 text-white/70">
-                  <Icon className="size-full" strokeWidth={1.5} />
-                </div>
                 <p className="font-switzer text-3xl font-light tracking-tight">
                   {day}
                 </p>
