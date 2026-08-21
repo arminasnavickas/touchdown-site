@@ -7,26 +7,15 @@ import Blob from "./Blob";
 import ArticleModal from "./ArticleModal";
 import Reveal from "./Reveal";
 import type { HowItWorksStep } from "@/lib/content";
-import { Brain, Dumbbell, Repeat, Trophy, Circle } from "lucide-react";
-
-// Icons are code, not content, so they stay keyed by step title rather than
-// coming from Sanity. Falls back to a plain circle for any custom step title
-// added later that doesn't match one of the four defaults.
-const icons: Record<string, typeof Brain> = {
-  Theory: Brain,
-  Practice: Dumbbell,
-  Repetition: Repeat,
-  Results: Trophy,
-};
 
 function StepCard({
+  index,
   title,
   image,
   paragraphs,
   onReadMore,
-}: HowItWorksStep & { onReadMore: () => void }) {
+}: HowItWorksStep & { index: number; onReadMore: () => void }) {
   const { openLightbox } = useLightbox();
-  const Icon = icons[title] ?? Circle;
   return (
     <div className="flex flex-1 flex-col overflow-hidden rounded-lg border border-danish-blue/30 shadow-md transition-all duration-300 hover:-translate-y-0.5 hover:border-cta/60 hover:shadow-lg hover:shadow-cta/10">
       <button
@@ -38,30 +27,47 @@ function StepCard({
         <FadeImage
           src={image}
           alt={title}
-          wrapperClassName="h-[300px] w-full"
+          wrapperClassName="h-[140px] w-full md:h-[300px]"
           className="h-full w-full object-cover transition-transform duration-300 hover:scale-110"
         />
       </button>
+      {/* Padding/type sizes step down on mobile - two cards now share a row
+          there (see the grid on the section below), so the extra room a
+          single full-width card had to work with is gone. Desktop keeps the
+          original sizes via the md: variants. */}
       <div
-        className="flex flex-1 flex-col gap-3 px-8 pb-10 pt-6"
+        className="flex flex-1 flex-col gap-2 px-4 pb-5 pt-4 md:gap-3 md:px-8 md:pb-10 md:pt-6"
         style={{
           backgroundImage:
             "linear-gradient(180deg, #FFFFFF 24.83%, rgba(208,235,242,0.1) 98.162%), linear-gradient(#FFFFFF, #FFFFFF)",
         }}
       >
-        <div className="flex items-center gap-2">
-          <Icon className="size-7 text-navy" strokeWidth={1.5} />
-          <p className="font-switzer text-3xl font-light tracking-tight text-navy">
-            {title}
-          </p>
-        </div>
-        <p className="font-switzer text-xl font-light leading-relaxed text-dark-ocean-blue/80">
+        {/* Step number - the section reads as a 4-step process, but a 2x2
+            mobile grid doesn't convey "top-left then top-right then
+            bottom-left then bottom-right" as an order on its own the way a
+            single column would. A numeral makes the sequence explicit. */}
+        <p className="font-switzer text-sm font-medium uppercase tracking-widest text-cta/70">
+          {String(index + 1).padStart(2, "0")}
+        </p>
+        <p className="font-switzer text-3xl font-light tracking-tight text-navy">
+          {title}
+        </p>
+        {/* Truncating with line-clamp's native ellipsis can visually chop a
+            word in half right before the "…" (e.g. "safet…") since the clamp
+            only guarantees 3 lines, not a word-boundary-safe cut. A
+            fixed-height clip plus a mask-image fade reads as an intentional
+            preview instead of a mid-word cutoff, regardless of where the
+            text happens to break. */}
+        <p
+          className="mb-4 max-h-[6.1rem] overflow-hidden font-switzer text-xl font-light leading-relaxed text-dark-ocean-blue/80 [-webkit-mask-image:linear-gradient(to_bottom,black_65%,transparent_100%)] [mask-image:linear-gradient(to_bottom,black_65%,transparent_100%)]"
+        >
           {paragraphs[0]}
         </p>
         <button
           type="button"
           onClick={onReadMore}
-          className="mt-auto w-fit rounded-[6px] bg-cta px-8 py-4 font-switzer text-sm font-medium uppercase tracking-wide text-white transition-all duration-200 ease-out hover:bg-aquatic hover:text-dark-ocean-blue hover:scale-105 hover:shadow-lg hover:shadow-cta/40 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cta focus-visible:ring-offset-2"
+          data-fab-avoid
+          className="mt-auto w-full rounded-[6px] border border-cta bg-transparent px-10 py-5 text-center font-switzer text-sm font-medium uppercase tracking-wide text-cta transition-all duration-200 ease-out hover:bg-cta hover:text-white hover:scale-105 hover:shadow-lg hover:shadow-cta/40 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cta focus-visible:ring-offset-2"
         >
           Read more
         </button>
@@ -97,10 +103,10 @@ export default function HowItWorks({
           </p>
         </div>
       </Reveal>
-      <div className="relative z-10 flex w-full flex-col gap-6 md:flex-row">
+      <div className="relative z-10 grid w-full grid-cols-2 gap-4 md:flex md:flex-row md:gap-6">
         {steps.map((step, i) => (
           <Reveal key={step.title} delay={i * 100} className="flex flex-1">
-            <StepCard {...step} onReadMore={() => setOpenStep(i)} />
+            <StepCard {...step} index={i} onReadMore={() => setOpenStep(i)} />
           </Reveal>
         ))}
       </div>
