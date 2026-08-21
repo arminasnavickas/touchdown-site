@@ -29,6 +29,7 @@ function FooterColumn({ title, links }: { title: string; links: FooterLink[] }) 
         <a
           key={link.id}
           href={hrefById[link.id] ?? "#"}
+          data-fab-avoid
           className="font-switzer text-lg font-light text-white/50 transition hover:text-aquatic"
         >
           {link.label}
@@ -87,7 +88,10 @@ export default function Footer({
           </div>
         </div>
 
-        <div className="flex w-full flex-col items-center gap-10 py-8 md:w-auto md:flex-1 md:flex-row md:flex-wrap md:items-start md:content-start md:justify-center md:py-0">
+        {/* Grid on mobile so the four link groups sit 2-per-row instead of
+            stacking one at a time full-width; desktop switches back to the
+            original flex-row wrap via md:flex. */}
+        <div className="grid w-full grid-cols-2 gap-8 py-8 md:flex md:w-auto md:flex-1 md:flex-row md:flex-wrap md:items-start md:content-start md:justify-center md:gap-10 md:py-0">
           <FooterColumn title={aboutTitle} links={aboutLinks} />
           <FooterColumn title={experienceTitle} links={experienceLinks} />
           <FooterColumn title={legalTitle} links={legalLinks} />

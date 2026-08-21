@@ -24,8 +24,25 @@ export default function TrainingRhythm({
       <div className="relative z-10 flex w-full flex-wrap items-start justify-center gap-6 md:flex-nowrap">
         {days.map(({ day, label, time }, i) => {
           return (
-            <Reveal key={day} delay={i * 70} className="flex flex-1">
-              <div className="flex flex-1 cursor-default flex-col items-center gap-2 rounded-lg bg-white/5 px-4 py-6 text-center text-white transition-colors duration-300 hover:bg-white/10 hover:text-cta">
+            <Reveal
+              key={day}
+              delay={i * 70}
+              className="flex max-w-[calc(50%-0.75rem)] flex-1 md:max-w-none"
+            >
+              {/* data-fab-avoid: with 7 cards wrapping two-per-row on mobile,
+                  a lone last card can end up sitting where the floating
+                  Book In/back-to-top stack lives - same issue we hit on How
+                  It Works. This opts every card in to that avoidance check.
+
+                  hover: is scoped to devices that report real hover support
+                  so a mobile tap doesn't leave a card permanently
+                  highlighted - touchscreens fire :hover on tap and only
+                  clear it on the next tap elsewhere, which read as a random
+                  stuck-blue day for no reason. */}
+              <div
+                data-fab-avoid
+                className="flex flex-1 cursor-default flex-col items-center gap-2 rounded-lg bg-white/5 px-4 py-6 text-center text-white transition-colors duration-300 [@media(hover:hover)]:hover:bg-white/10 [@media(hover:hover)]:hover:text-cta"
+              >
                 <p className="font-switzer text-3xl font-light tracking-tight">
                   {day}
                 </p>
