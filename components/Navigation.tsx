@@ -114,6 +114,7 @@ export default function Navigation({
     if (!open) return;
     const scrollY = window.scrollY;
     const { style } = document.body;
+    const html = document.documentElement;
     style.position = "fixed";
     style.top = `-${scrollY}px`;
     style.left = "0";
@@ -125,7 +126,19 @@ export default function Navigation({
       style.left = "";
       style.right = "";
       style.overflow = "";
+      // globals.css sets `scroll-behavior: smooth` on <html>, and that
+      // applies to every scrollTo() call site-wide - including this one.
+      // Without overriding it, restoring the scroll position here doesn't
+      // snap back instantly, it *animates* from wherever the browser left
+      // the native scroll position (effectively the top) back down to
+      // scrollY, which reads as the page visibly scrolling on close.
+      // Forcing scroll-behavior to "auto" for just this jump, then
+      // restoring whatever it was before, keeps the site-wide smooth
+      // scroll (e.g. nav link clicks) intact everywhere else.
+      const previousScrollBehavior = html.style.scrollBehavior;
+      html.style.scrollBehavior = "auto";
       window.scrollTo(0, scrollY);
+      html.style.scrollBehavior = previousScrollBehavior;
     };
   }, [open]);
 

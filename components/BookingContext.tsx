@@ -137,6 +137,7 @@ export default function BookingProvider({
     if (!open) return;
     const scrollY = window.scrollY;
     const { style } = document.body;
+    const html = document.documentElement;
     style.position = "fixed";
     style.top = `-${scrollY}px`;
     style.left = "0";
@@ -148,7 +149,13 @@ export default function BookingProvider({
       style.left = "";
       style.right = "";
       style.overflow = "";
+      // globals.css sets `scroll-behavior: smooth` on <html>, which
+      // otherwise makes this restore visibly animate instead of snapping
+      // back instantly. Force it off just for this jump.
+      const previousScrollBehavior = html.style.scrollBehavior;
+      html.style.scrollBehavior = "auto";
       window.scrollTo(0, scrollY);
+      html.style.scrollBehavior = previousScrollBehavior;
     };
   }, [open]);
 
