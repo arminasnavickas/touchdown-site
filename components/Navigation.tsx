@@ -194,7 +194,7 @@ export default function Navigation({
       <div className="relative z-50 flex items-center gap-8 px-6 py-4 md:gap-12 md:px-16">
         <Link href="/" className="shrink-0">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={logo} alt="Touchdown" className="h-[34px] w-auto md:h-5" />
+          <img src={logo} alt="Touchdown" className="h-[15px] w-auto md:h-5" />
         </Link>
 
         <nav className="hidden flex-1 items-center justify-end gap-6 md:flex">
@@ -253,7 +253,7 @@ export default function Navigation({
       <div
         onClick={() => setOpen(false)}
         aria-hidden="true"
-        className={`fixed inset-0 z-40 bg-dark-ocean-blue/70 transition-opacity duration-300 md:hidden ${
+        className={`fixed inset-0 z-40 bg-dark-ocean-blue/70 md:hidden ${
           open ? "opacity-100" : "pointer-events-none opacity-0"
         }`}
       />
@@ -263,7 +263,7 @@ export default function Navigation({
           pushing the rest of the content down as it opens. Scrolls
           internally if it's taller than the viewport. */}
       <div
-        className={`absolute inset-x-0 top-full z-50 overflow-y-auto overscroll-contain border-t border-danish-blue/20 bg-white transition-all duration-300 md:hidden ${
+        className={`absolute inset-x-0 top-full z-50 overflow-y-auto overscroll-contain border-t border-danish-blue/20 bg-white md:hidden ${
           open ? "max-h-[calc(100vh-5rem)]" : "max-h-0 border-t-0"
         }`}
       >

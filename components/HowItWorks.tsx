@@ -44,7 +44,7 @@ function StepCard({
         <p className="font-switzer text-lg font-light tracking-tight text-navy md:text-3xl">
           {title}
         </p>
-        <p className="line-clamp-3 font-switzer text-sm font-light leading-relaxed text-dark-ocean-blue/80 md:text-xl">
+        <p className="line-clamp-3 mb-4 font-switzer text-sm font-light leading-relaxed text-dark-ocean-blue/80 md:text-xl">
           {paragraphs[0]}
         </p>
         <button
