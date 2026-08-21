@@ -64,7 +64,7 @@ function ReviewCard({
 
   return (
     <div
-      className="flex h-full w-full flex-col gap-3 rounded-lg border border-transparent p-8 shadow-md transition-all duration-300 hover:-translate-y-0.5 hover:border-cta/60 hover:shadow-lg hover:shadow-cta/10 md:w-[360px] md:shrink-0 md:snap-start"
+      className="flex h-full w-[85%] shrink-0 flex-col gap-3 rounded-lg border border-transparent p-8 shadow-md transition-all duration-300 hover:-translate-y-0.5 hover:border-cta/60 hover:shadow-lg hover:shadow-cta/10 snap-start sm:w-[360px]"
       style={{
         backgroundImage:
           "linear-gradient(180deg, #FFFFFF 24.83%, rgba(208,235,242,0.1) 98.162%), linear-gradient(#FFFFFF, #FFFFFF)",
@@ -127,11 +127,6 @@ export default function Reviews({
   };
 
   const onPointerDown = (e: React.PointerEvent) => {
-    // Drag-to-scroll is a desktop-only affordance for the horizontal
-    // slider. On mobile the list is a normal vertical stack now, so this
-    // must bail out - capturing the pointer here would otherwise fight
-    // with the browser's native vertical touch-scroll on a phone.
-    if (!window.matchMedia("(min-width: 768px)").matches) return;
     const el = scrollerRef.current;
     if (!el) return;
     if ((e.target as HTMLElement).closest("button, a")) return;
@@ -156,7 +151,7 @@ export default function Reviews({
       id="reviews"
       className="relative flex flex-col items-center gap-[70px] overflow-hidden px-6 py-28 md:px-16 scroll-mt-20"
     >
-      <Blob className="right-0 top-[60%] h-[400px] w-[400px] -translate-y-1/2" />
+      <Blob className="right-0 top-[25%] h-[400px] w-[400px] -translate-y-1/2" />
 
       <Reveal>
         <div className="relative z-10 flex flex-col items-center gap-10 text-center">
@@ -176,8 +171,8 @@ export default function Reviews({
           onPointerMove={onPointerMove}
           onPointerUp={endDrag}
           onPointerLeave={endDrag}
-          className={`flex w-full flex-col gap-6 px-1 pb-4 md:flex-row md:overflow-x-auto [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden ${
-            isDragging ? "md:cursor-grabbing md:select-none" : "md:cursor-grab md:snap-x md:snap-mandatory md:scroll-smooth"
+          className={`flex w-full gap-6 overflow-x-auto px-1 pb-4 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden ${
+            isDragging ? "cursor-grabbing select-none" : "cursor-grab snap-x snap-mandatory scroll-smooth"
           }`}
           style={{ scrollPaddingLeft: "1px" }}
         >
