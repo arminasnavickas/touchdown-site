@@ -72,7 +72,7 @@ function PlanDropdown({
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}
-        className="flex w-full items-center justify-between rounded-[6px] border border-dark-ocean-blue/20 px-4 py-3 font-switzer text-base text-dark-ocean-blue transition focus:border-cta focus:outline-none"
+        className="flex w-full items-center justify-between rounded-[6px] border border-dark-ocean-blue/20 px-4 py-3 font-switzer text-lg text-dark-ocean-blue transition focus:border-cta focus:outline-none md:text-base"
       >
         <span className={value ? "" : "text-dark-ocean-blue/40"}>
           {value || "Select a plan"}
@@ -89,7 +89,7 @@ function PlanDropdown({
                 onChange(option);
                 setOpen(false);
               }}
-              className={`block w-full px-4 py-3 text-left font-switzer text-base transition hover:bg-cta/10 ${
+              className={`block w-full px-4 py-3 text-left font-switzer text-lg transition hover:bg-cta/10 md:text-base ${
                 option === value ? "bg-cta/15 text-dark-ocean-blue" : "text-dark-ocean-blue/80"
               }`}
             >
@@ -130,13 +130,32 @@ export default function BookingProvider({
   };
   const goBack = () => setSubmitted(false);
 
-  // Lock background scroll while open; restore on close.
+  // Lock background scroll while open; restore on close. `overflow:
+  // hidden` alone doesn't prevent touch-scrolling on iOS Safari, so we pin
+  // the body at its current scroll position instead and restore it on close.
   useEffect(() => {
     if (!open) return;
-    const previous = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
+    const scrollY = window.scrollY;
+    const { style } = document.body;
+    const html = document.documentElement;
+    style.position = "fixed";
+    style.top = `-${scrollY}px`;
+    style.left = "0";
+    style.right = "0";
+    style.overflow = "hidden";
     return () => {
-      document.body.style.overflow = previous;
+      style.position = "";
+      style.top = "";
+      style.left = "";
+      style.right = "";
+      style.overflow = "";
+      // globals.css sets `scroll-behavior: smooth` on <html>, which
+      // otherwise makes this restore visibly animate instead of snapping
+      // back instantly. Force it off just for this jump.
+      const previousScrollBehavior = html.style.scrollBehavior;
+      html.style.scrollBehavior = "auto";
+      window.scrollTo(0, scrollY);
+      html.style.scrollBehavior = previousScrollBehavior;
     };
   }, [open]);
 
@@ -179,7 +198,7 @@ export default function BookingProvider({
 
       {open && (
         <div
-          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/70 p-4"
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-dark-ocean-blue/50 p-4 backdrop-blur-sm"
           onClick={close}
         >
           <div
@@ -220,7 +239,7 @@ export default function BookingProvider({
                   <button
                     type="button"
                     onClick={goToRegForm}
-                    className="w-full rounded-[6px] bg-dark-ocean-blue px-8 py-4 font-switzer text-base font-medium uppercase tracking-wide text-white transition hover:bg-cta"
+                    className="w-full rounded-[6px] bg-cta px-8 py-4 font-switzer text-base font-medium uppercase tracking-wide text-white transition hover:bg-aquatic hover:text-dark-ocean-blue"
                   >
                     Continue
                   </button>
@@ -242,23 +261,27 @@ export default function BookingProvider({
                     name="name"
                     required
                     placeholder="Name"
-                    className="rounded-[6px] border border-dark-ocean-blue/20 px-4 py-3 font-switzer text-base text-dark-ocean-blue placeholder:text-dark-ocean-blue/40 focus:border-cta focus:outline-none"
-                  />
-                  <input
-                    type="date"
-                    name="startDate"
-                    required
-                    aria-label="Start date"
-                    className="rounded-[6px] border border-dark-ocean-blue/20 px-4 py-3 font-switzer text-base text-dark-ocean-blue placeholder:text-dark-ocean-blue/40 focus:border-cta focus:outline-none"
+                    className="rounded-[6px] border border-dark-ocean-blue/20 px-4 py-3 font-switzer text-lg text-dark-ocean-blue placeholder:text-dark-ocean-blue/40 focus:border-cta focus:outline-none md:text-base"
                   />
                   <div className="flex flex-col gap-1.5">
-                    <label className="font-switzer text-sm text-dark-ocean-blue/70">
+                    <label className="font-switzer text-base text-dark-ocean-blue/70 md:text-sm">
+                      Preferred start date
+                    </label>
+                    <input
+                      type="date"
+                      name="startDate"
+                      required
+                      className="rounded-[6px] border border-dark-ocean-blue/20 px-4 py-3 font-switzer text-lg text-dark-ocean-blue placeholder:text-dark-ocean-blue/40 focus:border-cta focus:outline-none md:text-base"
+                    />
+                  </div>
+                  <div className="flex flex-col gap-1.5">
+                    <label className="font-switzer text-base text-dark-ocean-blue/70 md:text-sm">
                       Choose your plan
                     </label>
                     <PlanDropdown options={planOptions} value={selectedPlan} onChange={setSelectedPlan} />
                   </div>
                   <div className="flex flex-col gap-1.5">
-                    <label className="font-switzer text-sm text-dark-ocean-blue/70">
+                    <label className="font-switzer text-base text-dark-ocean-blue/70 md:text-sm">
                       Telegram number
                     </label>
                     <input
@@ -266,11 +289,11 @@ export default function BookingProvider({
                       name="telegram"
                       required
                       placeholder="+44 00-0000-00000"
-                      className="rounded-[6px] border border-dark-ocean-blue/20 px-4 py-3 font-switzer text-base text-dark-ocean-blue placeholder:text-dark-ocean-blue/40 focus:border-cta focus:outline-none"
+                      className="rounded-[6px] border border-dark-ocean-blue/20 px-4 py-3 font-switzer text-lg text-dark-ocean-blue placeholder:text-dark-ocean-blue/40 focus:border-cta focus:outline-none md:text-base"
                     />
                   </div>
                   <div className="flex flex-col gap-1.5">
-                    <label className="font-switzer text-sm text-dark-ocean-blue/70">
+                    <label className="font-switzer text-base text-dark-ocean-blue/70 md:text-sm">
                       Your e-mail
                     </label>
                     <input
@@ -278,12 +301,12 @@ export default function BookingProvider({
                       name="email"
                       required
                       placeholder="example@mail.com"
-                      className="rounded-[6px] border border-dark-ocean-blue/20 px-4 py-3 font-switzer text-base text-dark-ocean-blue placeholder:text-dark-ocean-blue/40 focus:border-cta focus:outline-none"
+                      className="rounded-[6px] border border-dark-ocean-blue/20 px-4 py-3 font-switzer text-lg text-dark-ocean-blue placeholder:text-dark-ocean-blue/40 focus:border-cta focus:outline-none md:text-base"
                     />
                   </div>
                   <button
                     type="submit"
-                    className="mt-2 w-full rounded-[6px] bg-dark-ocean-blue px-8 py-4 font-switzer text-base font-medium uppercase tracking-wide text-white transition hover:bg-cta"
+                    className="mt-2 w-full rounded-[6px] bg-cta px-8 py-4 font-switzer text-base font-medium uppercase tracking-wide text-white transition hover:bg-aquatic hover:text-dark-ocean-blue"
                   >
                     Submit
                   </button>

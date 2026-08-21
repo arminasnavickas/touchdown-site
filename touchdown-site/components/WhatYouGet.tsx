@@ -23,7 +23,7 @@ export default function WhatYouGet({
         {items.map((item, i) => (
           <Reveal key={item.title} delay={i * 80}>
             <div className="grid grid-cols-1 items-center gap-4 py-10 md:grid-cols-2 md:gap-12">
-              <p className="font-switzer text-5xl font-thin leading-none tracking-tight text-cta md:text-7xl">
+              <p className="font-switzer text-3xl font-thin leading-none tracking-tight text-cta md:text-6xl">
                 <TypewriterText text={item.title} />
               </p>
               <p className="font-switzer text-xl font-light leading-relaxed text-white/80">

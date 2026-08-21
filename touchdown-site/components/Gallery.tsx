@@ -20,7 +20,7 @@ export default function Gallery({ images }: { images: string[] }) {
             <FadeImage
               src={src}
               alt=""
-              wrapperClassName="h-[150px] w-full md:h-[300px]"
+              wrapperClassName="h-[100px] w-full md:h-[300px]"
               className="h-full w-full object-cover transition-transform duration-300 hover:scale-110"
             />
           </button>

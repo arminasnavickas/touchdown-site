@@ -1,15 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef } from "react";
 import FadeImage from "./FadeImage";
-import Bubbles from "./Bubbles";
 import BookInButton from "./BookInButton";
 
-// Object-position tuning is a visual/technical concern, not content, so it
-// stays in code even though the actual photos come from Sanity. Any slide
-// beyond these two (e.g. a third photo added later in the Studio) falls
-// back to plain object-center.
-const slidePositions = ["object-[center_65%]", "object-[center_38%]"];
 const logoBadge = "/images/touchdown-stamp.svg";
 
 export default function Hero({
@@ -21,50 +15,67 @@ export default function Hero({
   subcopy: string;
   slides: string[];
 }) {
-  const [offset, setOffset] = useState(0);
-  const [activeSlide, setActiveSlide] = useState(0);
+  const parallaxRef = useRef<HTMLDivElement>(null);
   const headlineLines = headline.split("\n");
   const subcopyLines = subcopy.split(". ").filter(Boolean);
+  // Carousel removed - always just the first photo from Sanity. Cycling
+  // through multiple full-size background photos meant every extra slide
+  // competed for bandwidth and kept causing loading/rendering issues,
+  // especially on mobile.
+  const heroImage = slides[0];
+  // Only the bundled local fallback photo has a pre-generated mobile-sized
+  // variant sitting next to it in /public/images. A Sanity-hosted image
+  // comes from their CDN under a different URL entirely, so there's no
+  // matching "-mobile" file to point at - in that case we just fall back to
+  // serving the single `heroImage` URL at every width, same as before.
+  const isLocalHeroImage = heroImage === "/images/hero.jpg";
 
+  // Parallax via a ref + direct style write instead of React state - the
+  // old version called setOffset() on every native scroll event, which
+  // re-rendered the whole Hero component (including re-splitting the
+  // headline/subcopy strings) dozens of times per second while scrolling.
+  // Writing transform straight to the DOM node, throttled to one update
+  // per animation frame, gets the same visual effect without any of that
+  // React work on the hot path.
   useEffect(() => {
-    const onScroll = () => setOffset(window.scrollY * 0.3);
+    let ticking = false;
+    function onScroll() {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        if (parallaxRef.current) {
+          parallaxRef.current.style.transform = `translateY(${window.scrollY * 0.3}px)`;
+        }
+        ticking = false;
+      });
+    }
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // Auto-advance the background carousel every 6s, pausing implicitly
-  // whenever the tab isn't in the foreground since rAF/timers throttle then.
-  useEffect(() => {
-    if (slides.length <= 1) return;
-    const interval = setInterval(() => {
-      setActiveSlide((i) => (i + 1) % slides.length);
-    }, 6000);
-    return () => clearInterval(interval);
-  }, [slides.length]);
-
   return (
     <section className="relative h-[500px] w-full overflow-hidden bg-dark-ocean-blue md:h-[700px]">
-      {/* Background underwater image carousel (parallax) */}
+      {/* Background underwater image (parallax) */}
       <div
+        ref={parallaxRef}
         className="absolute inset-0"
-        style={{ transform: `translateY(${offset}px)`, willChange: "transform" }}
+        style={{ willChange: "transform" }}
       >
-        {slides.map((src, i) => (
-          <div
-            key={src}
-            className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
-              i === activeSlide ? "opacity-100" : "opacity-0"
-            }`}
-          >
-            <FadeImage
-              src={src}
-              alt="Freediver underwater in Dahab"
-              eager
-              wrapperClassName="absolute inset-0 h-[calc(100%+150px)]"
-              className={`h-full w-full object-cover ${slidePositions[i] ?? "object-center"}`}
-            />
-          </div>
-        ))}
+        {heroImage && (
+          <FadeImage
+            src={heroImage}
+            srcSet={
+              isLocalHeroImage
+                ? "/images/hero-mobile.jpg 800w, /images/hero.jpg 1600w"
+                : undefined
+            }
+            sizes={isLocalHeroImage ? "100vw" : undefined}
+            alt="Freediver underwater in Dahab"
+            eager
+            wrapperClassName="absolute inset-0 h-[calc(100%+150px)]"
+            className="h-full w-full object-cover object-[center_65%]"
+          />
+        )}
         <div
           className="absolute inset-0"
           style={{
@@ -74,25 +85,6 @@ export default function Hero({
           }}
         />
       </div>
-
-      {/* Carousel dot indicators */}
-      {slides.length > 1 && (
-        <div className="absolute bottom-24 left-1/2 z-10 flex -translate-x-1/2 gap-2 rounded-full bg-[#023048]/40 px-3 py-2 backdrop-blur-sm md:bottom-32">
-          {slides.map((src, i) => (
-            <button
-              key={src}
-              type="button"
-              onClick={() => setActiveSlide(i)}
-              aria-label={`Show background image ${i + 1}`}
-              className={`h-2 rounded-full transition-all duration-300 ${
-                i === activeSlide ? "w-6 bg-white" : "w-2 bg-white/40 hover:bg-white/60"
-              }`}
-            />
-          ))}
-        </div>
-      )}
-
-      <Bubbles />
 
       {/* Decorative blob */}
       <div
@@ -129,7 +121,7 @@ export default function Hero({
       </div>
 
       {/* Logo badge */}
-      <div className="absolute right-6 top-[270px] block h-[150px] w-[150px] md:right-24 md:top-[380px]">
+      <div className="absolute right-6 top-[270px] block h-[100px] w-[100px] md:right-24 md:top-[380px]">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src={logoBadge} alt="Touchdown space badge" className="h-full w-full object-contain" />
       </div>

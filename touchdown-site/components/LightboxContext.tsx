@@ -90,13 +90,32 @@ export default function LightboxProvider({ children }: { children: React.ReactNo
     setState({ ...state, index: (state.index + 1) % state.images.length });
   };
 
-  // Lock background scroll while open; restore on close.
+  // Lock background scroll while open; restore on close. `overflow:
+  // hidden` alone doesn't prevent touch-scrolling on iOS Safari, so we pin
+  // the body at its current scroll position instead and restore it on close.
   useEffect(() => {
     if (!state) return;
-    const previous = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
+    const scrollY = window.scrollY;
+    const { style } = document.body;
+    const html = document.documentElement;
+    style.position = "fixed";
+    style.top = `-${scrollY}px`;
+    style.left = "0";
+    style.right = "0";
+    style.overflow = "hidden";
     return () => {
-      document.body.style.overflow = previous;
+      style.position = "";
+      style.top = "";
+      style.left = "";
+      style.right = "";
+      style.overflow = "";
+      // globals.css sets `scroll-behavior: smooth` on <html>, which
+      // otherwise makes this restore visibly animate instead of snapping
+      // back instantly. Force it off just for this jump.
+      const previousScrollBehavior = html.style.scrollBehavior;
+      html.style.scrollBehavior = "auto";
+      window.scrollTo(0, scrollY);
+      html.style.scrollBehavior = previousScrollBehavior;
     };
   }, [state]);
 
@@ -119,7 +138,7 @@ export default function LightboxProvider({ children }: { children: React.ReactNo
 
       {state && (
         <div
-          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 p-6"
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-dark-ocean-blue/50 p-6 backdrop-blur-sm"
           onClick={onOverlayClick}
           onTouchStart={onTouchStart}
           onTouchEnd={onTouchEnd}

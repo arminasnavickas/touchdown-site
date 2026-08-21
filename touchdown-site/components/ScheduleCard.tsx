@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useRef, useState } from "react";
 import FadeImage from "./FadeImage";
 import { useLightbox } from "./LightboxContext";
 
@@ -26,9 +27,32 @@ export default function ScheduleCard({
   time = "07:00 - 10:00",
 }: ScheduleCardData) {
   const { openLightbox } = useLightbox();
+  const [active, setActive] = useState(false);
+  const cardRef = useRef<HTMLDivElement>(null);
+
+  // On mobile, highlight the card as it scrolls through the center of the
+  // viewport (like the nav's scroll-spy) instead of only on tap, which is
+  // what the plain `hover:` variant was doing on touch devices. Desktop
+  // keeps its own real :hover highlight via the md:hover: classes below.
+  useEffect(() => {
+    const el = cardRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => setActive(entry.isIntersecting),
+      { rootMargin: "-35% 0px -35% 0px", threshold: 0 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
   return (
-    <div className="flex h-full w-full flex-col overflow-hidden rounded-lg border border-transparent shadow-md transition-all duration-300 hover:-translate-y-0.5 hover:border-cta/60 hover:shadow-lg hover:shadow-cta/10">
-      <div className="relative h-[350px] w-full overflow-hidden">
+    <div
+      ref={cardRef}
+      className={`flex h-full w-full flex-col overflow-hidden rounded-lg border shadow-md transition-all duration-300 md:hover:-translate-y-0.5 md:hover:border-cta/60 md:hover:shadow-lg md:hover:shadow-cta/10 ${
+        active ? "-translate-y-0.5 border-cta/60 shadow-lg shadow-cta/10" : "border-transparent"
+      }`}
+    >
+      <div className="relative h-[280px] w-full overflow-hidden">
         <button
           type="button"
           onClick={() => openLightbox([image], 0)}
