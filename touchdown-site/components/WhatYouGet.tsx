@@ -1,4 +1,3 @@
-import Blob from "./Blob";
 import Reveal from "./Reveal";
 import TypewriterText from "./TypewriterText";
 import type { WhatYouGetItem } from "@/lib/content";
@@ -12,8 +11,6 @@ export default function WhatYouGet({
 }) {
   return (
     <section className="relative flex flex-col items-center gap-14 overflow-hidden px-6 py-20 md:px-16">
-      <Blob className="left-0 top-1/4 h-[360px] w-[360px] -translate-x-1/3" />
-      <Blob className="bottom-0 right-0 h-[380px] w-[380px] translate-x-1/4" />
       <Reveal className="relative z-10">
         <h2 className="text-center font-switzer text-4xl font-extralight tracking-tight text-white md:text-6xl">
           {heading}

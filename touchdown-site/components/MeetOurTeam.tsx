@@ -37,7 +37,7 @@ function TeamCard({
           src={member.image}
           alt={member.name}
           wrapperClassName="h-full w-full"
-          className="h-full w-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
+          className="h-full w-full object-cover object-top"
         />
       </button>
 

@@ -23,7 +23,7 @@ const hrefById: Record<string, string> = {
 
 function FooterColumn({ title, links }: { title: string; links: FooterLink[] }) {
   return (
-    <div className="flex w-full flex-col items-center gap-4 md:w-auto md:min-w-[120px] md:items-start">
+    <div className="flex w-full flex-col items-start gap-4 text-left md:w-auto md:min-w-[120px]">
       <p className="font-switzer text-lg font-medium">{title}</p>
       {links.map((link) => (
         <a
@@ -90,13 +90,17 @@ export default function Footer({
 
         {/* Grid on mobile so the four link groups sit 2-per-row instead of
             stacking one at a time full-width; desktop switches back to the
-            original flex-row wrap via md:flex. */}
-        <div className="grid w-full grid-cols-2 gap-8 py-8 md:flex md:w-auto md:flex-1 md:flex-row md:flex-wrap md:items-start md:content-start md:justify-center md:gap-10 md:py-0">
+            original flex-row wrap via md:flex. Each column is left-aligned
+            (not centered) on mobile too, matching the reference layout -
+            the outer divide-y on the wrapper already gives the horizontal
+            rule above and below this block, so no extra divider is needed
+            here. */}
+        <div className="grid w-full grid-cols-2 gap-8 py-8 text-left md:flex md:w-auto md:flex-1 md:flex-row md:flex-wrap md:items-start md:content-start md:justify-center md:gap-10 md:py-0">
           <FooterColumn title={aboutTitle} links={aboutLinks} />
           <FooterColumn title={experienceTitle} links={experienceLinks} />
           <FooterColumn title={legalTitle} links={legalLinks} />
 
-          <div className="flex w-full flex-col items-center gap-4 md:w-auto md:min-w-[120px] md:items-start">
+          <div className="flex w-full flex-col items-start gap-4 md:w-auto md:min-w-[120px]">
             <p className="font-switzer text-lg font-medium">{contactTitle}</p>
             <a
               href={`mailto:${email}`}

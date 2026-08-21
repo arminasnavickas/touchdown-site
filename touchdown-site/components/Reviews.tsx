@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState } from "react";
 import FadeImage from "./FadeImage";
 import ArticleModal from "./ArticleModal";
-import Blob from "./Blob";
 import Reveal from "./Reveal";
 import type { Review } from "@/lib/content";
 
@@ -151,8 +150,6 @@ export default function Reviews({
       id="reviews"
       className="relative flex flex-col items-center gap-[70px] overflow-hidden px-6 py-28 md:px-16 scroll-mt-20"
     >
-      <Blob className="right-0 top-[25%] h-[400px] w-[400px] -translate-y-1/2" />
-
       <Reveal>
         <div className="relative z-10 flex flex-col items-center gap-10 text-center">
           <h2 className="font-switzer text-4xl font-extralight tracking-tight text-danish-blue md:text-6xl">
