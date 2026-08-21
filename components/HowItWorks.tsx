@@ -7,17 +7,6 @@ import Blob from "./Blob";
 import ArticleModal from "./ArticleModal";
 import Reveal from "./Reveal";
 import type { HowItWorksStep } from "@/lib/content";
-import { Brain, Dumbbell, Repeat, Trophy, Circle } from "lucide-react";
-
-// Icons are code, not content, so they stay keyed by step title rather than
-// coming from Sanity. Falls back to a plain circle for any custom step title
-// added later that doesn't match one of the four defaults.
-const icons: Record<string, typeof Brain> = {
-  Theory: Brain,
-  Practice: Dumbbell,
-  Repetition: Repeat,
-  Results: Trophy,
-};
 
 function StepCard({
   title,
@@ -26,7 +15,6 @@ function StepCard({
   onReadMore,
 }: HowItWorksStep & { onReadMore: () => void }) {
   const { openLightbox } = useLightbox();
-  const Icon = icons[title] ?? Circle;
   return (
     <div className="flex flex-1 flex-col overflow-hidden rounded-lg border border-danish-blue/30 shadow-md transition-all duration-300 hover:-translate-y-0.5 hover:border-cta/60 hover:shadow-lg hover:shadow-cta/10">
       <button
@@ -53,19 +41,16 @@ function StepCard({
             "linear-gradient(180deg, #FFFFFF 24.83%, rgba(208,235,242,0.1) 98.162%), linear-gradient(#FFFFFF, #FFFFFF)",
         }}
       >
-        <div className="flex items-center gap-1.5 md:gap-2">
-          <Icon className="size-5 text-navy md:size-7" strokeWidth={1.5} />
-          <p className="font-switzer text-lg font-light tracking-tight text-navy md:text-3xl">
-            {title}
-          </p>
-        </div>
-        <p className="font-switzer text-sm font-light leading-relaxed text-dark-ocean-blue/80 md:text-xl">
+        <p className="font-switzer text-lg font-light tracking-tight text-navy md:text-3xl">
+          {title}
+        </p>
+        <p className="line-clamp-3 font-switzer text-sm font-light leading-relaxed text-dark-ocean-blue/80 md:text-xl">
           {paragraphs[0]}
         </p>
         <button
           type="button"
           onClick={onReadMore}
-          className="mt-auto w-fit rounded-[6px] bg-cta px-4 py-2 font-switzer text-xs font-medium uppercase tracking-wide text-white transition-all duration-200 ease-out hover:bg-aquatic hover:text-dark-ocean-blue hover:scale-105 hover:shadow-lg hover:shadow-cta/40 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cta focus-visible:ring-offset-2 md:px-8 md:py-4 md:text-sm"
+          className="mt-auto w-fit self-start rounded-[6px] border border-cta bg-transparent px-4 py-2 font-switzer text-xs font-medium uppercase tracking-wide text-cta transition-all duration-200 ease-out hover:bg-cta hover:text-white hover:scale-105 hover:shadow-lg hover:shadow-cta/40 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cta focus-visible:ring-offset-2 md:px-8 md:py-4 md:text-sm"
         >
           Read more
         </button>

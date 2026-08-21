@@ -90,7 +90,7 @@ function ReviewCard({
           </div>
         </div>
       </div>
-      <p ref={quoteRef} className="line-clamp-4 font-switzer text-lg font-light text-dark-ocean-blue/90">
+      <p ref={quoteRef} className="line-clamp-6 font-switzer text-lg font-light text-dark-ocean-blue/90">
         {review.quote}
       </p>
       {overflows && (

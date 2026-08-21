@@ -29,7 +29,7 @@ export default function WaterDaySchedule({
           </div>
         </div>
       </Reveal>
-      <div className="relative z-10 grid w-full grid-cols-1 gap-6 md:grid-cols-2">
+      <div className="relative z-10 grid w-full grid-cols-2 gap-4 md:gap-6">
         {cards.map((card, i) => (
           <Reveal key={card.title} delay={i * 100}>
             <ScheduleCard {...card} />

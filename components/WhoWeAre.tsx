@@ -39,7 +39,12 @@ export default function WhoWeAre({
             </p>
           ))}
         </div>
-        <BookInButton className="w-fit rounded-[6px] bg-cta px-8 py-4 font-switzer text-base font-medium uppercase tracking-wide text-white transition-all duration-200 ease-out hover:bg-aquatic hover:text-dark-ocean-blue hover:scale-105 hover:shadow-lg hover:shadow-cta/40 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cta focus-visible:ring-offset-2">
+        {/* Hidden on mobile only - the section already ends with the "Book
+            in" CTA in the hero above it, and on a narrow single-column
+            layout this one just repeated it right after the About Us copy.
+            md:inline-flex brings it back at desktop, where the two-column
+            layout means it isn't sitting right below another CTA. */}
+        <BookInButton className="hidden w-fit rounded-[6px] bg-cta px-8 py-4 font-switzer text-base font-medium uppercase tracking-wide text-white transition-all duration-200 ease-out hover:bg-aquatic hover:text-dark-ocean-blue hover:scale-105 hover:shadow-lg hover:shadow-cta/40 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cta focus-visible:ring-offset-2 md:inline-flex">
           Book in
         </BookInButton>
       </div>
