@@ -32,28 +32,25 @@ export default function TrainingRhythm({
           const Icon = icons[label];
           return (
             <Reveal key={day} delay={i * 70} className="flex flex-1">
-              {/* Padding/icon/heading size step down on mobile only (see
-                  md: variants) to roughly halve the card's height there;
-                  desktop keeps the original sizing. */}
-              <div className="flex flex-1 cursor-default flex-col items-center gap-1 rounded-lg bg-white/5 px-4 py-3 text-center text-white transition-colors duration-300 hover:bg-white/10 hover:text-cta md:gap-2 md:py-6">
-                <div className="size-8 text-white/70 md:size-16">
+              <div className="flex flex-1 cursor-default flex-col items-center gap-2 rounded-lg bg-white/5 px-4 py-6 text-center text-white transition-colors duration-300 hover:bg-white/10 hover:text-cta">
+                <div className="size-16 text-white/70">
                   <Icon className="size-full" strokeWidth={1.5} />
                 </div>
-                <p className="font-switzer text-lg font-light tracking-tight md:text-3xl">
+                <p className="font-switzer text-3xl font-light tracking-tight">
                   {day}
                 </p>
-                <p className="font-switzer text-xs font-bold uppercase tracking-widest md:text-sm">
+                <p className="font-switzer text-sm font-bold uppercase tracking-widest">
                   {label}
                 </p>
                 {time ? (
-                  <p className="flex w-fit items-center gap-1.5 whitespace-nowrap rounded-full bg-dark-ocean-blue/80 px-3 py-1 font-switzer text-xs font-medium tracking-wide text-white md:py-1.5 md:text-sm">
+                  <p className="flex w-fit items-center gap-1.5 whitespace-nowrap rounded-full bg-dark-ocean-blue/80 px-3 py-1.5 font-switzer text-sm font-medium tracking-wide text-white">
                     <Clock className="size-4 shrink-0" strokeWidth={1.5} />
                     {time}
                   </p>
                 ) : (
                   <p
                     aria-hidden="true"
-                    className="invisible flex w-fit items-center gap-1.5 whitespace-nowrap rounded-full px-3 py-1 font-switzer text-xs font-medium tracking-wide md:py-1.5 md:text-sm"
+                    className="invisible flex w-fit items-center gap-1.5 whitespace-nowrap rounded-full px-3 py-1.5 font-switzer text-sm font-medium tracking-wide"
                   >
                     <Clock className="size-4 shrink-0" strokeWidth={1.5} />
                     00:00 - 00:00

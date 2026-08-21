@@ -13,7 +13,7 @@ export type ScheduleCardData = {
 
 function ClockIcon() {
   return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="size-3.5 shrink-0 md:size-5">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="size-5 shrink-0">
       <circle cx="12" cy="12" r="9" />
       <path d="M12 7v5l3 3" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
@@ -52,11 +52,7 @@ export default function ScheduleCard({
         active ? "-translate-y-0.5 border-cta/60 shadow-lg shadow-cta/10" : "border-transparent"
       }`}
     >
-      {/* Image height, badge, padding and type all step down on mobile -
-          this card now shares a 2-column row there instead of running full
-          width, so the extra room it used to have is gone. md: variants
-          bring back the original desktop sizing untouched. */}
-      <div className="relative h-[70px] w-full overflow-hidden md:h-[350px]">
+      <div className="relative h-[350px] w-full overflow-hidden">
         <button
           type="button"
           onClick={() => openLightbox([image], 0)}
@@ -70,16 +66,16 @@ export default function ScheduleCard({
             className="h-full w-full object-cover transition-transform duration-300 hover:scale-110"
           />
         </button>
-        <div className="absolute right-2 top-2 flex items-center gap-1 rounded-full bg-dark-ocean-blue/80 px-2 py-1 text-aquatic md:right-4 md:top-4 md:gap-1.5 md:px-3 md:py-1.5">
+        <div className="absolute right-4 top-4 flex items-center gap-1.5 rounded-full bg-dark-ocean-blue/80 px-3 py-1.5 text-aquatic">
           <ClockIcon />
-          <span className="font-switzer text-xs font-medium tracking-wide md:text-lg">{time}</span>
+          <span className="font-switzer text-lg font-medium tracking-wide">{time}</span>
         </div>
       </div>
-      <div className="flex flex-1 flex-col gap-1 bg-gradient-to-br from-[#184664] to-[#084166] px-4 pb-5 pt-4 md:gap-2 md:px-10 md:pb-10 md:pt-6">
-        <p className="font-switzer text-lg font-light tracking-tight text-white md:text-2xl">
+      <div className="flex flex-1 flex-col gap-2 bg-gradient-to-br from-[#184664] to-[#084166] px-10 pb-10 pt-6">
+        <p className="font-switzer text-2xl font-light tracking-tight text-white">
           {title}
         </p>
-        <p className="font-switzer text-sm font-light leading-relaxed text-[#d3e3fd] md:text-xl">
+        <p className="font-switzer text-xl font-light leading-relaxed text-[#d3e3fd]">
           {copy}
         </p>
       </div>

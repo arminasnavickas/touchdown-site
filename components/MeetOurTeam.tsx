@@ -24,7 +24,7 @@ function TeamCard({
       <button
         type="button"
         onClick={() => openLightbox([member.image], 0)}
-        className="relative -mb-px aspect-[6/7] w-full cursor-zoom-in overflow-hidden"
+        className="relative -mb-px aspect-[6/4.9] w-full cursor-zoom-in overflow-hidden"
         aria-label="View full image"
       >
         <FadeImage
