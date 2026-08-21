@@ -1,8 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef } from "react";
 import FadeImage from "./FadeImage";
-import Bubbles from "./Bubbles";
 import BookInButton from "./BookInButton";
 
 const logoBadge = "/images/touchdown-stamp.svg";
@@ -16,7 +15,7 @@ export default function Hero({
   subcopy: string;
   slides: string[];
 }) {
-  const [offset, setOffset] = useState(0);
+  const parallaxRef = useRef<HTMLDivElement>(null);
   const headlineLines = headline.split("\n");
   const subcopyLines = subcopy.split(". ").filter(Boolean);
   // Carousel removed - always just the first photo from Sanity. Cycling
@@ -31,8 +30,25 @@ export default function Hero({
   // serving the single `heroImage` URL at every width, same as before.
   const isLocalHeroImage = heroImage === "/images/hero.jpg";
 
+  // Parallax via a ref + direct style write instead of React state - the
+  // old version called setOffset() on every native scroll event, which
+  // re-rendered the whole Hero component (including re-splitting the
+  // headline/subcopy strings) dozens of times per second while scrolling.
+  // Writing transform straight to the DOM node, throttled to one update
+  // per animation frame, gets the same visual effect without any of that
+  // React work on the hot path.
   useEffect(() => {
-    const onScroll = () => setOffset(window.scrollY * 0.3);
+    let ticking = false;
+    function onScroll() {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        if (parallaxRef.current) {
+          parallaxRef.current.style.transform = `translateY(${window.scrollY * 0.3}px)`;
+        }
+        ticking = false;
+      });
+    }
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
@@ -41,8 +57,9 @@ export default function Hero({
     <section className="relative h-[500px] w-full overflow-hidden bg-dark-ocean-blue md:h-[700px]">
       {/* Background underwater image (parallax) */}
       <div
+        ref={parallaxRef}
         className="absolute inset-0"
-        style={{ transform: `translateY(${offset}px)`, willChange: "transform" }}
+        style={{ willChange: "transform" }}
       >
         {heroImage && (
           <FadeImage
@@ -68,8 +85,6 @@ export default function Hero({
           }}
         />
       </div>
-
-      <Bubbles />
 
       {/* Decorative blob */}
       <div

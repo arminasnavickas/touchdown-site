@@ -38,30 +38,34 @@ function StepCard({
         <FadeImage
           src={image}
           alt={title}
-          wrapperClassName="h-[300px] w-full"
+          wrapperClassName="h-[140px] w-full md:h-[300px]"
           className="h-full w-full object-cover transition-transform duration-300 hover:scale-110"
         />
       </button>
+      {/* Padding/type sizes step down on mobile - two cards now share a row
+          there (see the grid on the section below), so the extra room a
+          single full-width card had to work with is gone. Desktop keeps the
+          original sizes via the md: variants. */}
       <div
-        className="flex flex-1 flex-col gap-3 px-8 pb-10 pt-6"
+        className="flex flex-1 flex-col gap-2 px-4 pb-5 pt-4 md:gap-3 md:px-8 md:pb-10 md:pt-6"
         style={{
           backgroundImage:
             "linear-gradient(180deg, #FFFFFF 24.83%, rgba(208,235,242,0.1) 98.162%), linear-gradient(#FFFFFF, #FFFFFF)",
         }}
       >
-        <div className="flex items-center gap-2">
-          <Icon className="size-7 text-navy" strokeWidth={1.5} />
-          <p className="font-switzer text-3xl font-light tracking-tight text-navy">
+        <div className="flex items-center gap-1.5 md:gap-2">
+          <Icon className="size-5 text-navy md:size-7" strokeWidth={1.5} />
+          <p className="font-switzer text-lg font-light tracking-tight text-navy md:text-3xl">
             {title}
           </p>
         </div>
-        <p className="font-switzer text-xl font-light leading-relaxed text-dark-ocean-blue/80">
+        <p className="font-switzer text-sm font-light leading-relaxed text-dark-ocean-blue/80 md:text-xl">
           {paragraphs[0]}
         </p>
         <button
           type="button"
           onClick={onReadMore}
-          className="mt-auto w-fit rounded-[6px] bg-cta px-8 py-4 font-switzer text-sm font-medium uppercase tracking-wide text-white transition-all duration-200 ease-out hover:bg-aquatic hover:text-dark-ocean-blue hover:scale-105 hover:shadow-lg hover:shadow-cta/40 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cta focus-visible:ring-offset-2"
+          className="mt-auto w-fit rounded-[6px] bg-cta px-4 py-2 font-switzer text-xs font-medium uppercase tracking-wide text-white transition-all duration-200 ease-out hover:bg-aquatic hover:text-dark-ocean-blue hover:scale-105 hover:shadow-lg hover:shadow-cta/40 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cta focus-visible:ring-offset-2 md:px-8 md:py-4 md:text-sm"
         >
           Read more
         </button>
@@ -97,7 +101,7 @@ export default function HowItWorks({
           </p>
         </div>
       </Reveal>
-      <div className="relative z-10 flex w-full flex-col gap-6 md:flex-row">
+      <div className="relative z-10 grid w-full grid-cols-2 gap-4 md:flex md:flex-row md:gap-6">
         {steps.map((step, i) => (
           <Reveal key={step.title} delay={i * 100} className="flex flex-1">
             <StepCard {...step} onReadMore={() => setOpenStep(i)} />
