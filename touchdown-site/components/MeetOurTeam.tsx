@@ -24,9 +24,15 @@ function TeamCard({
       <button
         type="button"
         onClick={() => openLightbox([member.image], 0)}
-        className="relative -mb-px aspect-[6/4.9] w-full cursor-zoom-in overflow-hidden"
+        className="relative -mb-px aspect-[6/4.2] w-full cursor-zoom-in overflow-hidden"
         aria-label="View full image"
       >
+        {/* object-top-cropped photos were showing a large flat block of the
+            subject's dark shirt at the bottom of the frame, which visually
+            merged into the card's own dark-ocean-blue background below it -
+            reading as one big black slab rather than a photo + card. A
+            shorter crop keeps the frame on face/shoulders and trims that
+            excess torso, so the photo's own bottom edge stays visible. */}
         <FadeImage
           src={member.image}
           alt={member.name}
@@ -35,7 +41,13 @@ function TeamCard({
         />
       </button>
 
-      <div className="flex flex-1 flex-col gap-4 p-5">
+      {/* data-fab-avoid: same floating Book In/back-to-top overlap issue we
+          hit on How It Works, Training Rhythm, and the footer links - the
+          floating stack sits over this card's bio text and Read more link
+          when scrolled into that position. Tagging the whole content block
+          (not just the button) so the fade-out triggers as soon as any of
+          the bio/CTA is covered, not only once the button itself is hit. */}
+      <div data-fab-avoid className="flex flex-1 flex-col gap-4 p-5">
         <div className="flex flex-col gap-1">
           <p className="font-switzer text-3xl font-light tracking-tight text-aquatic">
             {member.name}
