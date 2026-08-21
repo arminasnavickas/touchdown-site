@@ -75,7 +75,10 @@ export default function Footer({
   return (
     <footer id="site-footer" className="w-full flex flex-col items-center gap-14 pt-12 text-white" style={{ backgroundColor: "#003252" }}>
       <div className="flex w-full flex-col items-center divide-y divide-white/10 px-6 text-center md:flex-row md:flex-wrap md:items-start md:justify-between md:gap-10 md:divide-y-0 md:px-16 md:text-left">
-        <div className="flex w-full flex-col items-center gap-6 py-8 md:w-auto md:min-w-[220px] md:shrink-0 md:items-start md:gap-10 md:py-0">
+        {/* Desktop keeps the logo/socials as the first block up here; on
+            mobile it's moved down into the bottom bar instead (see below),
+            so this copy is desktop-only. */}
+        <div className="hidden md:flex md:w-auto md:min-w-[220px] md:shrink-0 md:flex-col md:items-start md:gap-10">
           <Link href="/" className="shrink-0">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={logo} alt="Touchdown" className="h-5 w-auto max-w-none" />
@@ -120,7 +123,7 @@ export default function Footer({
           </div>
         </div>
 
-        <div className="flex w-full flex-col items-center gap-6 py-8 md:w-auto md:min-w-[220px] md:items-end md:py-0">
+        <div className="flex w-full flex-col items-end gap-6 py-8 text-right md:w-auto md:min-w-[220px] md:items-end md:py-0">
           <p className="font-switzer text-2xl font-light tracking-tight md:text-3xl">
             {tagline}
           </p>
@@ -132,7 +135,23 @@ export default function Footer({
         </div>
       </div>
 
-      <div className="relative flex w-full flex-col items-center gap-4 border-t border-aquatic/50 px-6 py-6 text-center md:px-16">
+      <div className="relative flex w-full flex-col items-center gap-6 border-t border-aquatic/50 px-6 py-6 text-center md:gap-4 md:px-16">
+        {/* Mobile-only: logo + social icons, left-aligned, moved down here
+            from the top of the footer per request - desktop keeps its own
+            copy up in the header row above, so this is hidden there. */}
+        <div className="flex w-full flex-col items-start gap-6 text-left md:hidden">
+          <Link href="/" className="shrink-0">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={logo} alt="Touchdown" className="h-5 w-auto max-w-none" />
+          </Link>
+          <div className="flex gap-6">
+            <a href={instagram} target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="transition hover:text-cta"><InstagramIcon /></a>
+            <a href={telegram} target="_blank" rel="noopener noreferrer" aria-label="Telegram" className="transition hover:text-cta"><TelegramIcon /></a>
+            <a href={facebook} target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="transition hover:text-cta"><FacebookIcon /></a>
+            <a href={whatsapp} target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" className="transition hover:text-cta"><WhatsappIcon /></a>
+          </div>
+        </div>
+
         <p className="mx-auto font-switzer text-base font-light text-aquatic">
           © {new Date().getFullYear()} Touchdown Space. All rights reserved.
           <br />
