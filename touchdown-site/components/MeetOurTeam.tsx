@@ -9,6 +9,15 @@ import Blob from "./Blob";
 import Reveal from "./Reveal";
 import ArticleModal from "./ArticleModal";
 
+// Per-member vertical crop offset for the hero photo (CSS object-position
+// Y%). Most source photos read fine cropped from the very top (0%, the
+// default below); a few have extra blank studio backdrop above the
+// subject's head, so only those get nudged down here instead of shifting
+// the shared default and risking clipping into everyone else's hair.
+const PHOTO_Y_OFFSET_BY_NAME: Record<string, number> = {
+  "Maksim Kalnibolotskii": 18,
+};
+
 function TeamCard({
   member,
   index,
@@ -32,12 +41,18 @@ function TeamCard({
             merged into the card's own dark-ocean-blue background below it -
             reading as one big black slab rather than a photo + card. A
             shorter crop keeps the frame on face/shoulders and trims that
-            excess torso, so the photo's own bottom edge stays visible. */}
+            excess torso, so the photo's own bottom edge stays visible.
+
+            The Y offset defaults to 0% (top-anchored, same as before) and
+            is only overridden per-member via PHOTO_Y_OFFSET_BY_NAME above -
+            set as an inline style since Tailwind can't generate an
+            arbitrary-value class from a runtime variable. */}
         <FadeImage
           src={member.image}
           alt={member.name}
           wrapperClassName="h-full w-full"
-          className="h-full w-full object-cover object-top"
+          className="h-full w-full object-cover"
+          style={{ objectPosition: `50% ${PHOTO_Y_OFFSET_BY_NAME[member.name] ?? 0}%` }}
         />
       </button>
 
