@@ -2,16 +2,16 @@
 // converted to percentages of total page height. That page height has
 // drifted since (sections got resized/tightened over many edits), so these
 // percentages are an approximation of where each blob lands today - not
-// exact. Two of the original 5 are left out on purpose:
-//   - the one that sat around What You Get (~39.5%)
-//   - the one that sat around Reviews/FAQ (~90.2%)
-// both were reported as an unwanted glow over those specific sections.
-// The other three are kept for the rest of the page's ambient lighting.
+// exact, and each one has needed re-tuning as sections were resized:
+//   - the one that sat around What You Get (~39.5%) was removed
+//   - the one that sat around Reviews/FAQ (~90.2%) was removed
+//   - the middle one (was 55.6%) was still landing on What You Get, so
+//     it's nudged down to 63% to land on Training Rhythm instead
 // If one of these still lands somewhere unwanted, nudge/remove that entry
 // rather than disabling the whole layer again.
 const blobs = [
   { top: "16.8%", left: "-23.6%", size: 900 },
-  { top: "55.6%", left: "-10.8%", size: 900 },
+  { top: "63%", left: "-10.8%", size: 900 },
   { top: "75.7%", left: "83.3%", size: 950 },
 ];
 

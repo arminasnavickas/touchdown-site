@@ -123,35 +123,38 @@ export default function Footer({
           </div>
         </div>
 
-        <div className="flex w-full flex-col items-end gap-6 py-8 text-right md:w-auto md:min-w-[220px] md:items-end md:py-0">
-          <p className="font-switzer text-2xl font-light tracking-tight md:text-3xl">
-            {tagline}
-          </p>
-          <div className="flex flex-col gap-3">
-            <BookInButton className="w-fit rounded-[6px] bg-cta px-8 py-4 text-center font-switzer text-base font-medium uppercase tracking-wide text-white transition-all duration-200 ease-out hover:bg-aquatic hover:text-dark-ocean-blue hover:scale-105 hover:shadow-lg hover:shadow-cta/40 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cta focus-visible:ring-offset-2">
-              Book in
-            </BookInButton>
+        <div className="flex w-full flex-row items-center justify-between gap-6 py-8 md:w-auto md:min-w-[220px] md:items-end md:py-0">
+          {/* Mobile-only: logo + social icons, now aligned in the same row
+              as Ready to Dive In / Book In instead of down in the bottom
+              bar - desktop keeps its own separate copy up at the start of
+              the header row above, so this is hidden there. */}
+          <div className="flex flex-col items-start gap-6 text-left md:hidden">
+            <Link href="/" className="shrink-0">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={logo} alt="Touchdown" className="h-5 w-auto max-w-none" />
+            </Link>
+            <div className="flex gap-6">
+              <a href={instagram} target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="transition hover:text-cta"><InstagramIcon /></a>
+              <a href={telegram} target="_blank" rel="noopener noreferrer" aria-label="Telegram" className="transition hover:text-cta"><TelegramIcon /></a>
+              <a href={facebook} target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="transition hover:text-cta"><FacebookIcon /></a>
+              <a href={whatsapp} target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" className="transition hover:text-cta"><WhatsappIcon /></a>
+            </div>
+          </div>
+
+          <div className="flex flex-col items-end gap-6 text-right">
+            <p className="font-switzer text-2xl font-light tracking-tight md:text-3xl">
+              {tagline}
+            </p>
+            <div className="flex flex-col gap-3">
+              <BookInButton className="w-fit rounded-[6px] bg-cta px-8 py-4 text-center font-switzer text-base font-medium uppercase tracking-wide text-white transition-all duration-200 ease-out hover:bg-aquatic hover:text-dark-ocean-blue hover:scale-105 hover:shadow-lg hover:shadow-cta/40 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cta focus-visible:ring-offset-2">
+                Book in
+              </BookInButton>
+            </div>
           </div>
         </div>
       </div>
 
-      <div className="relative flex w-full flex-col items-center gap-6 border-t border-aquatic/50 px-6 py-6 text-center md:gap-4 md:px-16">
-        {/* Mobile-only: logo + social icons, left-aligned, moved down here
-            from the top of the footer per request - desktop keeps its own
-            copy up in the header row above, so this is hidden there. */}
-        <div className="flex w-full flex-col items-start gap-6 text-left md:hidden">
-          <Link href="/" className="shrink-0">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={logo} alt="Touchdown" className="h-5 w-auto max-w-none" />
-          </Link>
-          <div className="flex gap-6">
-            <a href={instagram} target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="transition hover:text-cta"><InstagramIcon /></a>
-            <a href={telegram} target="_blank" rel="noopener noreferrer" aria-label="Telegram" className="transition hover:text-cta"><TelegramIcon /></a>
-            <a href={facebook} target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="transition hover:text-cta"><FacebookIcon /></a>
-            <a href={whatsapp} target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" className="transition hover:text-cta"><WhatsappIcon /></a>
-          </div>
-        </div>
-
+      <div className="relative flex w-full flex-col items-center gap-4 border-t border-aquatic/50 px-6 py-6 text-center md:px-16">
         <p className="mx-auto font-switzer text-base font-light text-aquatic">
           © {new Date().getFullYear()} Touchdown Space. All rights reserved.
           <br />
