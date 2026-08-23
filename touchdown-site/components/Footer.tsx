@@ -106,29 +106,32 @@ export default function Footer({
           </div>
         </div>
 
-        {/* Two separate rows, cross-paired: tagline sits across from the
-            logo, and the Book In button sits across from the social icons -
-            matching the reference layout exactly rather than stacking logo
-            above icons opposite tagline above button. */}
-        <div className="flex w-full flex-row items-center justify-between gap-6 pt-8">
-          <p className="font-switzer text-2xl font-light tracking-tight md:text-3xl">
-            {tagline}
-          </p>
-          <Link href="/" className="shrink-0">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={logo} alt="Touchdown" className="h-5 w-auto max-w-none" />
-          </Link>
-        </div>
+        {/* Single block, no divider inside it - tagline+button form a left
+            column and logo+icons form a right column, each column's own
+            items-end/items-start keeping the logo and the icon row flush
+            against the same right edge so they read as one aligned group
+            instead of two independently-centered rows. */}
+        <div className="flex w-full flex-row items-start justify-between gap-6 py-6">
+          <div className="flex flex-col items-start gap-4">
+            <p className="font-switzer text-2xl font-light tracking-tight md:text-3xl">
+              {tagline}
+            </p>
+            <BookInButton className="w-fit rounded-[6px] bg-cta px-8 py-4 text-center font-switzer text-base font-medium uppercase tracking-wide text-white transition-all duration-200 ease-out hover:bg-aquatic hover:text-dark-ocean-blue hover:scale-105 hover:shadow-lg hover:shadow-cta/40 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cta focus-visible:ring-offset-2">
+              Book in
+            </BookInButton>
+          </div>
 
-        <div className="flex w-full flex-row items-center justify-between gap-6 py-8">
-          <BookInButton className="w-fit rounded-[6px] bg-cta px-8 py-4 text-center font-switzer text-base font-medium uppercase tracking-wide text-white transition-all duration-200 ease-out hover:bg-aquatic hover:text-dark-ocean-blue hover:scale-105 hover:shadow-lg hover:shadow-cta/40 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cta focus-visible:ring-offset-2">
-            Book in
-          </BookInButton>
-          <div className="flex gap-6">
-            <a href={instagram} target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="transition hover:text-cta"><InstagramIcon /></a>
-            <a href={telegram} target="_blank" rel="noopener noreferrer" aria-label="Telegram" className="transition hover:text-cta"><TelegramIcon /></a>
-            <a href={facebook} target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="transition hover:text-cta"><FacebookIcon /></a>
-            <a href={whatsapp} target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" className="transition hover:text-cta"><WhatsappIcon /></a>
+          <div className="flex flex-col items-end gap-4">
+            <Link href="/" className="shrink-0">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={logo} alt="Touchdown" className="h-5 w-auto max-w-none" />
+            </Link>
+            <div className="flex gap-6">
+              <a href={instagram} target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="transition hover:text-cta"><InstagramIcon /></a>
+              <a href={telegram} target="_blank" rel="noopener noreferrer" aria-label="Telegram" className="transition hover:text-cta"><TelegramIcon /></a>
+              <a href={facebook} target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="transition hover:text-cta"><FacebookIcon /></a>
+              <a href={whatsapp} target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" className="transition hover:text-cta"><WhatsappIcon /></a>
+            </div>
           </div>
         </div>
       </div>
