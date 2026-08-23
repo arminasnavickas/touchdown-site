@@ -87,6 +87,40 @@ export default function Footer({
           CTA instead of styling like the mobile version). Replicating the
           mobile structure everywhere avoids that. */}
       <div className="flex w-full flex-col items-center divide-y divide-white/10 px-6 text-center md:px-16">
+        {/* Explicit 2x2 grid (rather than two independent flex columns) so
+            each row's two cells share one grid row track, sized to the
+            taller of the two. Every cell wraps its content in flex
+            items-center, so row 1 (tagline / logo) and row 2 (BOOK IN
+            button / social icons) each center vertically within their own
+            shared row height - landing each pair's middle together even
+            though they sit in different columns. Now the first block in
+            the footer overall (moved above the links grid) per request. */}
+        <div className="grid w-full grid-cols-2 grid-rows-2 gap-x-8 gap-y-4 py-6">
+          <div className="col-start-1 row-start-1 flex items-center">
+            <p className="text-left font-switzer text-2xl font-light tracking-tight md:text-3xl">
+              {tagline}
+            </p>
+          </div>
+          <div className="col-start-2 row-start-1 flex items-center justify-start">
+            <Link href="/" className="shrink-0">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={logo} alt="Touchdown" className="h-5 w-auto max-w-none" />
+            </Link>
+          </div>
+
+          <div className="col-start-1 row-start-2 flex items-center">
+            <BookInButton className="w-fit rounded-[6px] bg-cta px-8 py-4 text-center font-switzer text-base font-medium uppercase tracking-wide text-white transition-all duration-200 ease-out hover:bg-aquatic hover:text-dark-ocean-blue hover:scale-105 hover:shadow-lg hover:shadow-cta/40 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cta focus-visible:ring-offset-2">
+              Book in
+            </BookInButton>
+          </div>
+          <div className="col-start-2 row-start-2 flex items-center gap-6">
+            <a href={instagram} target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="transition hover:text-cta"><InstagramIcon /></a>
+            <a href={telegram} target="_blank" rel="noopener noreferrer" aria-label="Telegram" className="transition hover:text-cta"><TelegramIcon /></a>
+            <a href={facebook} target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="transition hover:text-cta"><FacebookIcon /></a>
+            <a href={whatsapp} target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" className="transition hover:text-cta"><WhatsappIcon /></a>
+          </div>
+        </div>
+
         <div className="grid w-full grid-cols-2 gap-8 py-8 text-left">
           <FooterColumn title={aboutTitle} links={aboutLinks} />
           <FooterColumn title={experienceTitle} links={experienceLinks} />
@@ -109,37 +143,6 @@ export default function Footer({
             <p className="font-switzer text-lg font-light text-white/50">
               {location}
             </p>
-          </div>
-        </div>
-
-        {/* Grid (matching the links block's own grid-cols-2/gap-8) instead
-            of edge-to-edge flex justify-between - this keeps the right
-            column's left edge lined up with the Experience/Contact column
-            above it instead of the logo+icons pushing all the way out to
-            the far right edge. Icons are centered under the logo (not
-            right-aligned to it) since the icon row is wider than the logo
-            image itself. */}
-        <div className="grid w-full grid-cols-2 gap-8 py-6">
-          <div className="flex flex-col items-start gap-4">
-            <p className="font-switzer text-2xl font-light tracking-tight md:text-3xl">
-              {tagline}
-            </p>
-            <BookInButton className="w-fit rounded-[6px] bg-cta px-8 py-4 text-center font-switzer text-base font-medium uppercase tracking-wide text-white transition-all duration-200 ease-out hover:bg-aquatic hover:text-dark-ocean-blue hover:scale-105 hover:shadow-lg hover:shadow-cta/40 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cta focus-visible:ring-offset-2">
-              Book in
-            </BookInButton>
-          </div>
-
-          <div className="flex flex-col items-start gap-4">
-            <Link href="/" className="shrink-0">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={logo} alt="Touchdown" className="h-5 w-auto max-w-none" />
-            </Link>
-            <div className="flex gap-6">
-              <a href={instagram} target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="transition hover:text-cta"><InstagramIcon /></a>
-              <a href={telegram} target="_blank" rel="noopener noreferrer" aria-label="Telegram" className="transition hover:text-cta"><TelegramIcon /></a>
-              <a href={facebook} target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="transition hover:text-cta"><FacebookIcon /></a>
-              <a href={whatsapp} target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" className="transition hover:text-cta"><WhatsappIcon /></a>
-            </div>
           </div>
         </div>
       </div>
