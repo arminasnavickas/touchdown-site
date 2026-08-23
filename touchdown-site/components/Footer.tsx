@@ -23,7 +23,7 @@ const hrefById: Record<string, string> = {
 
 function FooterColumn({ title, links }: { title: string; links: FooterLink[] }) {
   return (
-    <div className="flex w-full flex-col items-start gap-4 text-left md:w-auto md:min-w-[120px]">
+    <div className="flex w-full flex-col items-start gap-4 text-left">
       <p className="font-switzer text-lg font-medium">{title}</p>
       {links.map((link) => (
         <a
@@ -74,36 +74,19 @@ export default function Footer({
 }) {
   return (
     <footer id="site-footer" className="w-full flex flex-col items-center gap-14 pt-12 text-white" style={{ backgroundColor: "#003252" }}>
-      <div className="flex w-full flex-col items-center divide-y divide-white/10 px-6 text-center md:flex-row md:flex-wrap md:items-start md:justify-between md:gap-10 md:divide-y-0 md:px-16 md:text-left">
-        {/* Desktop keeps the logo/socials as the first block up here; on
-            mobile it's moved down into the bottom bar instead (see below),
-            so this copy is desktop-only. */}
-        <div className="hidden md:flex md:w-auto md:min-w-[220px] md:shrink-0 md:flex-col md:items-start md:gap-10">
-          <Link href="/" className="shrink-0">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={logo} alt="Touchdown" className="h-5 w-auto max-w-none" />
-          </Link>
-          <div className="flex gap-6">
-            <a href={instagram} target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="transition hover:text-cta"><InstagramIcon /></a>
-            <a href={telegram} target="_blank" rel="noopener noreferrer" aria-label="Telegram" className="transition hover:text-cta"><TelegramIcon /></a>
-            <a href={facebook} target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="transition hover:text-cta"><FacebookIcon /></a>
-            <a href={whatsapp} target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" className="transition hover:text-cta"><WhatsappIcon /></a>
-          </div>
-        </div>
-
-        {/* Grid on mobile so the four link groups sit 2-per-row instead of
-            stacking one at a time full-width; desktop switches back to the
-            original flex-row wrap via md:flex. Each column is left-aligned
-            (not centered) on mobile too, matching the reference layout -
-            the outer divide-y on the wrapper already gives the horizontal
-            rule above and below this block, so no extra divider is needed
-            here. */}
-        <div className="grid w-full grid-cols-2 gap-8 py-8 text-left md:flex md:w-auto md:flex-1 md:flex-row md:flex-wrap md:items-start md:content-start md:justify-center md:gap-10 md:py-0">
+      {/* Unified layout at every breakpoint (no separate desktop variant) -
+          this used to switch to a flex-row-wrap layout with its own
+          top-of-footer logo block from md up, which produced an awkward
+          in-between state at tablet widths (logo wrapping down next to the
+          CTA instead of styling like the mobile version). Replicating the
+          mobile structure everywhere avoids that. */}
+      <div className="flex w-full flex-col items-center divide-y divide-white/10 px-6 text-center md:px-16">
+        <div className="grid w-full grid-cols-2 gap-8 py-8 text-left">
           <FooterColumn title={aboutTitle} links={aboutLinks} />
           <FooterColumn title={experienceTitle} links={experienceLinks} />
           <FooterColumn title={legalTitle} links={legalLinks} />
 
-          <div className="flex w-full flex-col items-start gap-4 md:w-auto md:min-w-[120px]">
+          <div className="flex w-full flex-col items-start gap-4">
             <p className="font-switzer text-lg font-medium">{contactTitle}</p>
             <a
               href={`mailto:${email}`}
@@ -123,33 +106,29 @@ export default function Footer({
           </div>
         </div>
 
-        <div className="flex w-full flex-row items-center justify-between gap-6 py-8 md:w-auto md:min-w-[220px] md:items-end md:py-0">
-          {/* Mobile-only: logo + social icons, now aligned in the same row
-              as Ready to Dive In / Book In instead of down in the bottom
-              bar - desktop keeps its own separate copy up at the start of
-              the header row above, so this is hidden there. */}
-          <div className="flex flex-col items-start gap-6 text-left md:hidden">
-            <Link href="/" className="shrink-0">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={logo} alt="Touchdown" className="h-5 w-auto max-w-none" />
-            </Link>
-            <div className="flex gap-6">
-              <a href={instagram} target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="transition hover:text-cta"><InstagramIcon /></a>
-              <a href={telegram} target="_blank" rel="noopener noreferrer" aria-label="Telegram" className="transition hover:text-cta"><TelegramIcon /></a>
-              <a href={facebook} target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="transition hover:text-cta"><FacebookIcon /></a>
-              <a href={whatsapp} target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" className="transition hover:text-cta"><WhatsappIcon /></a>
-            </div>
-          </div>
+        {/* Two separate rows, cross-paired: tagline sits across from the
+            logo, and the Book In button sits across from the social icons -
+            matching the reference layout exactly rather than stacking logo
+            above icons opposite tagline above button. */}
+        <div className="flex w-full flex-row items-center justify-between gap-6 pt-8">
+          <p className="font-switzer text-2xl font-light tracking-tight md:text-3xl">
+            {tagline}
+          </p>
+          <Link href="/" className="shrink-0">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={logo} alt="Touchdown" className="h-5 w-auto max-w-none" />
+          </Link>
+        </div>
 
-          <div className="flex flex-col items-end gap-6 text-right">
-            <p className="font-switzer text-2xl font-light tracking-tight md:text-3xl">
-              {tagline}
-            </p>
-            <div className="flex flex-col gap-3">
-              <BookInButton className="w-fit rounded-[6px] bg-cta px-8 py-4 text-center font-switzer text-base font-medium uppercase tracking-wide text-white transition-all duration-200 ease-out hover:bg-aquatic hover:text-dark-ocean-blue hover:scale-105 hover:shadow-lg hover:shadow-cta/40 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cta focus-visible:ring-offset-2">
-                Book in
-              </BookInButton>
-            </div>
+        <div className="flex w-full flex-row items-center justify-between gap-6 py-8">
+          <BookInButton className="w-fit rounded-[6px] bg-cta px-8 py-4 text-center font-switzer text-base font-medium uppercase tracking-wide text-white transition-all duration-200 ease-out hover:bg-aquatic hover:text-dark-ocean-blue hover:scale-105 hover:shadow-lg hover:shadow-cta/40 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cta focus-visible:ring-offset-2">
+            Book in
+          </BookInButton>
+          <div className="flex gap-6">
+            <a href={instagram} target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="transition hover:text-cta"><InstagramIcon /></a>
+            <a href={telegram} target="_blank" rel="noopener noreferrer" aria-label="Telegram" className="transition hover:text-cta"><TelegramIcon /></a>
+            <a href={facebook} target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="transition hover:text-cta"><FacebookIcon /></a>
+            <a href={whatsapp} target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" className="transition hover:text-cta"><WhatsappIcon /></a>
           </div>
         </div>
       </div>
