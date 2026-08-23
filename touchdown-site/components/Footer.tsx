@@ -106,12 +106,14 @@ export default function Footer({
           </div>
         </div>
 
-        {/* Single block, no divider inside it - tagline+button form a left
-            column and logo+icons form a right column, each column's own
-            items-end/items-start keeping the logo and the icon row flush
-            against the same right edge so they read as one aligned group
-            instead of two independently-centered rows. */}
-        <div className="flex w-full flex-row items-start justify-between gap-6 py-6">
+        {/* Grid (matching the links block's own grid-cols-2/gap-8) instead
+            of edge-to-edge flex justify-between - this keeps the right
+            column's left edge lined up with the Experience/Contact column
+            above it instead of the logo+icons pushing all the way out to
+            the far right edge. Icons are centered under the logo (not
+            right-aligned to it) since the icon row is wider than the logo
+            image itself. */}
+        <div className="grid w-full grid-cols-2 gap-8 py-6">
           <div className="flex flex-col items-start gap-4">
             <p className="font-switzer text-2xl font-light tracking-tight md:text-3xl">
               {tagline}
@@ -121,7 +123,7 @@ export default function Footer({
             </BookInButton>
           </div>
 
-          <div className="flex flex-col items-end gap-4">
+          <div className="flex flex-col items-center gap-4">
             <Link href="/" className="shrink-0">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={logo} alt="Touchdown" className="h-5 w-auto max-w-none" />
