@@ -46,14 +46,24 @@ function TeamCard({
             The Y offset defaults to 0% (top-anchored, same as before) and
             is only overridden per-member via PHOTO_Y_OFFSET_BY_NAME above -
             set as an inline style since Tailwind can't generate an
-            arbitrary-value class from a runtime variable. */}
-        <FadeImage
-          src={member.image}
-          alt={member.name}
-          wrapperClassName="h-full w-full"
-          className="h-full w-full object-cover"
-          style={{ objectPosition: `50% ${PHOTO_Y_OFFSET_BY_NAME[member.name] ?? 0}%` }}
-        />
+            arbitrary-value class from a runtime variable.
+
+            The wrapping div here bleeds 1px past the left/right edges
+            (clipped by this button's own overflow-hidden either way), and
+            the image itself is scaled up slightly (scale-105) so it
+            overshoots its box on every side - between the two, any
+            subpixel width-rounding gap that was showing the card's
+            dark-ocean-blue background as a thin dark line down the right
+            edge of the photo is fully covered. */}
+        <div className="absolute -inset-x-px inset-y-0">
+          <FadeImage
+            src={member.image}
+            alt={member.name}
+            wrapperClassName="h-full w-full"
+            className="h-full w-full scale-105 object-cover"
+            style={{ objectPosition: `50% ${PHOTO_Y_OFFSET_BY_NAME[member.name] ?? 0}%` }}
+          />
+        </div>
       </button>
 
       {/* data-fab-avoid: same floating Book In/back-to-top overlap issue we
