@@ -72,13 +72,13 @@ export default function Footer({
   legalLinks: FooterLink[];
   contactTitle: string;
 }) {
+  // No gap between the two direct children here - the bottom bar below
+  // already has its own symmetric py-6 around the copyright/back-to-top
+  // content, and an outer gap on top of that was making the space above
+  // the copyright text (gap + pt-6) bigger than the space below it
+  // (pb-6 alone), pushing the text visually low instead of centered in
+  // its bordered strip.
   return (
-    {/* No gap between the two direct children here - the bottom bar below
-        already has its own symmetric py-6 around the copyright/back-to-top
-        content, and an outer gap on top of that was making the space above
-        the copyright text (gap + pt-6) bigger than the space below it
-        (pb-6 alone), pushing the text visually low instead of centered in
-        its bordered strip. */}
     <footer id="site-footer" className="w-full flex flex-col items-center pt-12 text-white" style={{ backgroundColor: "#003252" }}>
       {/* Unified layout at every breakpoint (no separate desktop variant) -
           this used to switch to a flex-row-wrap layout with its own
