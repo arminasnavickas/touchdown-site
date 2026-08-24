@@ -18,6 +18,18 @@ const PHOTO_Y_OFFSET_BY_NAME: Record<string, number> = {
   "Maksim Kalnibolotskii": 18,
 };
 
+// Small fixed-pixel nudge on top of the percentage offset above, for
+// fine-tuning individual photos a few px further down without having to
+// re-derive their percentage equivalent (which shifts with each photo's
+// own height). Combined with the percentage offset via calc() below.
+const PHOTO_Y_NUDGE_PX: Record<string, number> = {
+  Gus: 10,
+  Omar: 10,
+  "Maksim Kalnibolotskii": 15,
+  Denis: 15,
+  Ilia: 15,
+};
+
 function TeamCard({
   member,
   index,
@@ -61,7 +73,9 @@ function TeamCard({
             alt={member.name}
             wrapperClassName="h-full w-full"
             className="h-full w-full scale-105 object-cover"
-            style={{ objectPosition: `50% ${PHOTO_Y_OFFSET_BY_NAME[member.name] ?? 0}%` }}
+            style={{
+              objectPosition: `50% calc(${PHOTO_Y_OFFSET_BY_NAME[member.name] ?? 0}% + ${PHOTO_Y_NUDGE_PX[member.name] ?? 0}px)`,
+            }}
           />
         </div>
       </button>
