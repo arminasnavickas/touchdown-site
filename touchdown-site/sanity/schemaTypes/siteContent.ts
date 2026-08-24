@@ -136,9 +136,15 @@ export default defineType({
     }),
     defineField({
       name: "footerTagline",
-      title: "Footer tagline (next to the Book in button)",
+      title: "Footer tagline (the large CTA headline)",
       type: "string",
       initialValue: "Ready to Dive In?",
+    }),
+    defineField({
+      name: "footerCtaSubcopy",
+      title: "Footer CTA subcopy (small line under the tagline)",
+      type: "string",
+      initialValue: "Your next dive starts here.",
     }),
     defineField({
       name: "headerNavLinks",
@@ -176,6 +182,7 @@ export default defineType({
     defineField({
       name: "footerLegalTitle",
       title: "Footer \"Legal\" column title",
+      description: "Not currently displayed - Legal links now render as a compact inline list in the footer's bottom bar instead of a full column, and don't have a visible title there. Kept in case that layout changes again.",
       type: "string",
       initialValue: "Legal",
     }),
@@ -190,7 +197,7 @@ export default defineType({
       name: "footerContactTitle",
       title: "Footer \"Contact\" column title",
       type: "string",
-      initialValue: "Contact",
+      initialValue: "Get in touch",
     }),
     defineField({
       name: "socialInstagram",

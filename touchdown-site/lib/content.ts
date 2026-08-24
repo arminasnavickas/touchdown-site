@@ -587,6 +587,9 @@ export type SiteContent = {
   footerPhone: string;
   footerLocation: string;
   footerTagline: string;
+  // Short supporting line under the tagline now that the footer's CTA block
+  // is the hero of the section rather than a small headline - see Footer.tsx.
+  footerCtaSubcopy: string;
   footerAboutTitle: string;
   footerAboutLinks: FooterLink[];
   footerExperienceTitle: string;
@@ -630,6 +633,7 @@ export const fallbackSiteContent: SiteContent = {
   footerPhone: "+20XXXXXXXXX",
   footerLocation: "Dahab, Egypt",
   footerTagline: "Ready to Dive In?",
+  footerCtaSubcopy: "Your next dive starts here.",
   footerAboutTitle: "About",
   footerAboutLinks: [
     { id: "about-us", label: "About Us" },
@@ -649,7 +653,7 @@ export const fallbackSiteContent: SiteContent = {
     { id: "privacy-policy", label: "Privacy Policy" },
     { id: "terms-and-conditions", label: "Terms & Conditions" },
   ],
-  footerContactTitle: "Contact",
+  footerContactTitle: "Get in touch",
   headerNavLinks: [
     { id: "about-us", label: "About us" },
     { id: "how-it-works", label: "How it works" },
@@ -769,6 +773,11 @@ export type HowItWorksStep = {
   title: string;
   image: string;
   paragraphs: string[];
+  // Scannable "what you'll learn" points shown in the step's modal, below a
+  // divider, instead of the second long paragraph these used to carry. Same
+  // underlying information, restructured so the modal reads as a focused
+  // answer rather than a full article.
+  learnPoints?: { title: string; copy: string }[];
 };
 
 export const fallbackHowItWorksSteps: HowItWorksStep[] = [
@@ -777,7 +786,20 @@ export const fallbackHowItWorksSteps: HowItWorksStep[] = [
     image: "/images/howitworks-theory.jpg",
     paragraphs: [
       "Learn the foundations of freediving through daily lectures and classes. We combine science, physiology, and mindfulness to prepare you mentally and physically for every dive. With the right knowledge, you'll feel confident and focused before entering the water.",
-      "We cover relaxation, focus and sensitivity as the mental foundation, paired with breathing and equalisation as the physical core of every dive. From there, we build mobility and technique, along with the equipment knowledge that supports safe, efficient diving. You'll also learn how recovery, periodisation and strategy fit into long-term progress, all grounded in a strong safety-first approach.",
+    ],
+    learnPoints: [
+      {
+        title: "Relaxation & focus",
+        copy: "Develop the mental calm needed to dive deeper, with less effort.",
+      },
+      {
+        title: "Breathing & equalisation",
+        copy: "Build the physical foundations of safe, confident diving.",
+      },
+      {
+        title: "Mobility & technique",
+        copy: "Improve efficiency and movement in the water, backed by equipment know-how.",
+      },
     ],
   },
   {
@@ -785,7 +807,20 @@ export const fallbackHowItWorksSteps: HowItWorksStep[] = [
     image: "/images/howitworks-practice.jpg",
     paragraphs: [
       "Apply your learning in real-time with expert instructors and safety teams by your side. Training takes place in world-renowned dive sites such as Egypt's Blue Hole, giving you the chance to experience depth while building trust and skill in open water.",
-      "Our practice combines yoga for flexibility and breath control with line training and dry practice to refine technique out of the water. Recovery is built into the rhythm too, with bike rides, sauna sessions and ice baths supporting your body between training days, so you arrive at every session ready to perform and progress.",
+    ],
+    learnPoints: [
+      {
+        title: "Open water training",
+        copy: "Put your skills into practice at a world-renowned site, with safety teams alongside you.",
+      },
+      {
+        title: "Line & dry practice",
+        copy: "Refine technique out of the water so it carries straight into your next dive.",
+      },
+      {
+        title: "Recovery",
+        copy: "Yoga, sauna and ice baths keep your body ready to perform, session after session.",
+      },
     ],
   },
   {
@@ -793,7 +828,20 @@ export const fallbackHowItWorksSteps: HowItWorksStep[] = [
     image: "/images/howitworks-repetition.jpg",
     paragraphs: [
       "Consistency is the key to progress. Through tailored dry and in-water training, you'll train your body and nervous system to adapt. Each session improves technique, efficiency, and relaxation, making every dive feel easier and more natural.",
-      "Our rhythm is built around 6 days a week of training, split between 4 open water days and 2 dry days, giving your body the structure it needs to adapt. Through a steady mix of open water and dry drills, you'll build volume gradually and safely, turning consistent repetition into lasting progress you can feel in every session.",
+    ],
+    learnPoints: [
+      {
+        title: "Structured rhythm",
+        copy: "Six days a week, split between open water and dry training days.",
+      },
+      {
+        title: "Consistent volume",
+        copy: "Build up gradually and safely, so progress compounds rather than plateaus.",
+      },
+      {
+        title: "Nervous system adaptation",
+        copy: "Every rep makes diving feel more natural, not just more familiar.",
+      },
     ],
   },
   {
@@ -801,7 +849,20 @@ export const fallbackHowItWorksSteps: HowItWorksStep[] = [
     image: "/images/howitworks-results.jpg",
     paragraphs: [
       "Your dedication brings results. With structure, guidance, and proven methods, you'll discover how much deeper you can safely go. The true transformation comes from your commitment - and together, we'll help turn your diving goals into reality.",
-      "Along the way, you'll build genuine mastery and depth, developing the nervous system regulation, awareness, control and sensitivity that define an accomplished freediver. These are the skills that carry far beyond the water, shaping how you move, breathe and respond under pressure in every part of life.",
+    ],
+    learnPoints: [
+      {
+        title: "Depth with control",
+        copy: "Discover how much further you can safely go, on your own timeline.",
+      },
+      {
+        title: "Nervous system mastery",
+        copy: "Build the regulation, awareness and sensitivity that define a skilled freediver.",
+      },
+      {
+        title: "Skills beyond the water",
+        copy: "Carry that composure and control into how you move and respond every day.",
+      },
     ],
   },
 ];

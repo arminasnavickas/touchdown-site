@@ -27,6 +27,7 @@ export default async function SiteLayout({
             phone={siteContent.footerPhone}
             location={siteContent.footerLocation}
             tagline={siteContent.footerTagline}
+            ctaSubcopy={siteContent.footerCtaSubcopy}
             instagram={siteContent.socialInstagram}
             telegram={siteContent.socialTelegram}
             facebook={siteContent.socialFacebook}
@@ -35,7 +36,6 @@ export default async function SiteLayout({
             aboutLinks={siteContent.footerAboutLinks}
             experienceTitle={siteContent.footerExperienceTitle}
             experienceLinks={siteContent.footerExperienceLinks}
-            legalTitle={siteContent.footerLegalTitle}
             legalLinks={siteContent.footerLegalLinks}
             contactTitle={siteContent.footerContactTitle}
           />

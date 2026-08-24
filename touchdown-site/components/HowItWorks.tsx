@@ -136,9 +136,18 @@ export default function HowItWorks({
         <ArticleModal
           content={{
             title: steps[openStep].title,
-            kicker: "How it works",
+            // "01 · How it works" - carries the same step-numbering system
+            // from the card into its expanded state, so the two feel
+            // connected rather than the modal being a generic popup.
+            kicker: `${String(openStep + 1).padStart(2, "0")} · How it works`,
             image: steps[openStep].image,
-            paragraphs: steps[openStep].paragraphs,
+            // Only the short intro paragraph - the old second paragraph's
+            // information now lives in learnPoints below, restructured into
+            // something scannable instead of one more wall of text.
+            paragraphs: [steps[openStep].paragraphs[0]],
+            learnPoints: steps[openStep].learnPoints,
+            ctaLabel: "Book your training",
+            ctaHref: "#schedule",
           }}
           onClose={() => setOpenStep(null)}
           onPrev={() => setOpenStep((steps.length + openStep - 1) % steps.length)}
