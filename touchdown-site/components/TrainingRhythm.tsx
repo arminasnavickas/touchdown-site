@@ -48,7 +48,7 @@ export default function TrainingRhythm({
           Derived from the same days array so it can never drift out of
           sync with the list below it. */}
       <Reveal className="relative z-10 flex flex-col items-center gap-3">
-        <p className="font-switzer text-xs font-medium uppercase tracking-[0.2em] text-white/40">
+        <p className="font-switzer text-xs font-medium uppercase tracking-[0.15em] text-white/40">
           Weekly training rhythm
         </p>
         <div className="flex flex-wrap items-center justify-center gap-x-2.5 gap-y-2">
@@ -86,14 +86,14 @@ export default function TrainingRhythm({
                   card grid here. */}
               <div
                 data-fab-avoid
-                className="flex flex-col gap-2 py-5 transition-colors duration-300 [@media(hover:hover)]:hover:bg-white/[0.03] sm:flex-row sm:items-center sm:justify-between sm:gap-6 sm:py-4"
+                className="flex flex-col gap-2 px-4 py-5 transition-colors duration-300 [@media(hover:hover)]:hover:bg-white/[0.03] sm:flex-row sm:items-center sm:justify-between sm:gap-6 sm:px-6 sm:py-4"
               >
                 <div className="flex flex-col gap-1">
-                  <p className="font-switzer text-xs font-medium uppercase tracking-[0.2em] text-white/40">
+                  <p className="font-switzer text-xs font-medium uppercase tracking-[0.15em] text-white/40">
                     {day}
                   </p>
                   <p
-                    className={`flex items-center gap-2 font-switzer text-xl font-light tracking-tight sm:text-2xl ${info.accentClass}`}
+                    className={`flex items-center gap-2 font-switzer text-2xl font-medium tracking-tight sm:text-3xl ${info.accentClass}`}
                   >
                     {info.marker === "dot" ? (
                       <span className="inline-block size-1.5 shrink-0 rounded-full bg-current" />
@@ -104,7 +104,7 @@ export default function TrainingRhythm({
                   </p>
                 </div>
 
-                <div className="flex items-center gap-1.5 font-switzer text-sm text-white/60 sm:text-base">
+                <div className="flex items-center gap-1.5 font-switzer text-sm tabular-nums text-white/60 sm:text-base">
                   {time ? (
                     <>
                       <Clock className="size-4 shrink-0" strokeWidth={1.5} />
