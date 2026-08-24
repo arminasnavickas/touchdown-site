@@ -687,32 +687,43 @@ export type ScheduleCard = {
   image: string;
   copy: string;
   time?: string;
+  // Short action word shown in the time badge ("07:00 · PICK-UP") - see
+  // the badge field comment on ScheduleCardData in ScheduleCard.tsx.
+  badge?: string;
 };
 
+// Copy rewritten as fact + experience (badge/time carries the "what/when",
+// the paragraph carries the "what it's like") rather than one long sentence
+// doing both jobs - shorter and easier to scan now that the title/number
+// moved onto the photo and this text is the panel's only content.
 export const fallbackWaterDayCards: ScheduleCard[] = [
   {
     title: "Preparation",
     image: "/images/water-day-preparation.jpg",
-    copy: "The day starts with a 07:00 taxi pickup for the scenic drive out to the Blue Hole, giving everyone time to settle in, get geared up, and mentally prepare before the first line goes in.",
+    copy: "The day begins with a scenic drive to the Blue Hole. Use the time to settle in, gear up, and get mentally ready before the first line goes in.",
     time: "07:00",
+    badge: "Pick-up",
   },
   {
     title: "Water time",
     image: "/images/water-day-watertime.jpg",
-    copy: "Spend the morning in the water with world-class coaches and safety teams. Sessions focus on technique and progression, with each dive tailored to your goals. You'll learn to relax at depth, refine your form, and build confidence with every session.",
+    copy: "Train in the water with world-class coaches and safety teams, in sessions built around your goals. Relax at depth, refine your form, and build confidence with every dive.",
     time: "07:00 - 12:00",
+    badge: "In water",
   },
   {
     title: "Recovery",
     image: "/images/water-day-recovery.jpg",
-    copy: "After diving, enjoy a relaxed lunch with fellow freedivers and take time to recharge before the evening session. Optional activities like stretching or light training are available in the afternoon.",
+    copy: "Unwind over lunch with fellow freedivers before the evening session. Light stretching or training is available in the afternoon for anyone who wants to keep moving.",
     time: "Afternoon",
+    badge: "Lunch",
   },
   {
     title: "Refinement",
     image: "/images/water-day-refinement.jpg",
-    copy: "The 18:00 dry session covers workshops and guided breathwork focused on equalization, breathing, and mental strategies. On Wednesdays, it's followed by an ice bath and sauna to round out the day.",
+    copy: "An evening dry session covers equalization, breathing, and mindset through guided workshops. On Wednesdays it's followed by an ice bath and sauna to round out the day.",
     time: "18:00",
+    badge: "Workshop",
   },
 ];
 
@@ -720,14 +731,16 @@ export const fallbackDryDayCards: ScheduleCard[] = [
   {
     title: "Yoga",
     image: "/images/dry-day-yoga.jpg",
-    copy: "Begin the day with yoga designed for freedivers. Sessions target recovery, flexibility, and lung capacity, helping you strengthen your foundation and prepare for deeper dives.",
+    copy: "Start the day with yoga built for freedivers - sessions target recovery, flexibility, and lung capacity to strengthen your foundation for deeper dives.",
     time: "09:00",
+    badge: "Yoga",
   },
   {
     title: "Refinement",
     image: "/images/dry-day-refinement.jpg",
-    copy: "At midday, join masterclasses and small-group workshops in the classroom or rooftop space. Training covers equalization, mindset, and guided breathwork to round out your practice.",
+    copy: "Midday masterclasses and small-group workshops cover equalization, mindset, and guided breathwork to round out your practice.",
     time: "12:00",
+    badge: "Workshop",
   },
 ];
 
@@ -1070,11 +1083,11 @@ async function getScheduleCards(section: "Water day" | "Dry day", fallback: Sche
   if (!isSanityConfigured || !sanityClient) return fallback;
   try {
     const items = await sanityClient.fetch(
-      `*[_type == "scheduleCard" && section == $section] | order(order asc){ title, "image": image, copy, time }`,
+      `*[_type == "scheduleCard" && section == $section] | order(order asc){ title, "image": image, copy, time, badge }`,
       { section }
     );
     if (!items?.length) return fallback;
-    return items.map((item: { title: string; image: unknown; copy: string; time: string | null }) => ({
+    return items.map((item: { title: string; image: unknown; copy: string; time: string | null; badge?: string | null }) => ({
       ...item,
       image: urlForImage(item.image as never) || "",
     }));

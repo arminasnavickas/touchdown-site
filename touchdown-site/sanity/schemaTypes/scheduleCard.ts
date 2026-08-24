@@ -16,6 +16,12 @@ export default defineType({
     defineField({ name: "image", title: "Image", type: "image" }),
     defineField({ name: "copy", title: "Copy", type: "text", rows: 4 }),
     defineField({ name: "time", title: "Time", type: "string" }),
+    defineField({
+      name: "badge",
+      title: "Time badge label",
+      description: 'Short action word shown next to the time, e.g. "Pick-up", "In water".',
+      type: "string",
+    }),
     defineField({ name: "order", title: "Order", type: "number" }),
   ],
   orderings: [
