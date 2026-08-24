@@ -74,7 +74,14 @@ function TeamCard({
             wrapperClassName="h-full w-full"
             className="h-full w-full scale-105 object-cover"
             style={{
-              objectPosition: `50% calc(${PHOTO_Y_OFFSET_BY_NAME[member.name] ?? 0}% + ${PHOTO_Y_NUDGE_PX[member.name] ?? 0}px)`,
+              // Subtract, not add: with object-fit: cover, a *lower*
+              // (more negative) offset is what crops the top of the photo
+              // away and reveals more of what's below - same direction as
+              // the existing percentage offsets above. Adding the px nudge
+              // instead pushed the image down past its top-aligned
+              // position and exposed the card's own background as a solid
+              // band across the top of the photo.
+              objectPosition: `50% calc(${PHOTO_Y_OFFSET_BY_NAME[member.name] ?? 0}% - ${PHOTO_Y_NUDGE_PX[member.name] ?? 0}px)`,
             }}
           />
         </div>
