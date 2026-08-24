@@ -44,7 +44,7 @@ export default defineType({
       name: "howItWorksSubtitle",
       title: '"How it works" subtitle',
       type: "string",
-      initialValue: "Patience is key",
+      initialValue: "Learn the fundamentals. Practice with guidance. Progress with confidence.",
     }),
     defineField({
       name: "pricingKicker",
@@ -121,7 +121,7 @@ export default defineType({
       name: "footerEmail",
       title: "Footer email",
       type: "string",
-      initialValue: "info@touchdown-space.com",
+      initialValue: "info@touchdownfreediving.com",
     }),
     defineField({
       name: "footerPhone",
