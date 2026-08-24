@@ -33,6 +33,14 @@ export type ArticleModalContent = {
   // on which reads better for a given caller's content shape.
   subtitle?: string;
   image?: string;
+  // Hero image display tuning. Portraits (Team) want a much taller frame
+  // anchored to the top so a head is never cropped out; landscape/action
+  // shots (How It Works) keep the original compact height and a centered
+  // crop. Both default to "compact"/"cover"/center so existing callers
+  // that don't pass these render exactly as before.
+  imageSize?: "compact" | "tall";
+  imageFit?: "cover" | "contain";
+  imagePosition?: string;
   avatar?: string;
   instagram?: string;
   paragraphs: string[];
@@ -146,63 +154,79 @@ export default function ArticleModal({
         onTouchStart={onTouchStart}
         onTouchEnd={onTouchEnd}
       >
-        {/* Zero-height sticky anchor: keeps this row pinned to the top-right
-            of the visible scroll area (not the document) as the modal's
-            content scrolls, without taking up any layout space itself.
-            Nav counter + close button live together here now, instead of
-            prev/next being large circles floating over the page on either
-            side of the modal - those competed with the reading column for
-            attention and gave no sense of "browsing a set of N". */}
-        <div className="sticky top-0 z-10 h-0 overflow-visible">
-          <div className="absolute right-5 top-5 flex items-center gap-2">
-            {typeof currentIndex === "number" && typeof total === "number" && total > 1 && (
-              <div className="flex items-center gap-1 rounded-full bg-white/80 py-1 pl-1 pr-2.5 text-dark-ocean-blue backdrop-blur-sm">
-                <button
-                  type="button"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onPrev?.();
-                  }}
-                  aria-label="Previous"
-                  className="flex size-7 items-center justify-center rounded-full transition hover:text-cta"
-                >
-                  <ArrowIcon direction="left" className="size-4" />
-                </button>
-                <span className="font-switzer text-xs font-medium tabular-nums text-dark-ocean-blue/60">
-                  {String(currentIndex + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}
-                </span>
-                <button
-                  type="button"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onNext?.();
-                  }}
-                  aria-label="Next"
-                  className="flex size-7 items-center justify-center rounded-full transition hover:text-cta"
-                >
-                  <ArrowIcon direction="right" className="size-4" />
-                </button>
-              </div>
-            )}
-            <button
-              type="button"
-              onClick={onClose}
-              aria-label="Close"
-              className="flex size-12 items-center justify-center rounded-full bg-white/80 text-dark-ocean-blue backdrop-blur-sm transition hover:text-cta"
-            >
-              <CloseIcon />
-            </button>
-          </div>
+        {/* Real header bar (not a floating overlay) - sits in normal flow
+            above the hero image and stays pinned via `sticky` as the modal
+            scrolls, the same way a page header would. Close + prev/next
+            live together here now, off the photograph entirely, instead of
+            translucent circles floating on top of it where they could sit
+            right over a person's face. */}
+        <div className="sticky top-0 z-10 flex items-center justify-end gap-2 rounded-t-lg bg-white px-5 py-3">
+          {typeof currentIndex === "number" && typeof total === "number" && total > 1 && (
+            <div className="flex items-center gap-1 rounded-full bg-dark-ocean-blue/5 py-1 pl-1 pr-2.5 text-dark-ocean-blue">
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onPrev?.();
+                }}
+                aria-label="Previous"
+                className="flex size-7 items-center justify-center rounded-full transition hover:text-cta"
+              >
+                <ArrowIcon direction="left" className="size-4" />
+              </button>
+              <span className="font-switzer text-xs font-medium tabular-nums text-dark-ocean-blue/60">
+                {String(currentIndex + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}
+              </span>
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onNext?.();
+                }}
+                aria-label="Next"
+                className="flex size-7 items-center justify-center rounded-full transition hover:text-cta"
+              >
+                <ArrowIcon direction="right" className="size-4" />
+              </button>
+            </div>
+          )}
+          <button
+            type="button"
+            onClick={onClose}
+            aria-label="Close"
+            className="flex size-10 items-center justify-center rounded-full bg-dark-ocean-blue/5 text-dark-ocean-blue transition hover:bg-dark-ocean-blue/10 hover:text-cta"
+          >
+            <CloseIcon />
+          </button>
         </div>
 
         {content.image && (
-          <FadeImage
-            src={content.image}
-            alt={content.title}
-            eager
-            wrapperClassName="h-[200px] w-full md:h-[300px]"
-            className="h-full w-full object-cover"
-          />
+          // Portraits ("tall") get a much taller frame - fluid between the
+          // mobile and desktop targets via clamp() so it scales with actual
+          // viewport height rather than jumping at a single breakpoint -
+          // anchored top by default so a head planted near the top of the
+          // source photo is never cropped. Landscape/action shots keep the
+          // original compact height and centered crop unless a caller opts
+          // into "tall" or overrides the position/fit directly.
+          <div
+            className={
+              content.imageSize === "tall"
+                ? "h-[clamp(350px,48vh,430px)] w-full overflow-hidden md:h-[clamp(550px,55vh,650px)]"
+                : "h-[200px] w-full overflow-hidden md:h-[300px]"
+            }
+          >
+            <FadeImage
+              src={content.image}
+              alt={content.title}
+              eager
+              wrapperClassName="h-full w-full"
+              className="h-full w-full"
+              style={{
+                objectFit: content.imageFit ?? "cover",
+                objectPosition: content.imagePosition ?? (content.imageSize === "tall" ? "center top" : "center"),
+              }}
+            />
+          </div>
         )}
 
         {/* Generous outer padding + an inner max-w-[560px] reading column -

@@ -17,7 +17,12 @@ export default function Faq({ items }: { items: FaqItem[] }) {
           FAQ
         </h2>
       </Reveal>
-      <div className="relative z-10 flex w-full flex-col">
+      {/* data-fab-avoid: same floating Book Now/back-to-top overlap issue
+          fixed elsewhere (How It Works, Team, footer links) - FAQ was
+          missing this tag, so the fixed stack was sitting directly on top
+          of the accordion rows/dividers whenever they scrolled into that
+          bottom-right corner. */}
+      <div data-fab-avoid className="relative z-10 flex w-full flex-col">
         {items.map((faq, i) => {
           const isOpen = openIndex === i;
           return (

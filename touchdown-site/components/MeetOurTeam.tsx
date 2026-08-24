@@ -24,6 +24,16 @@ import ArticleModal from "./ArticleModal";
 // photo genuinely needs one.
 const PHOTO_Y_OFFSET_BY_NAME: Record<string, number> = {};
 
+// Per-member focal position for the PROFILE PANEL's hero image (separate
+// from the card crop above - the modal frame is a completely different
+// aspect ratio/height, so a member who needs no override on the card can
+// still need one here, and vice versa). Defaults to "center top" for every
+// member, which keeps the full head in frame at the new taller hero height;
+// override individual entries only if a specific photo's subject sits low
+// enough in the source frame that top-anchoring cuts their shoulders off
+// awkwardly instead.
+const MODAL_IMAGE_POSITION_BY_NAME: Record<string, string> = {};
+
 function TeamCard({
   member,
   index,
@@ -193,8 +203,12 @@ export default function MeetOurTeam({
             // Full portrait via `image` (the rectangular hero-photo
             // treatment already built for How It Works), not `avatar` - the
             // small circular crop reads as a footnote, not the header photo
-            // a profile panel should open with.
+            // a profile panel should open with. "tall" + top-anchored so
+            // the full head stays in frame instead of getting cropped off
+            // the way the old fixed-height hero did.
             image: members[openIndex].image,
+            imageSize: "tall",
+            imagePosition: MODAL_IMAGE_POSITION_BY_NAME[members[openIndex].name] ?? "center top",
             subtitle: members[openIndex].role,
             instagram: members[openIndex].instagram ?? undefined,
             // Bare values here (no leading "-") to match the popup's own
