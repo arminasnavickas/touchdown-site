@@ -225,7 +225,12 @@ export default function Navigation({
           put the backdrop's dark blur ON TOP of the logo and close button
           instead of behind them, which is what actually made them look
           blurred/faded (not the header's own backdrop-blur). */}
-      <div className="relative z-50 flex items-center gap-8 px-6 py-4 md:gap-12 md:px-16">
+      {/* Mobile padding bumped from py-4 to py-5 (desktop unchanged) - lands
+          the mobile header's total height in the ~72-84px range (with the
+          size-9 hamburger icon) instead of clipping in tighter than that,
+          giving the compact logo-left/hamburger-right row a touch more
+          breathing room without pushing much more of the hero off-screen. */}
+      <div className="relative z-50 flex items-center gap-8 px-6 py-5 md:gap-12 md:px-16 md:py-4">
         <Link href="/" className="shrink-0">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={logo} alt="Touchdown" className="h-[15px] w-auto md:h-5" />
