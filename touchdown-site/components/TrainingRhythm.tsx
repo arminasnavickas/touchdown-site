@@ -86,7 +86,7 @@ export default function TrainingRhythm({
                   card grid here. */}
               <div
                 data-fab-avoid
-                className="flex flex-col gap-2 px-4 py-5 transition-colors duration-300 [@media(hover:hover)]:hover:bg-white/[0.03] sm:flex-row sm:items-center sm:justify-between sm:gap-6 sm:px-6 sm:py-4"
+                className="flex flex-row items-center justify-between gap-4 px-4 py-5 transition-colors duration-300 [@media(hover:hover)]:hover:bg-white/[0.03] sm:gap-6 sm:px-6 sm:py-4"
               >
                 <div className="flex flex-col gap-1">
                   <p className="font-switzer text-xs font-medium uppercase tracking-[0.15em] text-white/40">
