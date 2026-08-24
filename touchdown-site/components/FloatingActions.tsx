@@ -91,8 +91,12 @@ export default function FloatingActions() {
         visible ? "translate-y-0 opacity-100" : "pointer-events-none translate-y-4 opacity-0"
       }`}
     >
-      <BookInButton className="rounded-[6px] bg-cta px-8 py-4 font-switzer text-base font-medium uppercase tracking-wide text-white shadow-lg transition-all duration-200 ease-out hover:bg-aquatic hover:text-dark-ocean-blue hover:scale-105 hover:shadow-lg hover:shadow-cta/40 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cta focus-visible:ring-offset-2">
-        Book in
+      {/* "Book in" -> "Book now" - matches the rename across the footer
+          ("Book your dive") and pricing cards ("Book this course"); kept
+          short here since this is a small floating pill, not a full card. */}
+      <BookInButton className="flex items-center gap-2 rounded-[6px] bg-cta px-8 py-4 font-switzer text-base font-medium uppercase tracking-wide text-white shadow-lg transition-all duration-200 ease-out hover:bg-aquatic hover:text-dark-ocean-blue hover:scale-105 hover:shadow-lg hover:shadow-cta/40 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cta focus-visible:ring-offset-2">
+        Book now
+        <span aria-hidden>→</span>
       </BookInButton>
       <button
         type="button"

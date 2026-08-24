@@ -204,6 +204,8 @@ export default function Reviews({
             avatar: reviews[openIndex].image,
             paragraphs: [reviews[openIndex].quote],
           }}
+          currentIndex={openIndex}
+          total={reviews.length}
           onClose={() => setOpenIndex(null)}
           onPrev={() => setOpenIndex((reviews.length + openIndex - 1) % reviews.length)}
           onNext={() => setOpenIndex((openIndex + 1) % reviews.length)}

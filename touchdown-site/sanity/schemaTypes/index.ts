@@ -13,12 +13,18 @@ import heroSlide from "./heroSlide";
 import { privacyPolicy, termsAndConditions } from "./legalPages";
 import footerLink from "./footerLink";
 import author from "./author";
+import pricingFeature from "./pricingFeature";
+import teamRecord from "./teamRecord";
+import teamBioSection from "./teamBioSection";
 
 export const schemaTypes = [
   siteContent,
   faqItem,
   teamMember,
+  teamRecord,
+  teamBioSection,
   pricingTier,
+  pricingFeature,
   review,
   blogPost,
   scheduleDay,

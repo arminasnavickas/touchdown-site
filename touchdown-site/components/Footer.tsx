@@ -32,7 +32,7 @@ function FooterColumn({ title, links }: { title: string; links: FooterLink[] }) 
           key={link.id}
           href={hrefById[link.id] ?? "#"}
           data-fab-avoid
-          className="font-switzer text-lg font-light text-white/50 transition hover:text-aquatic"
+          className="font-switzer text-base font-light text-white/50 transition hover:text-aquatic"
         >
           {link.label}
         </a>
@@ -82,58 +82,72 @@ export default function Footer({
           happened to stop. */}
       <div className="h-px w-full shrink-0 bg-gradient-to-r from-transparent via-aquatic/40 to-transparent" />
 
-      <div className="flex w-full flex-col items-center divide-y divide-white/10 px-6 text-center md:px-16">
-        {/* The CTA is the footer's actual job (get one more booking before
-            the visitor leaves), so it's now the largest, most prominent
-            thing here - not a small headline sharing a 2x2 grid with the
-            logo. Logo/socials moved into their own group on the right,
-            independent of the CTA block's height. */}
-        <div className="flex w-full flex-col items-start gap-8 py-10 text-left md:flex-row md:items-center md:justify-between md:gap-6">
-          <div className="flex flex-col items-start gap-5">
-            <div className="flex flex-col gap-2">
-              <p className="font-switzer text-3xl font-light tracking-tight md:text-5xl">
+      {/* Left-aligned at every breakpoint, including mobile - this used to
+          center everything below md, which combined with the old
+          flex-col-then-row CTA/brand block made mobile read as "a desktop
+          footer collapsed into one column" rather than a deliberately
+          designed compact layout. */}
+      <div className="flex w-full flex-col items-start divide-y divide-white/10 px-6 text-left md:px-16">
+        {/* A real 2-column grid at every breakpoint (not flex-col on mobile
+            switching to flex-row at md) - CTA on the left, brand/socials on
+            the right, from the smallest screen up. Keeps the mobile footer
+            compact instead of stacking these into one tall column. */}
+        <div className="grid w-full grid-cols-2 items-start gap-x-4 gap-y-6 py-6 sm:gap-x-6 md:items-center md:gap-8 md:py-10">
+          <div className="flex flex-col items-start gap-3 sm:gap-5">
+            <div className="flex flex-col gap-1 sm:gap-2">
+              <p className="font-switzer text-xl font-light tracking-tight sm:text-3xl md:text-5xl">
                 {tagline}
               </p>
-              <p className="font-switzer text-lg font-light text-white/60">
+              <p className="font-switzer text-sm font-light text-white/60 sm:text-base md:text-lg">
                 {ctaSubcopy}
               </p>
             </div>
             {/* "Book in" -> "Book your dive" - reads as an actual next step
                 rather than a slightly awkward standalone verb, and pairs
-                naturally with "Ready to Dive In?" above it. */}
-            <BookInButton className="flex w-fit items-center gap-2 rounded-[6px] bg-cta px-8 py-4 text-center font-switzer text-base font-medium uppercase tracking-wide text-white transition-all duration-200 ease-out hover:bg-aquatic hover:text-dark-ocean-blue hover:scale-105 hover:shadow-lg hover:shadow-cta/40 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cta focus-visible:ring-offset-2">
+                naturally with "Ready to Dive In?" above it. Compact on
+                mobile (this column is only half the screen now), full size
+                from sm up. */}
+            <BookInButton className="flex w-fit items-center gap-1.5 rounded-[6px] bg-cta px-4 py-2.5 text-center font-switzer text-xs font-medium uppercase tracking-wide text-white transition-all duration-200 ease-out hover:bg-aquatic hover:text-dark-ocean-blue hover:scale-105 hover:shadow-lg hover:shadow-cta/40 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cta focus-visible:ring-offset-2 sm:gap-2 sm:px-8 sm:py-4 sm:text-base">
               Book your dive
               <span aria-hidden>→</span>
             </BookInButton>
           </div>
 
-          <div className="flex shrink-0 flex-col items-start gap-4 md:items-end">
+          <div className="flex flex-col items-start gap-2.5 sm:gap-4">
             <Link href="/" className="shrink-0">
+              {/* Capped to ~130px on mobile (was rendering much wider at a
+                  fixed height with no max-width) so it doesn't dominate a
+                  column that's now only half the screen. Left-aligned like
+                  everything else here, not pushed to the far right edge. */}
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={logo} alt="Touchdown" className="h-5 w-auto max-w-none" />
+              <img src={logo} alt="Touchdown" className="h-4 w-auto max-w-[130px] sm:h-5 sm:max-w-none" />
             </Link>
-            {/* Icons grouped tight to the logo (was a wide gap-6 sitting on
-                its own row below) so logo + socials read as one unit. */}
-            <div className="flex items-center gap-5">
-              <a href={instagram} target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="transition hover:text-cta"><InstagramIcon /></a>
-              <a href={telegram} target="_blank" rel="noopener noreferrer" aria-label="Telegram" className="transition hover:text-cta"><TelegramIcon /></a>
-              <a href={facebook} target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="transition hover:text-cta"><FacebookIcon /></a>
-              <a href={whatsapp} target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" className="transition hover:text-cta"><WhatsappIcon /></a>
+            {/* Icons grouped tight to the logo, and sized down on mobile via
+                the [&>svg] override below - SocialIcons' own size-8 default
+                is sized for a desktop-width column, not a 2-up mobile one. */}
+            <div className="flex flex-wrap items-center gap-3 sm:gap-5">
+              <a href={instagram} target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="transition hover:text-cta [&>svg]:size-5 sm:[&>svg]:size-6"><InstagramIcon /></a>
+              <a href={telegram} target="_blank" rel="noopener noreferrer" aria-label="Telegram" className="transition hover:text-cta [&>svg]:size-5 sm:[&>svg]:size-6"><TelegramIcon /></a>
+              <a href={facebook} target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="transition hover:text-cta [&>svg]:size-5 sm:[&>svg]:size-6"><FacebookIcon /></a>
+              <a href={whatsapp} target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" className="transition hover:text-cta [&>svg]:size-5 sm:[&>svg]:size-6"><WhatsappIcon /></a>
             </div>
           </div>
         </div>
 
-        {/* Three columns instead of four - Legal moved down into the
-            bottom bar below (two short links didn't need a whole column of
-            their own), which turns this into a proper About / Experience /
-            Get in touch system instead of four visually-equal blocks.
-            Contact spans both columns on mobile (col-span-2) rather than
-            fighting About and Experience for width in a cramped 3-up row. */}
-        <div className="grid w-full grid-cols-2 gap-x-8 gap-y-8 py-8 text-left md:grid-cols-3">
+        {/* About | Experience already reads well as a 2-up mobile row, so
+            that part's unchanged structurally - just slightly smaller link
+            text (text-lg -> text-base) and tighter vertical padding to fit
+            the more compact rhythm of the section above. Three columns
+            instead of four overall - Legal moved down into the bottom bar
+            below (two short links didn't need a whole column of their
+            own), and Contact spans both columns on mobile (col-span-2)
+            rather than fighting About/Experience for width in a cramped
+            3-up row. */}
+        <div className="grid w-full grid-cols-2 gap-x-8 gap-y-6 py-6 md:grid-cols-3 md:gap-y-8 md:py-8">
           <FooterColumn title={aboutTitle} links={aboutLinks} />
           <FooterColumn title={experienceTitle} links={experienceLinks} />
 
-          <div className="col-span-2 flex w-full flex-col items-start gap-4 md:col-span-1">
+          <div className="col-span-2 flex w-full flex-col items-start gap-3 md:col-span-1 md:gap-4">
             <p className="font-switzer text-sm font-semibold uppercase tracking-[0.15em] text-aquatic">
               {contactTitle}
             </p>
@@ -143,17 +157,17 @@ export default function Footer({
                 rather than reading identically to a nav link. */}
             <a
               href={`mailto:${email}`}
-              className="font-switzer text-lg font-medium text-cta transition hover:text-white"
+              className="font-switzer text-base font-medium text-cta transition hover:text-white"
             >
               {email}
             </a>
             <a
               href={`tel:${phone}`}
-              className="font-switzer text-lg font-light text-white/50 transition hover:text-aquatic"
+              className="font-switzer text-base font-light text-white/50 transition hover:text-aquatic"
             >
               {phone}
             </a>
-            <p className="font-switzer text-lg font-light text-white/50">
+            <p className="font-switzer text-base font-light text-white/50">
               {location}
             </p>
           </div>
@@ -163,7 +177,7 @@ export default function Footer({
       {/* Legal lives here now as a compact inline list next to the
           copyright, instead of a whole column above for two short links -
           also lets Back to top keep its exact spot at the far right. */}
-      <div className="relative flex w-full flex-col items-center gap-3 border-t border-aquatic/50 px-6 py-5 text-center md:flex-row md:items-center md:justify-between md:gap-6 md:px-16 md:text-left">
+      <div className="relative flex w-full flex-col items-start gap-3 border-t border-aquatic/50 px-6 py-5 text-left md:flex-row md:items-center md:justify-between md:gap-6 md:px-16">
         <p className="font-switzer text-sm font-light text-aquatic/80">
           © {new Date().getFullYear()} Touchdown Space. All rights reserved.
           <br />

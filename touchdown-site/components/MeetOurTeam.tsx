@@ -4,7 +4,7 @@ import { useState } from "react";
 import FadeImage from "./FadeImage";
 import { useLightbox } from "./LightboxContext";
 import type { TeamMember } from "@/lib/content";
-import { InstagramIcon, GlobeIcon } from "./SocialIcons";
+import { GlobeIcon } from "./SocialIcons";
 import Blob from "./Blob";
 import Reveal from "./Reveal";
 import ArticleModal from "./ArticleModal";
@@ -39,7 +39,7 @@ function TeamCard({
       <button
         type="button"
         onClick={() => openLightbox([member.image], 0)}
-        className="relative -mb-px aspect-[6/4.2] w-full cursor-zoom-in overflow-hidden"
+        className="relative -mb-px aspect-[6/3.6] w-full cursor-zoom-in overflow-hidden"
         aria-label="View full image"
       >
         {/* object-top-cropped photos were showing a large flat block of the
@@ -74,43 +74,64 @@ function TeamCard({
 
       {/* data-fab-avoid: same floating Book In/back-to-top overlap issue we
           hit on How It Works, Training Rhythm, and the footer links - the
-          floating stack sits over this card's bio text and Read more link
-          when scrolled into that position. Tagging the whole content block
-          (not just the button) so the fade-out triggers as soon as any of
-          the bio/CTA is covered, not only once the button itself is hit. */}
-      <div data-fab-avoid className="flex flex-1 flex-col gap-4 p-5">
+          floating stack sits over this card's bio text and CTA link when
+          scrolled into that position. Tagging the whole content block (not
+          just the button) so the fade-out triggers as soon as any of the
+          bio/CTA is covered, not only once the button itself is hit. */}
+      <div data-fab-avoid className="flex flex-1 flex-col gap-3 p-5">
+        {/* Name -> short role tags -> compact records line -> description,
+            in that order, so the card reads "who / what they do / what
+            they've done / a bit about them" top to bottom instead of
+            burying the role under a name-sized records line. */}
         <div className="flex flex-col gap-1">
           <p className="font-switzer text-3xl font-light tracking-tight text-aquatic">
             {member.name}
           </p>
-          {member.records && (
-            <p className="font-switzer text-sm font-medium uppercase tracking-wide text-cta">
-              {member.records}
-            </p>
-          )}
+          <p className="font-switzer text-sm font-medium uppercase tracking-wide text-cta">
+            {member.role}
+          </p>
         </div>
+        {member.records && member.records.length > 0 && (
+          <p className="font-switzer text-sm font-light text-white/50">
+            {member.records.map((record, i) => (
+              <span key={record.label}>
+                {i > 0 && <span className="mx-1.5 text-white/25">·</span>}
+                -{record.value} <span className="text-white/35">{record.label}</span>
+              </span>
+            ))}
+          </p>
+        )}
         <p className="font-switzer text-xl font-light leading-relaxed text-white/80">
           {member.bio}
         </p>
+        {/* Personalized CTA ("Meet Gus") replacing the generic "Read more" -
+            styled like How It Works' demoted read-more link (small
+            uppercase text + arrow) rather than the old underline-on-hover
+            treatment, to match the rest of the site's secondary-link style. */}
         <button
           type="button"
           onClick={() => onOpen(index)}
-          className="group/link relative inline-block w-fit font-switzer text-base font-medium text-cta transition hover:text-white"
+          className="group/link flex w-fit items-center gap-1.5 pt-1 font-switzer text-sm font-medium uppercase tracking-widest text-cta transition hover:text-white"
         >
-          Read more
-          <span className="absolute -bottom-1 left-0 h-[2px] w-0 bg-white transition-all duration-300 group-hover/link:w-full" />
+          Meet {member.name.split(" ")[0]}
+          <span aria-hidden className="transition-transform duration-200 group-hover/link:translate-x-1">
+            →
+          </span>
         </button>
         {(member.instagram || member.website) && (
-          <div className="mt-auto flex gap-4 border-t border-white/10 pt-4 text-white/60">
+          <div className="mt-auto flex items-center gap-4 border-t border-white/10 pt-4">
+            {/* Instagram as an intentional "Instagram ->" text link instead
+                of a lone icon - matches the treatment used in the modal
+                header, rather than an unlabeled glyph sitting on its own. */}
             {member.instagram && (
               <a
                 href={member.instagram}
                 target="_blank"
                 rel="noopener noreferrer"
-                aria-label={`${member.name} on Instagram`}
-                className="transition hover:text-cta"
+                className="flex items-center gap-1 font-switzer text-sm font-medium uppercase tracking-widest text-white/60 transition hover:text-cta"
               >
-                <InstagramIcon />
+                Instagram
+                <span aria-hidden>→</span>
               </a>
             )}
             {member.website && (
@@ -119,7 +140,7 @@ function TeamCard({
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label={`${member.name}'s website`}
-                className="transition hover:text-cta"
+                className="text-white/60 transition hover:text-cta"
               >
                 <GlobeIcon />
               </a>
@@ -169,16 +190,29 @@ export default function MeetOurTeam({
         <ArticleModal
           content={{
             title: members[openIndex].name,
-            kicker: members[openIndex].records ?? undefined,
-            avatar: members[openIndex].image,
+            // Full portrait via `image` (the rectangular hero-photo
+            // treatment already built for How It Works), not `avatar` - the
+            // small circular crop reads as a footnote, not the header photo
+            // a profile panel should open with.
+            image: members[openIndex].image,
+            subtitle: members[openIndex].role,
             instagram: members[openIndex].instagram ?? undefined,
-            paragraphs: [
-              ...members[openIndex].fullBio,
-              ...(members[openIndex].qualifications.length
-                ? [`Background & qualifications: ${members[openIndex].qualifications.join(". ")}.`]
-                : []),
-            ],
+            // Bare values here (no leading "-") to match the popup's own
+            // stat-grid convention - the card is what prepends the minus
+            // sign for its compact inline records line.
+            stats: members[openIndex].records?.map((record) => ({
+              value: record.value,
+              label: record.label,
+            })),
+            sections: members[openIndex].bioSections,
+            // Still required by ArticleModalContent's type, but only used
+            // as a fallback when `sections` is empty - every team member
+            // has bioSections, so this never actually renders.
+            paragraphs: members[openIndex].fullBio,
+            qualifications: members[openIndex].qualifications,
           }}
+          currentIndex={openIndex}
+          total={members.length}
           onClose={() => setOpenIndex(null)}
           onPrev={() => setOpenIndex((members.length + openIndex - 1) % members.length)}
           onNext={() => setOpenIndex((openIndex + 1) % members.length)}

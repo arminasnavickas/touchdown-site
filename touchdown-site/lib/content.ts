@@ -62,13 +62,27 @@ export const fallbackFaq: FaqItem[] = [
   },
 ];
 
+export type TeamRecord = { value: string; label: string };
+export type TeamBioSection = { title: string; paragraphs: string[] };
+
 export type TeamMember = {
   name: string;
   image: string;
+  // Short role tags for the card/modal header (e.g. "Founder · Instructor
+  // · Coach") - distinct from `bio`, which is the longer one-line
+  // description shown in the card body.
+  role: string;
   bio: string;
   fullBio: string[];
+  // Same story as fullBio, broken into titled sections for the modal (see
+  // ArticleModal's `sections` prop) - the card and flat-paragraph fallback
+  // still use fullBio directly, this is additive for the redesigned popup.
+  bioSections: TeamBioSection[];
   qualifications: string[];
-  records: string | null;
+  // Structured depth records (was a single "-130m NLT / -107m CWT / ..."
+  // string) so the card can show a compact line and the modal a proper
+  // stat row without parsing a sentence back apart at render time.
+  records: TeamRecord[] | null;
   instagram: string | null;
   website: string | null;
 };
@@ -77,10 +91,25 @@ export const fallbackTeam: TeamMember[] = [
   {
     name: "Gus",
     image: "/images/team-gus.jpg",
+    role: "Founder · Instructor · Coach",
     bio: "Founder of TOUCHDOWN. SSI, AIDA, and Molchanovs instructor, CMAS Instructor Trainer, competitive freediver.",
     fullBio: [
       "I didn't come to freediving from the water: I came to it from a welding job in grey, rainy England, feeling like there had to be more to life than that. A video of Guillaume Nery's \"Freefall\" was what pulled me in, and I never looked back. I left welding behind, moved to Sharm El Sheikh to learn from the best there, and built myself into an instructor, coach, and competitive freediver from scratch. Aside from World Championships, Vertical Blue in the Bahamas, the \"Wimbledon of Freediving\", was one of the proving grounds along the way.",
       "Dahab is where it all settled: after years of practice, I opened Touchdown on the roof of a seaside restaurant, in the middle of the pandemic, with more belief than resources. Everything since has been building that rooftop idea into what Touchdown is now: one of the best holistic freediving schools in the world. Step by step is my motto.",
+    ],
+    bioSections: [
+      {
+        title: "The beginning",
+        paragraphs: [
+          "I didn't come to freediving from the water: I came to it from a welding job in grey, rainy England, feeling like there had to be more to life than that. A video of Guillaume Nery's \"Freefall\" was what pulled me in, and I never looked back. I left welding behind, moved to Sharm El Sheikh to learn from the best there, and built myself into an instructor, coach, and competitive freediver from scratch. Aside from World Championships, Vertical Blue in the Bahamas, the \"Wimbledon of Freediving\", was one of the proving grounds along the way.",
+        ],
+      },
+      {
+        title: "Dahab",
+        paragraphs: [
+          "Dahab is where it all settled: after years of practice, I opened Touchdown on the roof of a seaside restaurant, in the middle of the pandemic, with more belief than resources. Everything since has been building that rooftop idea into what Touchdown is now: one of the best holistic freediving schools in the world. Step by step is my motto.",
+        ],
+      },
     ],
     qualifications: [
       "SSI, AIDA, and Molchanovs Freediving Instructor",
@@ -88,19 +117,52 @@ export const fallbackTeam: TeamMember[] = [
       "CMAS Instructor Trainer",
       "Master of Underwater Sports",
     ],
-    records: "-130m NLT / -107m CWT / -94m FIM / -88m CWTB / -61m CNF",
+    records: [
+      { value: "130m", label: "NLT" },
+      { value: "107m", label: "CWT" },
+      { value: "94m", label: "FIM" },
+      { value: "88m", label: "CWTB" },
+      { value: "61m", label: "CNF" },
+    ],
     instagram: "https://www.instagram.com/gkreivenas?igsh=Ymlzb3l5eG03eTh0",
     website: null,
   },
   {
     name: "Omar",
     image: "/images/team-omar.jpg",
+    role: "Coach · Athlete · Safety",
     bio: "Coach, athlete, safety. Specialized in frenzel equalisation. AIDA instructor, YOUTH instructor.",
     fullBio: [
       "Born in Giza, Egypt, I lived in Saudi Arabia, Bahrain, and Malaysia before moving back home to reconnect with my roots. Ultimately, I chose to settle down in Dahab: mostly because of the Blue Hole.",
       "My love for the water started as early as I can remember, with my parents signing me up for swimming classes and spending every summer on the coast. Growing up, I threw myself into every water sport I could find, including surfing, kitesurfing, and scuba diving. Then, in 2023, I heard about freediving and came to Dahab out of pure curiosity to try it out.",
       "One year later, I was a certified instructor, competitive athlete, and safety freediver. My obsession with the sport only grew stronger every day. A few months after that, I joined Touchdown, where the team shares the exact same obsession: pushing the limits to become world-class freedivers. The rest is history!",
       "Something fun about me? I'm a total nerd when it comes to learning new skills. Outside of diving, I like to analyze equity investments and manage properties as an Airbnb Superhost. I'm also a proud Beagle dad: keep an eye out, you'll probably meet Johnny around the school. Currently, I'm also on my path to becoming a certified yoga and meditation teacher!",
+    ],
+    bioSections: [
+      {
+        title: "Roots",
+        paragraphs: [
+          "Born in Giza, Egypt, I lived in Saudi Arabia, Bahrain, and Malaysia before moving back home to reconnect with my roots. Ultimately, I chose to settle down in Dahab: mostly because of the Blue Hole.",
+        ],
+      },
+      {
+        title: "Finding the water",
+        paragraphs: [
+          "My love for the water started as early as I can remember, with my parents signing me up for swimming classes and spending every summer on the coast. Growing up, I threw myself into every water sport I could find, including surfing, kitesurfing, and scuba diving. Then, in 2023, I heard about freediving and came to Dahab out of pure curiosity to try it out.",
+        ],
+      },
+      {
+        title: "Joining Touchdown",
+        paragraphs: [
+          "One year later, I was a certified instructor, competitive athlete, and safety freediver. My obsession with the sport only grew stronger every day. A few months after that, I joined Touchdown, where the team shares the exact same obsession: pushing the limits to become world-class freedivers. The rest is history!",
+        ],
+      },
+      {
+        title: "Off the water",
+        paragraphs: [
+          "Something fun about me? I'm a total nerd when it comes to learning new skills. Outside of diving, I like to analyze equity investments and manage properties as an Airbnb Superhost. I'm also a proud Beagle dad: keep an eye out, you'll probably meet Johnny around the school. Currently, I'm also on my path to becoming a certified yoga and meditation teacher!",
+        ],
+      },
     ],
     qualifications: [
       "3 years experience as a freediving athlete, coach, and safety diver",
@@ -117,6 +179,7 @@ export const fallbackTeam: TeamMember[] = [
   {
     name: "Maksim Kalnibolotskii",
     image: "/images/team-maksim.jpg",
+    role: "Instructor · Competitive Freediver",
     bio: "TOUCHDOWN Instructor, Competitive freediver. YWS yoga instructor.",
     fullBio: [
       "I spent my entire childhood, up to age 17, at a dolphinarium in Crimea, where we swam with dolphins every single day. That was also where I was first introduced to freediving and yoga.",
@@ -124,6 +187,38 @@ export const fallbackTeam: TeamMember[] = [
       "Between 2015 and 2021, I trained independently and took courses under the Molchanovs and YWS systems. Step by step, my depth increased, and the internal transformation became more and more profound. But one thing stayed the same: whenever teaching came up, I resisted fiercely: I still had unresolved childhood blocks to work through. Yet, at that point, I was already diving deeper than most of the instructors I had learned from.",
       "In 2021, I joined Touchdown. By then, I was already diving to 90 meters, but I started suffering severe injuries (lung squeezes), and my body could no longer handle the extreme stress of deep dives. Gus solved this problem for me: six months later, we reached 102 meters, and along with that, my attitude toward teaching completely shifted.",
       "Gradually, things fell into place, turning my initial interest into my primary life calling. In 2023, we dived to 105 meters. After that, I fully focused on teaching.",
+    ],
+    bioSections: [
+      {
+        title: "Childhood",
+        paragraphs: [
+          "I spent my entire childhood, up to age 17, at a dolphinarium in Crimea, where we swam with dolphins every single day. That was also where I was first introduced to freediving and yoga.",
+        ],
+      },
+      {
+        title: "Finding the calling",
+        paragraphs: [
+          "At first, I didn't realize this was my true calling. I was simply curious about how these practices affected my state of mind and shaped my perception. I could see the process changing me on every level: my perception expanded, and along with it grew my awareness of myself, the world, and my relationship with it.",
+        ],
+      },
+      {
+        title: "Independent practice",
+        paragraphs: [
+          "Between 2015 and 2021, I trained independently and took courses under the Molchanovs and YWS systems. Step by step, my depth increased, and the internal transformation became more and more profound. But one thing stayed the same: whenever teaching came up, I resisted fiercely: I still had unresolved childhood blocks to work through. Yet, at that point, I was already diving deeper than most of the instructors I had learned from.",
+        ],
+      },
+      {
+        title: "Joining Touchdown",
+        paragraphs: [
+          "In 2021, I joined Touchdown. By then, I was already diving to 90 meters, but I started suffering severe injuries (lung squeezes), and my body could no longer handle the extreme stress of deep dives. Gus solved this problem for me: six months later, we reached 102 meters, and along with that, my attitude toward teaching completely shifted.",
+        ],
+      },
+      {
+        title: "Becoming a teacher",
+        paragraphs: [
+          "Gradually, things fell into place, turning my initial interest into my primary life calling. In 2023, we dived to 105 meters. After that, I fully focused on teaching.",
+        ],
+      },
     ],
     qualifications: [
       "2015: Started freediving practice",
@@ -133,19 +228,39 @@ export const fallbackTeam: TeamMember[] = [
       "2023: Reached 105 meters",
       "2024: Started teaching",
     ],
-    records: "-105m FIM",
+    records: [{ value: "105m", label: "FIM" }],
     instagram: "https://www.instagram.com/maksim_kalnibolotskii?igsh=MWJlOHl5dHhkMDNubQ==",
     website: null,
   },
   {
     name: "Denis",
     image: "/images/team-denis.jpg",
+    role: "Instructor · Athlete · Safety",
     bio: "Freediving instructor, competitive athlete, and safety diver with a taste for extreme sports and adventure.",
     fullBio: [
       "If I had to describe my life in two words, it would be: \"Everything happened.\"",
       "I learned to swim before I could walk, hence my love of water. I've traveled to many countries, and lived in some of them, hence my curiosity and thirst for new things. While traveling, I had to earn money, sometimes in extremely dubious ways, hence the mix of a healthy dose of not caring (an easy-going attitude) and cold reason.",
       "Extreme sports have always attracted me: parachutes, motorcycles, rocks, mountains, cars, boats, and (in the future) planes. I got into freediving on a friend's advice, and it hooked me like cigarettes from the first puff. Then I found TD and immediately decided I would stay here. My dream came true: the sea, the sun, the fish, and a bunch of crazy friends just like me. I love all of you: those who are with me all the time, and those who come for a while.",
       "Nordic character, eternally young and cheerful.",
+    ],
+    bioSections: [
+      {
+        title: "Everything happened",
+        paragraphs: ["If I had to describe my life in two words, it would be: \"Everything happened.\""],
+      },
+      {
+        title: "Water & wandering",
+        paragraphs: [
+          "I learned to swim before I could walk, hence my love of water. I've traveled to many countries, and lived in some of them, hence my curiosity and thirst for new things. While traveling, I had to earn money, sometimes in extremely dubious ways, hence the mix of a healthy dose of not caring (an easy-going attitude) and cold reason.",
+        ],
+      },
+      {
+        title: "Finding Touchdown",
+        paragraphs: [
+          "Extreme sports have always attracted me: parachutes, motorcycles, rocks, mountains, cars, boats, and (in the future) planes. I got into freediving on a friend's advice, and it hooked me like cigarettes from the first puff. Then I found TD and immediately decided I would stay here. My dream came true: the sea, the sun, the fish, and a bunch of crazy friends just like me. I love all of you: those who are with me all the time, and those who come for a while.",
+          "Nordic character, eternally young and cheerful.",
+        ],
+      },
     ],
     qualifications: ["Molchanovs W2I and WJ Instructor (young pool)", "AIDA 3", "AIDA Junior Judge"],
     records: null,
@@ -155,6 +270,7 @@ export const fallbackTeam: TeamMember[] = [
   {
     name: "Ilia",
     image: "/images/team-illia.jpg",
+    role: "Freediving & Yoga Instructor",
     bio: "Freediving and yoga instructor helping students connect breath, body, and water.",
     fullBio: [
       "I was born in Moscow; my mother is from Sochi, and every summer as a child we would visit my grandmother on the Black Sea. I learned to swim around the same time I learned to walk: my parents say my first words were \"rocks and sea,\" not \"mom and dad.\" My brother and I were constantly playing in the water, diving and trying to pick up large rocks from the bottom. We knew nothing about equalization, but we still managed to dive to 5 meters.",
@@ -163,6 +279,39 @@ export const fallbackTeam: TeamMember[] = [
       "On my last day in Dahab, I met Gus by chance at a cafe, and that meeting completely changed my life. Just six months later, I returned to Dahab to dive with Gus. The Touchdown school didn't exist yet, but the same methods, teaching approach, and incredible atmosphere that later became its foundation were already in place.",
       "Today, at the school, I help people enjoy the process, better understand their body and breathing, and transfer these skills into the water. The sea has always been a part of my life, and I'm happy to share this experience, helping others discover their own path in freediving.",
       "Something curious about me? I do beatboxing. This always surprises people, and among freedivers, the question always comes up: does it help with equalization?",
+    ],
+    bioSections: [
+      {
+        title: "Childhood by the sea",
+        paragraphs: [
+          "I was born in Moscow; my mother is from Sochi, and every summer as a child we would visit my grandmother on the Black Sea. I learned to swim around the same time I learned to walk: my parents say my first words were \"rocks and sea,\" not \"mom and dad.\" My brother and I were constantly playing in the water, diving and trying to pick up large rocks from the bottom. We knew nothing about equalization, but we still managed to dive to 5 meters.",
+        ],
+      },
+      {
+        title: "Discovering yoga",
+        paragraphs: [
+          "In 2014, I started practicing yoga and was lucky with my instructor: alongside working with the body, he immediately began teaching breathing techniques and meditation. I learned that freedivers use some of these techniques, and I wanted to learn more. Through these practices, I first saw how breathing and attention can change my state and thinking, and later felt this even more strongly in the water.",
+        ],
+      },
+      {
+        title: "Finding freediving",
+        paragraphs: [
+          "In the summer of 2016, I took a basic freediving course in a pool, and on the first day, I knew freediving would become my life's work. In the fall of 2016, I went to Dahab for a depth course and fell in love with the place.",
+        ],
+      },
+      {
+        title: "Meeting Gus",
+        paragraphs: [
+          "On my last day in Dahab, I met Gus by chance at a cafe, and that meeting completely changed my life. Just six months later, I returned to Dahab to dive with Gus. The Touchdown school didn't exist yet, but the same methods, teaching approach, and incredible atmosphere that later became its foundation were already in place.",
+        ],
+      },
+      {
+        title: "Today",
+        paragraphs: [
+          "Today, at the school, I help people enjoy the process, better understand their body and breathing, and transfer these skills into the water. The sea has always been a part of my life, and I'm happy to share this experience, helping others discover their own path in freediving.",
+          "Something curious about me? I do beatboxing. This always surprises people, and among freedivers, the question always comes up: does it help with equalization?",
+        ],
+      },
     ],
     qualifications: [
       "Molchanovs Wave 4 (W4)",
@@ -179,6 +328,7 @@ export const fallbackTeam: TeamMember[] = [
   {
     name: "Francesco",
     image: "/images/team-francesco.jpg",
+    role: "Physiotherapist · Osteopath · S&C Coach",
     bio: "Physiotherapist, osteopath, and strength & conditioning coach specialized in freediver performance and recovery.",
     fullBio: [
       "I'm Francesco, an Italian physiotherapist, osteopath, and strength & conditioning coach with a passion for human performance. Ever since I began studying physiotherapy, I've been fascinated by the human body and the way it performs.",
@@ -187,6 +337,34 @@ export const fallbackTeam: TeamMember[] = [
       "I love translating complex science into easily digestible knowledge.",
       "For me, Touchdown is much more than a freediving school: it's a place where performance, education, and community come together. Being part of a team that shares knowledge and constantly pushes each other to improve is what makes working here so rewarding.",
       "Something fun about me? I'm a proud nerd. If you can't find me exploring nature or buried in a sports science book, you'll probably find me playing Magic: The Gathering, a wonderfully nerdy strategy card game. And, just to complete the nerd package, I also own a 3D printer.",
+    ],
+    bioSections: [
+      {
+        title: "Background",
+        paragraphs: [
+          "I'm Francesco, an Italian physiotherapist, osteopath, and strength & conditioning coach with a passion for human performance. Ever since I began studying physiotherapy, I've been fascinated by the human body and the way it performs.",
+        ],
+      },
+      {
+        title: "Finding Dahab",
+        paragraphs: [
+          "My journey to Dahab actually started by chance. I first came here to celebrate my 30th birthday, and what was meant to be just a vacation quickly turned into something much bigger. I met Gus, discovered Touchdown, and immediately fell in love with both the team and the opportunity to combine my profession with my passion for the ocean and performance.",
+        ],
+      },
+      {
+        title: "Today",
+        paragraphs: [
+          "Today, I work closely with freedivers, helping them better understand their bodies, recover from injuries, improve movement efficiency, and optimize their performance through evidence-based training. At Touchdown, I combine physiotherapy, osteopathy, and strength & conditioning to support freedivers throughout every stage of their journey, from overcoming pain and movement limitations to designing training strategies that improve performance, while also contributing to the educational side of the school through lectures and workshops.",
+          "I love translating complex science into easily digestible knowledge.",
+        ],
+      },
+      {
+        title: "Touchdown",
+        paragraphs: [
+          "For me, Touchdown is much more than a freediving school: it's a place where performance, education, and community come together. Being part of a team that shares knowledge and constantly pushes each other to improve is what makes working here so rewarding.",
+          "Something fun about me? I'm a proud nerd. If you can't find me exploring nature or buried in a sports science book, you'll probably find me playing Magic: The Gathering, a wonderfully nerdy strategy card game. And, just to complete the nerd package, I also own a 3D printer.",
+        ],
+      },
     ],
     qualifications: [
       "Graduated in Physiotherapy from the University of Milan in 2014, before completing an Osteopathy diploma at ICOM in 2020. Currently continuing education in Strength & Conditioning through the European Institute of Athletic Preparation (IEPA), while preparing for the NSCA Certified Strength and Conditioning Specialist (CSCS) certification.",
@@ -199,6 +377,7 @@ export const fallbackTeam: TeamMember[] = [
   {
     name: "Piko",
     image: "/images/team-piko.jpg",
+    role: "Photographer · Visual Storyteller",
     bio: "Photographer & visual storyteller. Specialized in underwater photography and adventure sports. Freediver.",
     fullBio: [
       "Hello! I'm Eslam Piko, an underwater, event, wedding, and adventure photographer based in Egypt.",
@@ -208,6 +387,29 @@ export const fallbackTeam: TeamMember[] = [
       "I now split my time between Cairo and the stunning coastline of the Red Sea, indulging in extreme sports and capturing photos whenever I can.",
       "Fun fact about me? When I'm not behind the lens, you'll find me cycling with a rucksack full of camera equipment alongside my two honey-coloured dogs, Biscuit and Sugar. Rescued from the streets, they adopted me, and we've been a family ever since.",
     ],
+    bioSections: [
+      {
+        title: "Getting started",
+        paragraphs: [
+          "Hello! I'm Eslam Piko, an underwater, event, wedding, and adventure photographer based in Egypt.",
+          "How did I end up here? Starting off at a major marketing agency in Cairo, I was always drawn to storytelling through visuals and imagery, so it felt natural to pick up a camera and dive into this creative field. I began my journey in photography with nightlife events before moving on to high-end parties, celebrity events, portraits, and weddings across Egypt. It wasn't long before I was working with major brands like Microsoft, Vodafone, Pepsi, and Mercedes, travelling across the country and delivering unique visual content that spoke to my clients' goals.",
+        ],
+      },
+      {
+        title: "Dahab",
+        paragraphs: [
+          "Then Covid hit. Hours before the national lockdown, I gambled everything and traveled to Dahab on the Red Sea, hoping to ride out the pandemic by the ocean. Little did I know it would transform my life.",
+          "For the next two years, I immersed myself in freediving, exploring the underwater world on a single breath. This experience has shaped my approach to photography and visual content, and pushed my imagery to become even more creative.",
+        ],
+      },
+      {
+        title: "Today",
+        paragraphs: [
+          "I now split my time between Cairo and the stunning coastline of the Red Sea, indulging in extreme sports and capturing photos whenever I can.",
+          "Fun fact about me? When I'm not behind the lens, you'll find me cycling with a rucksack full of camera equipment alongside my two honey-coloured dogs, Biscuit and Sugar. Rescued from the streets, they adopted me, and we've been a family ever since.",
+        ],
+      },
+    ],
     qualifications: [],
     records: null,
     instagram: "https://www.instagram.com/eslampiko?igsh=b20zdno0bWxmM3Fv",
@@ -216,11 +418,32 @@ export const fallbackTeam: TeamMember[] = [
   {
     name: "Francesca",
     image: "/images/team-francesca.jpg",
+    role: "Operations Manager · Athlete · Judge",
     bio: "In-land operations manager handling center organization and social media. Competitive athlete, safety freediver, and judge.",
     fullBio: [
       "My story with Dahab started three years ago, almost by chance. I was in Sharm El Sheikh for a training period at Freediving World, and during a trip I stopped for a day at the Blue Hole. On the way back I made a brief stop in town and that was enough to feel something I couldn't quite explain, but strong enough to make me promise myself I'd come back. So I did, a year later, staying for a full month. The problem is I never really left: I went back to Italy only to wrap up a few things and pack my bags, before moving here for good.",
       "I'd heard about Touchdown long before I actually got to know it, and from the outside it almost seemed like a military school for freedivers: I'll admit it intimidated me a little at first. But the more I got to know their philosophy and training method, the more I fell for it, until at the beginning of this year I joined the team as in-land operations manager: I handle all the \"dry\" side of things, general center organization, and social media.",
       "Something fun about me? I have four cats: and I'm allergic to them. If you ever need an antihistamine, you know where to find me.",
+    ],
+    bioSections: [
+      {
+        title: "Finding Dahab",
+        paragraphs: [
+          "My story with Dahab started three years ago, almost by chance. I was in Sharm El Sheikh for a training period at Freediving World, and during a trip I stopped for a day at the Blue Hole. On the way back I made a brief stop in town and that was enough to feel something I couldn't quite explain, but strong enough to make me promise myself I'd come back. So I did, a year later, staying for a full month. The problem is I never really left: I went back to Italy only to wrap up a few things and pack my bags, before moving here for good.",
+        ],
+      },
+      {
+        title: "Joining Touchdown",
+        paragraphs: [
+          "I'd heard about Touchdown long before I actually got to know it, and from the outside it almost seemed like a military school for freedivers: I'll admit it intimidated me a little at first. But the more I got to know their philosophy and training method, the more I fell for it, until at the beginning of this year I joined the team as in-land operations manager: I handle all the \"dry\" side of things, general center organization, and social media.",
+        ],
+      },
+      {
+        title: "Something fun",
+        paragraphs: [
+          "Something fun about me? I have four cats: and I'm allergic to them. If you ever need an antihistamine, you know where to find me.",
+        ],
+      },
     ],
     qualifications: [
       "Professional background in hospitality, working with social media and reception, which is where a passion for organization comes from.",
@@ -233,13 +456,24 @@ export const fallbackTeam: TeamMember[] = [
   },
 ];
 
+export type PricingFeature = { count: string; label: string };
+
 export type PricingTier = {
   name: string;
   duration: string;
   price: string;
-  features: string[];
+  // Short verb-phrase framing this tier's place in the ladder (Discovery ->
+  // Freedom Flow -> Deep Mastery -> Ultimate reads as "Try it -> Build it ->
+  // Progress it -> Master it"), so the four cards read as a progression
+  // rather than four unrelated products.
+  step: string;
+  features: PricingFeature[];
   bonus: string | null;
   quote: string;
+  // Generic attribution for the shortened quote below ("- Student") - not
+  // tied to a specific named person, since these are trimmed marketing
+  // lines rather than individually-sourced testimonials.
+  quoteAuthor: string;
   popular: boolean;
 };
 
@@ -247,37 +481,65 @@ export const fallbackPricing: PricingTier[] = [
   {
     name: "Discovery day",
     duration: "1 Day",
+    step: "Try it",
     price: "€190",
-    features: ["1 Intro lecture", "1 dry session", "1 water session", "Up to 2 students per 1 buoy"],
+    features: [
+      { count: "01", label: "Intro lecture" },
+      { count: "01", label: "Dry session" },
+      { count: "01", label: "Water session" },
+      { count: "02", label: "Students per buoy" },
+    ],
     bonus: null,
-    quote: "A thrilling introduction to freediving in just one day – perfect for curious minds and adrenaline seekers",
+    quote: "A thrilling introduction to freediving in just one day.",
+    quoteAuthor: "Student",
     popular: false,
   },
   {
     name: "Freedom Flow",
     duration: "1 Week",
+    step: "Build it",
     price: "€740",
-    features: ["4 lectures", "5 dry sessions", "5 water sessions", "Up to 2 students per 1 buoy"],
+    features: [
+      { count: "04", label: "Lectures" },
+      { count: "05", label: "Dry sessions" },
+      { count: "05", label: "Water sessions" },
+      { count: "02", label: "Students per buoy" },
+    ],
     bonus: null,
-    quote: "Experience the fundamentals of freediving and build real confidence over a full week of focused training",
+    quote: "A full week that builds real, lasting confidence.",
+    quoteAuthor: "Student",
     popular: false,
   },
   {
     name: "Deep Mastery",
     duration: "2 Weeks",
+    step: "Progress it",
     price: "€1,450",
-    features: ["6 lectures", "12 dry sessions", "8 water sessions", "Up to 2 students per 1 buoy"],
+    features: [
+      { count: "06", label: "Lectures" },
+      { count: "12", label: "Dry sessions" },
+      { count: "08", label: "Water sessions" },
+      { count: "02", label: "Students per buoy" },
+    ],
     bonus: "Personalized underwater video analysis",
-    quote: "Transform your freediving with our most effective program, combining breath control, equalization, and deep exploration",
+    quote: "Our most effective program for real transformation.",
+    quoteAuthor: "Student",
     popular: true,
   },
   {
     name: "Ultimate Freediver",
     duration: "4 Weeks",
+    step: "Master it",
     price: "€2,750",
-    features: ["12 lectures", "24 dry sessions", "16 water sessions", "Up to 2 students per 1 buoy"],
+    features: [
+      { count: "12", label: "Lectures" },
+      { count: "24", label: "Dry sessions" },
+      { count: "16", label: "Water sessions" },
+      { count: "02", label: "Students per buoy" },
+    ],
     bonus: "High-performance training insights & mindset coaching",
-    quote: "This is the most complete freediving experience, designed for those who want to turn freediving into a lifestyle and push their limits beyond expectations",
+    quote: "The most complete freediving experience we offer.",
+    quoteAuthor: "Student",
     popular: false,
   },
 ];
@@ -1027,13 +1289,15 @@ export async function getTeamMembers(): Promise<TeamMember[]> {
   if (!isSanityConfigured || !sanityClient) return fallbackTeam;
   try {
     const items = await sanityClient.fetch(
-      `*[_type == "teamMember"] | order(order asc){ name, "image": photo, bio, fullBio, qualifications, records, instagram, website }`
+      `*[_type == "teamMember"] | order(order asc){ name, "image": photo, role, bio, fullBio, bioSections, qualifications, records, instagram, website }`
     );
     if (!items?.length) return fallbackTeam;
-    return items.map((item: { name: string; image: unknown; bio: string; fullBio: string[] | null; qualifications: string[] | null; records: string | null; instagram: string | null; website: string | null }) => ({
+    return items.map((item: { name: string; image: unknown; role: string | null; bio: string; fullBio: string[] | null; bioSections: TeamBioSection[] | null; qualifications: string[] | null; records: TeamRecord[] | null; instagram: string | null; website: string | null }) => ({
       ...item,
+      role: item.role ?? "",
       image: urlForImage(item.image as never) || "",
       fullBio: item.fullBio ?? [],
+      bioSections: item.bioSections ?? [],
       qualifications: item.qualifications ?? [],
     }));
   } catch {
@@ -1045,7 +1309,7 @@ export async function getPricingTiers(): Promise<PricingTier[]> {
   if (!isSanityConfigured || !sanityClient) return fallbackPricing;
   try {
     const items = await sanityClient.fetch(
-      `*[_type == "pricingTier"] | order(order asc){ name, duration, price, features, bonus, quote, popular }`
+      `*[_type == "pricingTier"] | order(order asc){ name, duration, step, price, features, bonus, quote, quoteAuthor, popular }`
     );
     return items?.length ? items : fallbackPricing;
   } catch {

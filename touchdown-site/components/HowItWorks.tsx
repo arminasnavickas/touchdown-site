@@ -149,6 +149,8 @@ export default function HowItWorks({
             ctaLabel: "Book your training",
             ctaHref: "#schedule",
           }}
+          currentIndex={openStep}
+          total={steps.length}
           onClose={() => setOpenStep(null)}
           onPrev={() => setOpenStep((steps.length + openStep - 1) % steps.length)}
           onNext={() => setOpenStep((openStep + 1) % steps.length)}

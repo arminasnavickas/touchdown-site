@@ -12,9 +12,9 @@ function CloseIcon() {
   );
 }
 
-function ArrowIcon({ direction }: { direction: "left" | "right" }) {
+function ArrowIcon({ direction, className = "size-6" }: { direction: "left" | "right"; className?: string }) {
   return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="size-6">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className={className}>
       <path
         d={direction === "left" ? "M15 6l-6 6 6 6" : "M9 6l6 6-6 6"}
         strokeLinecap="round"
@@ -27,10 +27,25 @@ function ArrowIcon({ direction }: { direction: "left" | "right" }) {
 export type ArticleModalContent = {
   title: string;
   kicker?: string;
+  // Small line rendered directly under the title (Team's role tags, e.g.
+  // "Founder · Instructor · Coach") - distinct from `kicker`, which renders
+  // above the title instead, so both can be used independently depending
+  // on which reads better for a given caller's content shape.
+  subtitle?: string;
   image?: string;
   avatar?: string;
   instagram?: string;
   paragraphs: string[];
+  // Optional sectioned body copy (title + paragraphs per section), rendered
+  // instead of the flat `paragraphs` list when present - Team bios only for
+  // now. Reviews/HowItWorks keep using flat `paragraphs`.
+  sections?: { title: string; paragraphs: string[] }[];
+  // Optional compact stat row (e.g. depth records), rendered above the body
+  // copy. Horizontally scrolls on narrow screens rather than wrapping.
+  stats?: { value: string; label: string }[];
+  // Optional short bullet list rendered after the body copy, behind its own
+  // divider - Team's qualifications.
+  qualifications?: string[];
   // Optional scannable "what you'll learn" block, rendered after the
   // paragraphs behind a divider. Only How It Works populates this - team
   // bios and reviews don't have this shape, so they just render as before.
@@ -43,11 +58,19 @@ export type ArticleModalContent = {
 
 export default function ArticleModal({
   content,
+  currentIndex,
+  total,
   onClose,
   onPrev,
   onNext,
 }: {
   content: ArticleModalContent;
+  // When browsing a set (team members, review authors, steps), the header
+  // shows a compact "02 / 08" counter with small chevrons instead of the
+  // old large circular prev/next buttons floating over the page - only
+  // rendered when both are provided and there's more than one item.
+  currentIndex?: number;
+  total?: number;
   onClose: () => void;
   onPrev?: () => void;
   onNext?: () => void;
@@ -123,18 +146,53 @@ export default function ArticleModal({
         onTouchStart={onTouchStart}
         onTouchEnd={onTouchEnd}
       >
-        {/* Zero-height sticky anchor: keeps the button pinned to the top-right
+        {/* Zero-height sticky anchor: keeps this row pinned to the top-right
             of the visible scroll area (not the document) as the modal's
-            content scrolls, without taking up any layout space itself. */}
+            content scrolls, without taking up any layout space itself.
+            Nav counter + close button live together here now, instead of
+            prev/next being large circles floating over the page on either
+            side of the modal - those competed with the reading column for
+            attention and gave no sense of "browsing a set of N". */}
         <div className="sticky top-0 z-10 h-0 overflow-visible">
-          <button
-            type="button"
-            onClick={onClose}
-            aria-label="Close"
-            className="absolute right-5 top-5 flex size-12 items-center justify-center rounded-full bg-white/80 text-dark-ocean-blue backdrop-blur-sm transition hover:text-cta"
-          >
-            <CloseIcon />
-          </button>
+          <div className="absolute right-5 top-5 flex items-center gap-2">
+            {typeof currentIndex === "number" && typeof total === "number" && total > 1 && (
+              <div className="flex items-center gap-1 rounded-full bg-white/80 py-1 pl-1 pr-2.5 text-dark-ocean-blue backdrop-blur-sm">
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onPrev?.();
+                  }}
+                  aria-label="Previous"
+                  className="flex size-7 items-center justify-center rounded-full transition hover:text-cta"
+                >
+                  <ArrowIcon direction="left" className="size-4" />
+                </button>
+                <span className="font-switzer text-xs font-medium tabular-nums text-dark-ocean-blue/60">
+                  {String(currentIndex + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}
+                </span>
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onNext?.();
+                  }}
+                  aria-label="Next"
+                  className="flex size-7 items-center justify-center rounded-full transition hover:text-cta"
+                >
+                  <ArrowIcon direction="right" className="size-4" />
+                </button>
+              </div>
+            )}
+            <button
+              type="button"
+              onClick={onClose}
+              aria-label="Close"
+              className="flex size-12 items-center justify-center rounded-full bg-white/80 text-dark-ocean-blue backdrop-blur-sm transition hover:text-cta"
+            >
+              <CloseIcon />
+            </button>
+          </div>
         </div>
 
         {content.image && (
@@ -167,7 +225,11 @@ export default function ArticleModal({
                 {content.kicker}
               </p>
             )}
-            <div className="mb-6 flex items-center gap-3">
+            {/* Name and Instagram share one row (name left, link right)
+                instead of a small icon tucked right after the title - reads
+                as "here's this person, here's where to find them" rather
+                than a decoration next to the heading. */}
+            <div className="flex items-center justify-between gap-3">
               <h3 className="font-switzer text-4xl font-light tracking-tight text-dark-ocean-blue md:text-5xl">
                 {content.title}
               </h3>
@@ -176,25 +238,89 @@ export default function ArticleModal({
                   href={content.instagram}
                   target="_blank"
                   rel="noopener noreferrer"
-                  aria-label={`${content.title} on Instagram`}
-                  className="text-dark-ocean-blue/60 transition hover:text-cta"
+                  className="flex shrink-0 items-center gap-1 font-switzer text-sm font-medium uppercase tracking-widest text-cta transition hover:text-dark-ocean-blue"
                 >
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="size-6">
-                    <rect x="2.5" y="2.5" width="19" height="19" rx="5" />
-                    <circle cx="12" cy="12" r="4.2" />
-                    <circle cx="17.2" cy="6.8" r="1" fill="currentColor" stroke="none" />
-                  </svg>
+                  Instagram
+                  <span aria-hidden>→</span>
                 </a>
               )}
             </div>
-            {content.paragraphs.map((p, i) => (
-              <p
-                key={i}
-                className="mb-5 font-switzer text-lg font-light leading-relaxed text-dark-ocean-blue/80 last:mb-0"
-              >
-                {p}
+            {content.subtitle && (
+              <p className="mt-1 font-switzer text-sm font-medium uppercase tracking-widest text-dark-ocean-blue/50">
+                {content.subtitle}
               </p>
-            ))}
+            )}
+
+            {/* Compact stat row (e.g. depth records) - scrolls horizontally
+                on narrow screens instead of wrapping, so it stays a single
+                scannable line rather than an oversized sentence. */}
+            {content.stats && content.stats.length > 0 && (
+              <div className="mb-2 mt-5 flex gap-6 overflow-x-auto">
+                {content.stats.map((s) => (
+                  <div key={s.label} className="flex shrink-0 flex-col gap-0.5">
+                    <p className="font-switzer text-2xl font-medium tabular-nums text-dark-ocean-blue md:text-3xl">
+                      {s.value}
+                    </p>
+                    <p className="font-switzer text-xs font-semibold uppercase tracking-widest text-aquatic">
+                      {s.label}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            <div className="mt-6">
+              {content.sections && content.sections.length > 0 ? (
+                <div className="flex flex-col gap-6">
+                  {content.sections.map((section) => (
+                    <div key={section.title}>
+                      <p className="mb-2 font-switzer text-xs font-semibold uppercase tracking-[0.15em] text-aquatic">
+                        {section.title}
+                      </p>
+                      {section.paragraphs.map((p, i) => (
+                        <p
+                          key={i}
+                          className="mb-3 font-switzer text-lg font-light leading-relaxed text-dark-ocean-blue/80 last:mb-0"
+                        >
+                          {p}
+                        </p>
+                      ))}
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                content.paragraphs.map((p, i) => (
+                  <p
+                    key={i}
+                    className="mb-5 font-switzer text-lg font-light leading-relaxed text-dark-ocean-blue/80 last:mb-0"
+                  >
+                    {p}
+                  </p>
+                ))
+              )}
+            </div>
+
+            {/* Short bullet list (Team's qualifications) - deliberately not
+                paragraph prose, since a list of certifications/dates reads
+                better as scannable lines than as sentences stitched
+                together with periods. */}
+            {content.qualifications && content.qualifications.length > 0 && (
+              <div className="mt-2 border-t border-dark-ocean-blue/10 pt-6">
+                <p className="mb-3 font-switzer text-xs font-semibold uppercase tracking-[0.15em] text-aquatic">
+                  Background &amp; qualifications
+                </p>
+                <ul className="flex flex-col gap-2">
+                  {content.qualifications.map((q) => (
+                    <li
+                      key={q}
+                      className="font-switzer text-base font-light leading-relaxed text-dark-ocean-blue/70"
+                    >
+                      {q}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
 
             {/* Scannable "what you'll learn" block - the alternative to
                 dropping a second long paragraph in. Only present when the
@@ -234,33 +360,6 @@ export default function ArticleModal({
           </div>
         </div>
       </div>
-
-      {onPrev && (
-        <button
-          type="button"
-          onClick={(e) => {
-            e.stopPropagation();
-            onPrev();
-          }}
-          aria-label="Previous"
-          className="fixed left-4 top-1/2 flex size-11 -translate-y-1/2 items-center justify-center rounded-full bg-white text-dark-ocean-blue shadow-lg transition hover:bg-aquatic md:left-8 md:size-12"
-        >
-          <ArrowIcon direction="left" />
-        </button>
-      )}
-      {onNext && (
-        <button
-          type="button"
-          onClick={(e) => {
-            e.stopPropagation();
-            onNext();
-          }}
-          aria-label="Next"
-          className="fixed right-4 top-1/2 flex size-11 -translate-y-1/2 items-center justify-center rounded-full bg-white text-dark-ocean-blue shadow-lg transition hover:bg-aquatic md:right-8 md:size-12"
-        >
-          <ArrowIcon direction="right" />
-        </button>
-      )}
     </div>,
     document.body
   );
