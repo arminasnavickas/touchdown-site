@@ -21,7 +21,7 @@ export default function WhoWeAre({
   return (
     <section
       id="about-us"
-      className="relative flex flex-col items-center gap-10 overflow-hidden px-6 py-28 md:flex-row md:items-center md:justify-between md:gap-16 md:px-16 scroll-mt-20"
+      className="relative flex flex-col items-center gap-10 overflow-hidden px-6 py-20 md:flex-row md:items-center md:justify-between md:gap-16 md:px-16 scroll-mt-20"
     >
       <Blob className="left-0 top-[45%] h-[360px] w-[360px] -translate-y-1/2" />
       {/* order-2/order-1 put the photo above the text on mobile (where the

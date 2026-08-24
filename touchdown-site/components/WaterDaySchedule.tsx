@@ -14,7 +14,7 @@ export default function WaterDaySchedule({
 }) {
   const subcopyLines = subcopy.split("\n").filter(Boolean);
   return (
-    <section id="water-schedule" className="relative flex flex-col items-center gap-[100px] overflow-hidden px-6 py-28 md:px-16 scroll-mt-20">
+    <section id="water-schedule" className="relative flex flex-col items-center gap-[100px] overflow-hidden px-6 py-20 md:px-16 scroll-mt-20">
       <Blob className="left-0 top-[8%] h-[260px] w-[260px]" />
       <Blob className="right-0 top-[65%] h-[280px] w-[280px] -translate-y-1/2" />
       <Reveal>

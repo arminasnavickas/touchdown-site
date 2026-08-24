@@ -79,7 +79,7 @@ export default function Pricing({
   return (
     <section
       id="prices"
-      className="relative flex flex-col items-center gap-[100px] overflow-hidden px-6 py-28 md:px-16 scroll-mt-20"
+      className="relative flex flex-col items-center gap-[100px] overflow-hidden px-6 py-20 md:px-16 scroll-mt-20"
     >
       <Blob className="left-0 top-[62%] h-[400px] w-[400px] -translate-y-1/2" />
       <Blob className="right-0 top-[8%] h-[300px] w-[300px]" />

@@ -10,7 +10,7 @@ export default function Faq({ items }: { items: FaqItem[] }) {
   return (
     <section
       id="faq"
-      className="relative flex flex-col items-center gap-24 overflow-hidden px-6 py-28 md:px-16 scroll-mt-20"
+      className="relative flex flex-col items-center gap-24 overflow-hidden px-6 py-20 md:px-16 scroll-mt-20"
     >
       <Reveal>
         <h2 className="relative z-10 font-switzer text-4xl font-extralight tracking-tight text-danish-blue md:text-6xl">

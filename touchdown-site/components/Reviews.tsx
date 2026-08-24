@@ -148,7 +148,7 @@ export default function Reviews({
   return (
     <section
       id="reviews"
-      className="relative flex flex-col items-center gap-[70px] overflow-hidden px-6 py-28 md:px-16 scroll-mt-20"
+      className="relative flex flex-col items-center gap-[70px] overflow-hidden px-6 py-20 md:px-16 scroll-mt-20"
     >
       <Reveal>
         <div className="relative z-10 flex flex-col items-center gap-10 text-center">

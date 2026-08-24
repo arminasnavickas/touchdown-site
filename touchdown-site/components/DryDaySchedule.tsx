@@ -13,7 +13,7 @@ export default function DryDaySchedule({
   subcopy: string;
 }) {
   return (
-    <section className="relative flex flex-col items-center gap-[100px] overflow-hidden px-6 py-28 md:px-16">
+    <section className="relative flex flex-col items-center gap-[100px] overflow-hidden px-6 py-20 md:px-16">
       <Blob className="left-0 top-[60%] h-[300px] w-[300px] -translate-y-1/2" />
       <Reveal>
         <div className="relative z-10 flex max-w-3xl flex-col items-center gap-10 text-center">

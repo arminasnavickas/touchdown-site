@@ -158,7 +158,7 @@ export default function MeetOurTeam({
   return (
     <section
       id="team"
-      className="relative flex flex-col items-center gap-[100px] overflow-hidden px-6 py-28 md:px-16 scroll-mt-20"
+      className="relative flex flex-col items-center gap-[100px] overflow-hidden px-6 py-20 md:px-16 scroll-mt-20"
     >
       <Blob className="left-0 top-[8%] h-[320px] w-[320px]" />
       <Blob className="bottom-[6%] right-0 h-[340px] w-[340px]" />

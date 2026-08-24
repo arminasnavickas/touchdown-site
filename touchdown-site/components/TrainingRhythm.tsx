@@ -13,7 +13,7 @@ export default function TrainingRhythm({
   return (
     <section
       id="schedule"
-      className="relative flex flex-col items-center gap-16 overflow-hidden px-6 py-28 md:px-16 scroll-mt-20"
+      className="relative flex flex-col items-center gap-16 overflow-hidden px-6 py-20 md:px-16 scroll-mt-20"
     >
       <Blob className="right-0 top-[55%] h-[320px] w-[320px] -translate-y-1/2" />
       <Reveal>

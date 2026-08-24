@@ -90,7 +90,7 @@ export default function HowItWorks({
   return (
     <section
       id="courses"
-      className="relative flex flex-col items-center gap-10 overflow-hidden px-6 py-28 md:px-16 scroll-mt-20"
+      className="relative flex flex-col items-center gap-10 overflow-hidden px-6 py-20 md:px-16 scroll-mt-20"
     >
       <Blob className="left-0 top-[55%] h-[340px] w-[340px] -translate-y-1/2" />
       <Reveal>
