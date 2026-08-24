@@ -8,19 +8,18 @@ import type { ScheduleDay } from "@/lib/content";
 // field, so this works with the existing Sanity content as-is. Deliberately
 // NOT three different colours (per design feedback: small tonal/label
 // differences are enough to scan by, more colour reads as decoration) -
-// water gets the brand's aquatic accent and a filled dot, dry stays neutral
-// white with a filled dot, rest drops to a quiet muted tone with a dash
-// instead of a dot so it visually recedes rather than competing for
-// attention on the one day there's nothing scheduled.
+// water gets the brand's aquatic accent, dry stays neutral white, rest
+// drops to a quiet muted tone so it visually recedes rather than competing
+// for attention on the one day there's nothing scheduled.
 function dayTypeInfo(label: string) {
   const normalized = label.toLowerCase();
   if (normalized.includes("water")) {
-    return { word: "WATER", accentClass: "text-aquatic", marker: "dot" as const };
+    return { word: "WATER", accentClass: "text-aquatic" };
   }
   if (normalized.includes("dry")) {
-    return { word: "DRY", accentClass: "text-white", marker: "dot" as const };
+    return { word: "DRY", accentClass: "text-white" };
   }
-  return { word: "REST", accentClass: "text-white/40", marker: "dash" as const };
+  return { word: "REST", accentClass: "text-white/40" };
 }
 
 export default function TrainingRhythm({
@@ -93,25 +92,20 @@ export default function TrainingRhythm({
                     {day}
                   </p>
                   <p
-                    className={`flex items-center gap-2 font-switzer text-2xl font-medium tracking-tight sm:text-3xl ${info.accentClass}`}
+                    className={`font-switzer text-2xl font-medium tracking-tight sm:text-3xl ${info.accentClass}`}
                   >
-                    {info.marker === "dot" ? (
-                      <span className="inline-block size-1.5 shrink-0 rounded-full bg-current" />
-                    ) : (
-                      <span className="text-white/30">&mdash;</span>
-                    )}
                     {info.word}
                   </p>
                 </div>
 
-                <div className="flex items-center gap-1.5 font-switzer text-sm tabular-nums text-white/60 sm:text-base">
+                <div className="flex items-center">
                   {time ? (
-                    <>
+                    <span className="flex items-center gap-1.5 whitespace-nowrap rounded-full bg-white/10 px-3 py-1.5 font-switzer text-sm font-medium tracking-wide tabular-nums text-white sm:text-base">
                       <Clock className="size-4 shrink-0" strokeWidth={1.5} />
                       {time}
-                    </>
+                    </span>
                   ) : (
-                    <span className="text-white/40">Rest &amp; recovery</span>
+                    <span className="font-switzer text-sm text-white/40 sm:text-base">Rest &amp; recovery</span>
                   )}
                 </div>
               </div>

@@ -18,12 +18,13 @@ function PricingCard({ tier }: { tier: PricingTier }) {
         </span>
       )}
 
-      {/* Name/price and the features/quote sit stacked on mobile (room is
-          tight, so a two-column split would squeeze both too narrow to
-          read), then split into a left price column + right description
-          column from md up, where each card has enough width for it. */}
-      <div className="flex w-full flex-col gap-4 md:flex-row md:items-start md:gap-8">
-        <div className="flex flex-col items-center gap-3 text-center md:w-2/5 md:shrink-0 md:items-start md:text-left">
+      {/* Name/price sits on top with the features/quote below at every
+          breakpoint - previously split into a left price column + right
+          description column from md up, but that read as two competing
+          halves rather than one card; stacking keeps the same top-to-bottom
+          reading order as mobile. */}
+      <div className="flex w-full flex-col gap-4">
+        <div className="flex flex-col items-center gap-3 text-center md:items-start md:text-left">
           <div className="font-switzer text-xl font-light tracking-tight text-dark-ocean-blue">
             <p>{tier.name}</p>
             <p>{tier.duration}</p>
@@ -33,7 +34,7 @@ function PricingCard({ tier }: { tier: PricingTier }) {
           </p>
         </div>
 
-        <div className="flex w-full flex-col gap-4 md:w-3/5">
+        <div className="flex w-full flex-col gap-4">
           <div className="font-switzer text-lg font-light text-dark-ocean-blue">
             <ul className="list-disc pl-5">
               {tier.features.map((f) => (
