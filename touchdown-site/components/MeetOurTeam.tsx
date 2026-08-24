@@ -14,21 +14,15 @@ import ArticleModal from "./ArticleModal";
 // default below); a few have extra blank studio backdrop above the
 // subject's head, so only those get nudged down here instead of shifting
 // the shared default and risking clipping into everyone else's hair.
-const PHOTO_Y_OFFSET_BY_NAME: Record<string, number> = {
-  "Maksim Kalnibolotskii": 18,
-};
-
-// Small fixed-pixel nudge on top of the percentage offset above, for
-// fine-tuning individual photos a few px further down without having to
-// re-derive their percentage equivalent (which shifts with each photo's
-// own height). Combined with the percentage offset via calc() below.
-const PHOTO_Y_NUDGE_PX: Record<string, number> = {
-  Gus: 10,
-  Omar: 10,
-  "Maksim Kalnibolotskii": 15,
-  Denis: 15,
-  Ilia: 15,
-};
+// Currently empty - Maksim's photo used to need an 18% nudge here to skip
+// blank studio backdrop above his head, but that was because the source
+// file was a tall 2:3 portrait while every other team photo is a square
+// (~1:1). That mismatch was also why his lightbox popup had a visibly
+// different shape from everyone else's. Fixed at the source instead: the
+// file itself is now cropped to match the rest of the team's square ratio,
+// so this map goes back to needing per-member overrides only if a future
+// photo genuinely needs one.
+const PHOTO_Y_OFFSET_BY_NAME: Record<string, number> = {};
 
 function TeamCard({
   member,
@@ -73,16 +67,7 @@ function TeamCard({
             alt={member.name}
             wrapperClassName="h-full w-full"
             className="h-full w-full scale-105 object-cover"
-            style={{
-              // Subtract, not add: with object-fit: cover, a *lower*
-              // (more negative) offset is what crops the top of the photo
-              // away and reveals more of what's below - same direction as
-              // the existing percentage offsets above. Adding the px nudge
-              // instead pushed the image down past its top-aligned
-              // position and exposed the card's own background as a solid
-              // band across the top of the photo.
-              objectPosition: `50% calc(${PHOTO_Y_OFFSET_BY_NAME[member.name] ?? 0}% - ${PHOTO_Y_NUDGE_PX[member.name] ?? 0}px)`,
-            }}
+            style={{ objectPosition: `50% ${PHOTO_Y_OFFSET_BY_NAME[member.name] ?? 0}%` }}
           />
         </div>
       </button>

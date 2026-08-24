@@ -1,7 +1,27 @@
 import Blob from "./Blob";
+import BookInButton from "./BookInButton";
 import { Clock } from "lucide-react";
 import Reveal from "./Reveal";
 import type { ScheduleDay } from "@/lib/content";
+
+// Day type is inferred from the label text rather than added as a new CMS
+// field, so this works with the existing Sanity content as-is. Deliberately
+// NOT three different colours (per design feedback: small tonal/label
+// differences are enough to scan by, more colour reads as decoration) -
+// water gets the brand's aquatic accent and a filled dot, dry stays neutral
+// white with a filled dot, rest drops to a quiet muted tone with a dash
+// instead of a dot so it visually recedes rather than competing for
+// attention on the one day there's nothing scheduled.
+function dayTypeInfo(label: string) {
+  const normalized = label.toLowerCase();
+  if (normalized.includes("water")) {
+    return { word: "WATER", accentClass: "text-aquatic", marker: "dot" as const };
+  }
+  if (normalized.includes("dry")) {
+    return { word: "DRY", accentClass: "text-white", marker: "dot" as const };
+  }
+  return { word: "REST", accentClass: "text-white/40", marker: "dash" as const };
+}
 
 export default function TrainingRhythm({
   days,
@@ -13,7 +33,7 @@ export default function TrainingRhythm({
   return (
     <section
       id="schedule"
-      className="relative flex flex-col items-center gap-16 overflow-hidden px-6 py-20 md:px-16 scroll-mt-20"
+      className="relative flex flex-col items-center gap-12 overflow-hidden px-6 py-20 md:px-16 scroll-mt-20"
     >
       <Blob className="right-0 top-[55%] h-[320px] w-[320px] -translate-y-1/2" />
       <Reveal>
@@ -21,59 +41,100 @@ export default function TrainingRhythm({
           {heading}
         </h2>
       </Reveal>
-      <div className="relative z-10 flex w-full flex-wrap items-start justify-center gap-6 md:flex-nowrap">
-        {days.map(({ day, label, time }, i) => {
-          return (
-            <Reveal
-              key={day}
-              delay={i * 70}
-              className="flex max-w-[calc(50%-0.75rem)] flex-1 md:max-w-none"
-            >
-              {/* data-fab-avoid: with 7 cards wrapping two-per-row on mobile,
-                  a lone last card can end up sitting where the floating
-                  Book In/back-to-top stack lives - same issue we hit on How
-                  It Works. This opts every card in to that avoidance check.
 
-                  hover: is scoped to devices that report real hover support
-                  so a mobile tap doesn't leave a card permanently
-                  highlighted - touchscreens fire :hover on tap and only
-                  clear it on the next tap elsewhere, which read as a random
-                  stuck-blue day for no reason. */}
+      {/* The pattern strip - WATER · WATER · DRY · ... - exists purely to
+          communicate the *rhythm* itself at a glance (why the week is
+          shaped this way) before the reader gets into individual days.
+          Derived from the same days array so it can never drift out of
+          sync with the list below it. */}
+      <Reveal className="relative z-10 flex flex-col items-center gap-3">
+        <p className="font-switzer text-xs font-medium uppercase tracking-[0.2em] text-white/40">
+          Weekly training rhythm
+        </p>
+        <div className="flex flex-wrap items-center justify-center gap-x-2.5 gap-y-2">
+          {days.map((d, i) => {
+            const info = dayTypeInfo(d.label);
+            return (
+              <span key={d.day} className="flex items-center gap-2.5">
+                <span
+                  className={`font-switzer text-xs font-semibold uppercase tracking-widest ${info.accentClass}`}
+                >
+                  {info.word}
+                </span>
+                {i < days.length - 1 && <span className="text-white/20">·</span>}
+              </span>
+            );
+          })}
+        </div>
+      </Reveal>
+
+      {/* Rows, not cards - a bordered list reads as a deliberate weekly
+          programme (closer to a table/schedule) rather than seven
+          isolated tiles that each have to be read on their own. Day name
+          is now the small eyebrow line; the training type is the largest,
+          most prominent text in the row (per design feedback: the type is
+          the actionable information, the day name is just an index into
+          the week). */}
+      <div className="relative z-10 w-full max-w-3xl divide-y divide-white/10 border-y border-white/10">
+        {days.map(({ day, label, time }, i) => {
+          const info = dayTypeInfo(label);
+          return (
+            <Reveal key={day} delay={i * 60}>
+              {/* data-fab-avoid: the floating Book In/back-to-top stack can
+                  end up sitting over whichever row is scrolled into that
+                  position - same issue hit on How It Works and the old
+                  card grid here. */}
               <div
                 data-fab-avoid
-                className="flex flex-1 cursor-default flex-col items-center gap-2 rounded-lg bg-white/5 px-4 py-6 text-center text-white transition-colors duration-300 [@media(hover:hover)]:hover:bg-white/10 [@media(hover:hover)]:hover:text-cta"
+                className="flex flex-col gap-2 py-5 transition-colors duration-300 [@media(hover:hover)]:hover:bg-white/[0.03] sm:flex-row sm:items-center sm:justify-between sm:gap-6 sm:py-4"
               >
-                <p className="font-switzer text-3xl font-light tracking-tight">
-                  {day}
-                </p>
-                <p className="font-switzer text-sm font-bold uppercase tracking-widest">
-                  {label}
-                </p>
-                {time ? (
-                  <p className="flex w-fit items-center gap-1.5 whitespace-nowrap rounded-full bg-dark-ocean-blue/80 px-3 py-1.5 font-switzer text-sm font-medium tracking-wide text-white">
-                    <Clock className="size-4 shrink-0" strokeWidth={1.5} />
-                    {time}
+                <div className="flex flex-col gap-1">
+                  <p className="font-switzer text-xs font-medium uppercase tracking-[0.2em] text-white/40">
+                    {day}
                   </p>
-                ) : (
                   <p
-                    aria-hidden="true"
-                    className="invisible flex w-fit items-center gap-1.5 whitespace-nowrap rounded-full px-3 py-1.5 font-switzer text-sm font-medium tracking-wide"
+                    className={`flex items-center gap-2 font-switzer text-xl font-light tracking-tight sm:text-2xl ${info.accentClass}`}
                   >
-                    <Clock className="size-4 shrink-0" strokeWidth={1.5} />
-                    00:00 - 00:00
+                    {info.marker === "dot" ? (
+                      <span className="inline-block size-1.5 shrink-0 rounded-full bg-current" />
+                    ) : (
+                      <span className="text-white/30">&mdash;</span>
+                    )}
+                    {info.word}
                   </p>
-                )}
+                </div>
+
+                <div className="flex items-center gap-1.5 font-switzer text-sm text-white/60 sm:text-base">
+                  {time ? (
+                    <>
+                      <Clock className="size-4 shrink-0" strokeWidth={1.5} />
+                      {time}
+                    </>
+                  ) : (
+                    <span className="text-white/40">Rest &amp; recovery</span>
+                  )}
+                </div>
               </div>
             </Reveal>
           );
         })}
       </div>
-      <a
-        href="#water-schedule"
-        className="relative z-10 w-fit rounded-[6px] border border-white px-8 py-4 font-switzer text-base font-medium uppercase tracking-wide text-white transition-all duration-200 ease-out hover:bg-white hover:text-dark-ocean-blue hover:scale-105 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-dark-ocean-blue"
-      >
-        View full schedule
-      </a>
+
+      {/* BOOK YOUR TRAINING is the primary action; VIEW FULL SCHEDULE was
+          previously an equal-weight outlined button competing for the same
+          attention. Demoted to a plain text link so the hierarchy reads
+          training rhythm -> schedule -> booking, not two parallel CTAs. */}
+      <div className="relative z-10 flex flex-col items-center gap-5 sm:flex-row sm:gap-8">
+        <BookInButton className="w-fit rounded-[6px] bg-cta px-8 py-4 text-center font-switzer text-base font-medium uppercase tracking-wide text-white transition-all duration-200 ease-out hover:bg-aquatic hover:text-dark-ocean-blue hover:scale-105 hover:shadow-lg hover:shadow-cta/40 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cta focus-visible:ring-offset-2">
+          Book your training
+        </BookInButton>
+        <a
+          href="#water-schedule"
+          className="font-switzer text-sm font-medium uppercase tracking-widest text-white/60 underline decoration-white/30 underline-offset-4 transition hover:text-white hover:decoration-white"
+        >
+          View full schedule
+        </a>
+      </div>
     </section>
   );
 }
