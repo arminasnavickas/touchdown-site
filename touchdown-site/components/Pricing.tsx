@@ -50,9 +50,13 @@ function PricingCard({ tier }: { tier: PricingTier }) {
 
       {/* Numeric benefit system - "04  Lectures" reads and compares across
           cards far faster than a bulleted sentence, especially once you're
-          scanning four cards side by side. */}
+          scanning four cards side by side. INCLUDES sits directly under the
+          price and in the same cyan as the numbers themselves (was the
+          lighter aquatic accent) - this is the primary thing a comparing
+          visitor came here to read, so it gets the same accent weight as
+          the price/CTA rather than reading as a minor label. */}
       <div className="flex flex-col gap-2.5">
-        <p className="font-switzer text-xs font-semibold uppercase tracking-[0.15em] text-aquatic">
+        <p className="font-switzer text-sm font-semibold uppercase tracking-[0.15em] text-cta">
           Includes
         </p>
         <ul className="flex flex-col gap-2">
@@ -71,14 +75,18 @@ function PricingCard({ tier }: { tier: PricingTier }) {
 
       {/* Bonus gets its own small highlighted row instead of being tacked
           onto the end of the features list as "Bonus: ..." - it's meant to
-          read as extra value, not one more list item. */}
-      {tier.bonus && (
+          read as extra value, not one more list item. Every tier renders
+          *something* in this slot (Bonus if it has one, otherwise a "Good
+          for" positioning line) so the box is never just missing - a tier
+          without a bonus used to leave a visible empty gap here once the
+          row stretched to match its tallest sibling. */}
+      {(tier.bonus || tier.goodFor) && (
         <div className="rounded-md bg-aquatic/10 px-4 py-3">
           <p className="font-switzer text-xs font-semibold uppercase tracking-[0.15em] text-horizon">
-            Bonus
+            {tier.bonus ? "Bonus" : "Good for"}
           </p>
           <p className="font-switzer text-base font-light text-dark-ocean-blue">
-            {tier.bonus}
+            {tier.bonus ?? tier.goodFor}
           </p>
         </div>
       )}

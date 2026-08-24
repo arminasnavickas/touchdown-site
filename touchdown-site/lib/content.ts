@@ -8,17 +8,41 @@ import { urlForImage } from "./sanityImage";
 // exactly as it does today until a real Sanity project is connected.
 // ---------------------------------------------------------------------------
 
-export type FaqItem = { question: string; answer: string[] };
+export type FaqItem = {
+  question: string;
+  answer: string[];
+  // Subtle group label ("TRAINING", "BOOKING", "EQUIPMENT", "ARRIVAL") shown
+  // above the first question in each group so a longer FAQ list stays
+  // navigable without turning into full tabs. Optional - items without one
+  // just render with no group heading above them.
+  category?: string;
+  // Optional callout extracted from the answer for the one FAQ where a
+  // single fact (e.g. a recommended session count) is worth pulling out of
+  // the paragraph so it reads immediately instead of being buried mid-
+  // sentence. Same facts as the paragraph text, just surfaced.
+  highlight?: { label: string; text: string };
+};
 
+// Grouped by category (Training / Booking / Equipment / Arrival) rather than
+// the original flat order, so the section's new category labels reflect a
+// real grouping instead of repeating the same label twice non-adjacently.
 export const fallbackFaq: FaqItem[] = [
   {
     question: "Which package is right for me?",
+    category: "Training",
+    highlight: {
+      label: "Our recommendation",
+      text: "At least 8 training sessions, ideally across two weeks of diving.",
+    },
     answer: [
-      "We work with students of all levels, from beginners to well-seasoned athletes. You can choose any standard training package, and you can always personalize it based on your needs. Every student is different, but to see the best progress, we suggest at least 8 training sessions. You will benefit from shorter training periods with us, but at least two weeks of diving allows you to develop, adapt to, and absorb the skills we teach. Your training will depend on how much time you can commit to freediving and your availability in Dahab. If you're unsure which package is right for you, reach out, and we can help you decide.",
+      "We work with students of all levels, from beginners to well-seasoned athletes. You can choose any standard training package, and you can always personalize it based on your needs.",
+      "You will benefit from shorter training periods with us, but at least two weeks of diving allows you to develop, adapt to, and absorb the skills we teach. Your training will depend on how much time you can commit to freediving and your availability in Dahab.",
+      "If you're unsure which package is right for you, reach out, and we can help you decide.",
     ],
   },
   {
     question: "What's included in the price?",
+    category: "Booking",
     answer: [
       "Every package includes expert coaching, safety supervision, and access to our training sites, including Dahab's Blue Hole. Depending on the package, this may also include daily theory sessions, water time, dry training, and recovery activities such as yoga and breathwork. Our higher-tier packages also include a media kit, with professional photos from your sessions to capture your progress. Specific inclusions vary by package: check each card above for full details.",
     ],
@@ -30,24 +54,26 @@ export const fallbackFaq: FaqItem[] = [
     ],
   },
   {
+    question: "Payment options",
+    answer: [
+      "We accept payment via cash or bank transfer. A deposit may be required to secure your spot, with the balance due before or upon arrival. Reach out to our team for full payment details.",
+    ],
+  },
+  {
     question: "What equipment should I bring?",
+    category: "Equipment",
     answer: [
       "If you already have your own mask, snorkel, wetsuit, fins, or freediving computer, bring them along! Training with your own gear is always the best option. If you don't have some or all of these, don't worry: depending on availability, we may be able to provide what you need. Just let us know in advance so we can check what we have on hand.",
     ],
   },
   {
     question: "Pre-arrival preparation",
+    category: "Arrival",
     answer: [
       "Before you arrive, take care of a few key things to avoid any last-minute stress.",
       "Make sure you have your flight tickets, transfer arrangements, travel documents in order and double-check what's allowed in your luggage. If you need to rent equipment, confirm availability with us in advance. Bring both cash and a card, since not every place accepts card payments, and organize your accommodation ahead of time.",
       "On the visa side: if you're flying directly into Sharm El Sheikh and staying only within South Sinai (Sharm El Sheikh, Dahab, Nuweiba and Taba), you can enter on a free \"Sinai Only\" stamp, valid for 15 days and issued automatically at passport control. If you're staying longer, you'll need the standard 30-day tourist visa instead, either an e-visa arranged online before departure or a visa on arrival at the airport (around USD 25-30, cash only).",
       "One last thing: try not to arrive exhausted. Long flights and jet lag can slow down your body's recovery and make it more prone to inflammation, so give yourself a buffer before jumping into training.",
-    ],
-  },
-  {
-    question: "Payment options",
-    answer: [
-      "We accept payment via cash or bank transfer. A deposit may be required to secure your spot, with the balance due before or upon arrival. Reach out to our team for full payment details.",
     ],
   },
   {
@@ -469,6 +495,12 @@ export type PricingTier = {
   step: string;
   features: PricingFeature[];
   bonus: string | null;
+  // Shown in the same slot as `bonus` (same box treatment) for tiers that
+  // don't have one, so that slot is never just empty - a tier with no
+  // bonus and no goodFor would otherwise leave a visible gap between the
+  // features list and the testimonial/CTA below it, while every other
+  // tier's box fills the space.
+  goodFor: string | null;
   quote: string;
   // Generic attribution for the shortened quote below ("- Student") - not
   // tied to a specific named person, since these are trimmed marketing
@@ -490,6 +522,7 @@ export const fallbackPricing: PricingTier[] = [
       { count: "02", label: "Students per buoy" },
     ],
     bonus: null,
+    goodFor: "First-time freedivers",
     quote: "A thrilling introduction to freediving in just one day.",
     quoteAuthor: "Student",
     popular: false,
@@ -506,6 +539,7 @@ export const fallbackPricing: PricingTier[] = [
       { count: "02", label: "Students per buoy" },
     ],
     bonus: null,
+    goodFor: "Divers building real, lasting confidence",
     quote: "A full week that builds real, lasting confidence.",
     quoteAuthor: "Student",
     popular: false,
@@ -522,6 +556,7 @@ export const fallbackPricing: PricingTier[] = [
       { count: "02", label: "Students per buoy" },
     ],
     bonus: "Personalized underwater video analysis",
+    goodFor: null,
     quote: "Our most effective program for real transformation.",
     quoteAuthor: "Student",
     popular: true,
@@ -538,6 +573,7 @@ export const fallbackPricing: PricingTier[] = [
       { count: "02", label: "Students per buoy" },
     ],
     bonus: "High-performance training insights & mindset coaching",
+    goodFor: null,
     quote: "The most complete freediving experience we offer.",
     quoteAuthor: "Student",
     popular: false,
@@ -1277,7 +1313,7 @@ export async function getFaqItems(): Promise<FaqItem[]> {
   if (!isSanityConfigured || !sanityClient) return fallbackFaq;
   try {
     const items = await sanityClient.fetch(
-      `*[_type == "faqItem"] | order(order asc){ question, answer }`
+      `*[_type == "faqItem"] | order(order asc){ question, answer, category, highlight }`
     );
     return items?.length ? items : fallbackFaq;
   } catch {
@@ -1309,7 +1345,7 @@ export async function getPricingTiers(): Promise<PricingTier[]> {
   if (!isSanityConfigured || !sanityClient) return fallbackPricing;
   try {
     const items = await sanityClient.fetch(
-      `*[_type == "pricingTier"] | order(order asc){ name, duration, step, price, features, bonus, quote, quoteAuthor, popular }`
+      `*[_type == "pricingTier"] | order(order asc){ name, duration, step, price, features, bonus, goodFor, quote, quoteAuthor, popular }`
     );
     return items?.length ? items : fallbackPricing;
   } catch {

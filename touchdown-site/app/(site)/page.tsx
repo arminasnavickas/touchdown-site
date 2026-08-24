@@ -88,7 +88,7 @@ export default async function Home() {
       <Pricing tiers={pricingTiers} kicker={siteContent.pricingKicker} />
       <MeetOurTeam members={teamMembers} kicker={siteContent.teamKicker} />
       <Reviews reviews={reviews} subtitle={siteContent.reviewsSubtitle} />
-      <Faq items={faqItems} />
+      <Faq items={faqItems} contactEmail={siteContent.footerEmail} />
       <FloatingActions />
     </main>
   );

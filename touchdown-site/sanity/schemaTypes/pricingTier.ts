@@ -42,6 +42,12 @@ export default defineType({
       type: "string",
     }),
     defineField({
+      name: "goodFor",
+      title: "\"Good for\" positioning line (optional)",
+      type: "string",
+      description: 'Shown in the same highlighted box as Bonus, for tiers that don\'t have one - e.g. "First-time freedivers". Leave blank if Bonus is filled in above.',
+    }),
+    defineField({
       name: "quote",
       title: "Testimonial quote (short - one line)",
       type: "text",
