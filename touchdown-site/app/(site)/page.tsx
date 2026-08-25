@@ -69,12 +69,12 @@ export default async function Home() {
         copy={siteContent.whoWeAreCopy}
         image={siteContent.whoWeAreImage}
       />
-      <OurFacility />
       <HowItWorks
         heading={siteContent.howItWorksHeading}
         subtitle={siteContent.howItWorksSubtitle}
         steps={howItWorksSteps}
       />
+      <OurFacility />
       <WhatYouGet items={whatYouGetItems} heading={siteContent.whatYouGetHeading} />
       <TrainingRhythm days={scheduleDays} heading={siteContent.trainingRhythmHeading} />
       <WaterDaySchedule
