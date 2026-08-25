@@ -106,7 +106,7 @@ export default function Faq({
                       {faq.answer.map((paragraph, pi) => (
                         <p
                           key={pi}
-                          className="font-switzer text-[17px] font-light leading-relaxed text-danish-blue md:text-lg"
+                          className="font-switzer text-[17px] font-light leading-relaxed text-danish-blue md:text-[20px]"
                         >
                           {paragraph}
                         </p>

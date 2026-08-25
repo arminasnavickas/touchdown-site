@@ -62,13 +62,12 @@ function ReviewCard({
   }, [review.quote]);
 
   return (
-    // Quote-led, not card-led: chrome dialed back from a hover-lifting
-    // product card (shadow escalation, border-color shift, translate) to a
-    // quiet printed block - a flat shadow-sm that barely deepens on hover,
-    // no border, no lift. The quote is now the first and largest thing in
-    // the block; the reviewer's photo/name/rating moved into a small byline
-    // underneath instead of introducing them first, closer to a magazine
-    // pull-quote than a testimonial card.
+    // Reviewer-led, not quote-led: the byline (photo/name/role/rating) now
+    // opens the card with a divider underneath, and the quote follows below
+    // it - reads as "who said it" before "what they said", closer to a
+    // standard testimonial card than the earlier magazine pull-quote
+    // treatment. Card's own styling (flat shadow-sm, rounded-lg, gradient
+    // background, dimensions) is unchanged - only the internal order moved.
     <div
       className="flex h-full w-[80%] shrink-0 flex-col gap-3 rounded-lg p-6 shadow-sm transition-shadow duration-300 hover:shadow-md snap-start sm:w-[320px]"
       style={{
@@ -76,29 +75,9 @@ function ReviewCard({
           "linear-gradient(180deg, #FFFFFF 24.83%, rgba(208,235,242,0.1) 98.162%), linear-gradient(#FFFFFF, #FFFFFF)",
       }}
     >
-      <span aria-hidden className="font-switzer text-4xl font-light leading-none text-cta/25">
-        &ldquo;
-      </span>
-      <p
-        ref={quoteRef}
-        className="-mt-3 line-clamp-4 font-switzer text-base font-light leading-relaxed text-dark-ocean-blue"
-      >
-        {review.quote}
-      </p>
-      {overflows && (
-        <button
-          type="button"
-          onClick={() => onOpen(index)}
-          className="group relative inline-block w-fit self-start font-switzer text-base font-medium text-horizon transition hover:text-cta"
-        >
-          Read more
-          <span className="absolute -bottom-1 left-0 h-[2px] w-0 bg-cta transition-all duration-300 group-hover:w-full" />
-        </button>
-      )}
-      {/* Byline - photo/name/role/rating, all demoted from the card's
-          opening block to a small attribution line at the close, the way a
-          printed pull-quote credits its source rather than leading with it. */}
-      <div className="mt-auto flex items-center gap-2.5 border-t border-dark-ocean-blue/10 pt-3">
+      {/* Reviewer row - photo/name/role left, rating right, with a divider
+          below it separating the byline from the quote that follows. */}
+      <div className="flex items-center gap-2.5 border-b border-dark-ocean-blue/10 pb-3">
         <FadeImage
           src={review.image}
           alt={review.name}
@@ -115,6 +94,25 @@ function ReviewCard({
         </div>
         <StarRating rating={review.rating} />
       </div>
+      <span aria-hidden className="font-switzer text-4xl font-light leading-none text-cta/25">
+        &ldquo;
+      </span>
+      <p
+        ref={quoteRef}
+        className="-mt-3 line-clamp-4 font-switzer text-[17px] font-light leading-relaxed text-dark-ocean-blue md:text-[20px]"
+      >
+        {review.quote}
+      </p>
+      {overflows && (
+        <button
+          type="button"
+          onClick={() => onOpen(index)}
+          className="group relative inline-block w-fit self-start font-switzer text-base font-medium text-horizon transition hover:text-cta"
+        >
+          Read more
+          <span className="absolute -bottom-1 left-0 h-[2px] w-0 bg-cta transition-all duration-300 group-hover:w-full" />
+        </button>
+      )}
     </div>
   );
 }
@@ -171,7 +169,7 @@ export default function Reviews({
           <h2 className="font-switzer text-4xl font-extralight tracking-tight text-danish-blue md:text-6xl">
             Reviews
           </h2>
-          <p className="font-switzer text-xl font-light text-danish-blue">
+          <p className="font-switzer text-lg font-light leading-relaxed text-danish-blue md:text-xl">
             {subtitle}
           </p>
         </div>
