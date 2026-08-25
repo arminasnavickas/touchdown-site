@@ -132,20 +132,26 @@ export default function TrainingRhythm({
         })}
       </div>
 
-      {/* BOOK YOUR TRAINING is the primary action; VIEW FULL SCHEDULE was
-          previously an equal-weight outlined button competing for the same
-          attention. Demoted to a plain text link so the hierarchy reads
-          training rhythm -> schedule -> booking, not two parallel CTAs. */}
+      {/* BOOK YOUR TRAINING is still the primary action, but its position
+          swapped with VIEW FULL SCHEDULE (link now sits first/left on
+          desktop, CTA second/right - was the reverse). The link itself is
+          upgraded from a muted white underline to the brand cyan, with an
+          arrow that nudges forward on hover and an underline that
+          strengthens on hover, so it's clearly clickable without becoming a
+          second button competing with the CTA. */}
       <div className="relative z-10 flex flex-col items-center gap-5 sm:flex-row sm:gap-8">
+        <a
+          href="#water-schedule"
+          className="group/link flex items-center gap-1.5 font-switzer text-sm font-medium uppercase tracking-widest text-cta underline decoration-cta/40 underline-offset-4 transition hover:text-white hover:decoration-white"
+        >
+          View full schedule
+          <span aria-hidden className="transition-transform duration-200 group-hover/link:translate-x-1">
+            →
+          </span>
+        </a>
         <BookInButton className="w-fit rounded-[6px] bg-cta px-8 py-4 text-center font-switzer text-base font-medium uppercase tracking-wide text-white transition-all duration-200 ease-out hover:bg-aquatic hover:text-dark-ocean-blue hover:scale-105 hover:shadow-lg hover:shadow-cta/40 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cta focus-visible:ring-offset-2">
           Book your training
         </BookInButton>
-        <a
-          href="#water-schedule"
-          className="font-switzer text-sm font-medium uppercase tracking-widest text-white/60 underline decoration-white/30 underline-offset-4 transition hover:text-white hover:decoration-white"
-        >
-          View full schedule
-        </a>
       </div>
     </section>
   );

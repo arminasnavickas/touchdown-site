@@ -104,17 +104,25 @@ function PricingCard({ tier, index }: { tier: PricingTier; index: number }) {
 export default function Pricing({
   tiers,
   kicker,
+  contactEmail,
 }: {
   tiers: PricingTier[];
   kicker: string;
+  contactEmail: string;
 }) {
   return (
     // One of the page's three strongest information moments (with Hero and
     // How It Works) - py stays bumped up so it reads as a bigger beat than
-    // the supporting sections around it.
+    // the supporting sections around it. Bottom padding is deliberately
+    // larger than top (pb-32/md:pb-40 vs pt-24/md:pt-28) - a bigger,
+    // intentional pause before the next section instead of the cards
+    // feeling attached to it. overflow-hidden removed (was clipping card
+    // content, e.g. the "Most popular" card's elevated -mt-4/pb-11) - the
+    // Blob glow is small and mid-section, so it doesn't need the section to
+    // clip in order to stay contained.
     <section
       id="prices"
-      className="relative flex flex-col items-center gap-16 overflow-hidden px-6 py-24 md:gap-20 md:px-16 md:py-28 scroll-mt-20"
+      className="relative flex flex-col items-center gap-16 px-6 pt-24 pb-32 md:gap-20 md:px-16 md:pt-28 md:pb-40 scroll-mt-20"
     >
       {/* One contained glow behind the recommended plan (3rd of 4 columns) -
           the page's one deliberate mid-page glow moment (with Hero and the
@@ -161,10 +169,24 @@ export default function Pricing({
           </Reveal>
         ))}
       </div>
+      {/* Now a real mailto link (was plain text) - visually secondary to
+          the per-card "Book this course" CTAs above, but clearly clickable:
+          cyan accent on the actionable half of the sentence, an underline
+          that animates in on hover, and an arrow, without becoming a
+          second button competing with the cards. */}
       <Reveal className="relative z-10">
-        <p className="text-center font-switzer text-lg font-light text-white/70">
-          Looking for something different? Custom training is available on request.
-        </p>
+        <a
+          href={`mailto:${contactEmail}?subject=${encodeURIComponent("Custom training inquiry")}`}
+          className="group/custom inline-flex flex-wrap items-center justify-center gap-x-2 text-center font-switzer text-lg font-light text-white/70 transition hover:text-white"
+        >
+          <span>Looking for something different?</span>
+          <span className="inline-flex items-center gap-1.5 font-medium text-cta underline decoration-cta/40 underline-offset-4 transition group-hover/custom:decoration-cta">
+            Custom training is available on request
+            <span aria-hidden className="transition-transform duration-200 group-hover/custom:translate-x-1">
+              →
+            </span>
+          </span>
+        </a>
       </Reveal>
     </section>
   );

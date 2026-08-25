@@ -85,7 +85,7 @@ export default async function Home() {
         heading={siteContent.dryDayHeading}
         subcopy={siteContent.dryDaySubcopy}
       />
-      <Pricing tiers={pricingTiers} kicker={siteContent.pricingKicker} />
+      <Pricing tiers={pricingTiers} kicker={siteContent.pricingKicker} contactEmail={siteContent.footerEmail} />
       <MeetOurTeam members={teamMembers} kicker={siteContent.teamKicker} />
       <Reviews reviews={reviews} subtitle={siteContent.reviewsSubtitle} />
       <Faq items={faqItems} contactEmail={siteContent.footerEmail} />

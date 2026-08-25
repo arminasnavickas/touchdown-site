@@ -77,31 +77,11 @@ function TeamCard({
             {member.role}
           </p>
         </div>
-        {/* The lead record becomes a graphic stat (large thin numerals, the
-            same numeral language used everywhere else on the page) instead
-            of sitting inline as small caption text - a diver's depth or
-            record count is credibility, and it should read like one. Any
-            further records stay as the small inline list underneath. */}
-        {member.records && member.records.length > 0 && (
-          <div className="flex flex-col gap-0.5">
-            <p className="font-switzer text-3xl font-thin leading-none tracking-tight text-cta md:text-4xl">
-              -{member.records[0].value}
-            </p>
-            <p className="font-switzer text-[10px] font-semibold uppercase tracking-[0.2em] text-white/35">
-              {member.records[0].label}
-            </p>
-          </div>
-        )}
-        {member.records && member.records.length > 1 && (
-          <p className="font-switzer text-xs font-light text-white/45">
-            {member.records.slice(1).map((record, i) => (
-              <span key={record.label}>
-                {i > 0 && <span className="mx-1.5 text-white/20">·</span>}
-                -{record.value} <span className="text-white/30">{record.label}</span>
-              </span>
-            ))}
-          </p>
-        )}
+        {/* Depth records removed from the card (still passed into the
+            ArticleModal below via `stats`, so they remain fully visible in
+            each member's popup) - the grid now leads with name/role/bio
+            only, kept clean and scannable; performance data lives one tap
+            away in the detailed profile instead of competing with it here. */}
         {/* Clamped to 2 lines (was the full bio, uncapped) - now that the
             photo is the dominant element and taller, letting every card's
             bio run to a different length made the grid's bottom edge

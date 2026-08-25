@@ -166,7 +166,7 @@ export default function Reviews({
       <Reveal>
         <div className="relative z-10 flex flex-col items-center gap-4 text-center">
           <p className="font-switzer text-xs font-semibold uppercase tracking-[0.25em] text-cta md:text-sm">
-            Proof
+            The proof is in the pudding
           </p>
           <h2 className="font-switzer text-4xl font-extralight tracking-tight text-danish-blue md:text-6xl">
             Reviews
