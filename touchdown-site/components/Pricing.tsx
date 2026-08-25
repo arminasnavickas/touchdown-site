@@ -16,8 +16,10 @@ function PricingCard({ tier, index }: { tier: PricingTier; index: number }) {
       // Elevation instead of a badge - the recommended tier lifts slightly
       // on desktop (a physical shift, not a floating shadowed box) so it
       // reads as genuinely elevated within the row rather than flagged with
-      // a sticker.
-      className={`relative flex h-full w-full flex-col gap-6 border-t-2 p-7 transition-colors duration-300 ${
+      // a sticker. Mobile gets a full perimeter border (rounded, since each
+      // card is now a discrete swipeable panel in a carousel) instead of
+      // the desktop's single top rule between continuous columns.
+      className={`relative flex h-full w-full flex-col gap-6 rounded-lg border p-7 transition-colors duration-300 md:rounded-none md:border-0 md:border-t-2 ${
         tier.popular ? "border-cta bg-cta/5 md:-mt-4 md:pb-11" : "border-white/15 hover:border-cta/40"
       }`}
     >
@@ -138,16 +140,32 @@ export default function Pricing({
           </p>
         </div>
       </Reveal>
-      {/* items-start removed (was preventing the cards from stretching to
-          match row height) so the grid's default stretch behavior, plus
-          h-full on both the Reveal wrapper and the card itself, makes every
-          card in a row exactly as tall as its tallest sibling. A thin
-          shared divider column-to-column (divide-x) reinforces the
-          "programme catalogue" feel now that the cards no longer carry
-          their own boxed border/shadow. */}
-      <div className="relative z-10 grid w-full grid-cols-1 divide-y divide-white/10 md:grid-cols-2 md:divide-x md:divide-y-0 lg:grid-cols-4">
+      {/* Mobile hint that there's more than one screen's worth of cards -
+          the carousel below has no visible edge of the next card peeking
+          in once you're mid-scroll, so this is the one place that tells the
+          user to keep swiping. */}
+      <p className="relative z-10 -mt-8 font-switzer text-xs font-medium uppercase tracking-widest text-white/40 md:hidden">
+        Swipe to compare →
+      </p>
+      {/* Mobile: a horizontal snap-scroll carousel (one discrete card at a
+          time, matching the Reviews scroller's pattern) instead of four
+          full-height blocks stacked top to bottom - every package still
+          shows its full Includes/Bonus/CTA, just one swipe away from the
+          next rather than a long scroll away. Desktop keeps the grid: items
+          -start removed (was preventing the cards from stretching to match
+          row height) so the grid's default stretch behavior, plus h-full on
+          both the Reveal wrapper and the card itself, makes every card in a
+          row exactly as tall as its tallest sibling. A thin shared divider
+          column-to-column (divide-x) reinforces the "programme catalogue"
+          feel now that the cards no longer carry their own boxed
+          border/shadow. */}
+      <div className="relative z-10 flex w-full gap-4 overflow-x-auto px-1 pb-2 snap-x snap-mandatory [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:grid md:grid-cols-2 md:gap-0 md:divide-x md:divide-y-0 md:divide-white/10 md:overflow-visible md:px-0 md:pb-0 lg:grid-cols-4">
         {tiers.map((tier, i) => (
-          <Reveal key={tier.name} delay={i * 100} className="h-full">
+          <Reveal
+            key={tier.name}
+            delay={i * 100}
+            className="h-full w-[82%] shrink-0 snap-start sm:w-[360px] md:w-auto md:shrink md:snap-align-none"
+          >
             <PricingCard tier={tier} index={i} />
           </Reveal>
         ))}

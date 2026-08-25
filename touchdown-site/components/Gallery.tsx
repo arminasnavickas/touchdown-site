@@ -6,8 +6,7 @@ import { useLightbox } from "./LightboxContext";
 // Real hierarchy instead of a uniform "featured vs. small" split - one
 // hero, a tall companion beside it, two supporting mid-size images, three
 // smaller images with a deliberate empty fourth cell (negative space, not a
-// bug), then one final full-bleed image as a closing statement. Desktop
-// only; mobile stays the plain, compact 2-column grid below.
+// bug), then one final full-bleed image as a closing statement.
 const TILE_LAYOUT = [
   { span: "md:col-span-3", height: "md:h-[460px]" }, // 0 - hero
   { span: "md:col-span-1", height: "md:h-[460px]" }, // 1 - tall companion
@@ -17,6 +16,22 @@ const TILE_LAYOUT = [
   { span: "md:col-span-1", height: "md:h-[170px]" }, // 5 - small
   { span: "md:col-span-1", height: "md:h-[170px]" }, // 6 - small (4th column of this row left empty on purpose)
   { span: "md:col-span-4", height: "md:h-[440px]" }, // 7 - closing full-bleed image
+];
+
+// Mobile gets its own hierarchy on the same 2-column grid - not the desktop
+// pattern shrunk, and not a uniform grid of equal tiles either. Hero opens
+// full-width, then a supporting pair, a full-width mid image, another
+// supporting pair, one small tile with its partner cell left empty
+// (intentional, not a bug), then a full-width closer.
+const MOBILE_TILE_LAYOUT = [
+  { span: "col-span-2", height: "h-[220px]" }, // 0 - hero
+  { span: "col-span-1", height: "h-[150px]" }, // 1
+  { span: "col-span-1", height: "h-[150px]" }, // 2
+  { span: "col-span-2", height: "h-[190px]" }, // 3 - mid
+  { span: "col-span-1", height: "h-[150px]" }, // 4
+  { span: "col-span-1", height: "h-[150px]" }, // 5
+  { span: "col-span-1", height: "h-[130px]" }, // 6 - deliberate half-empty row
+  { span: "col-span-2", height: "h-[240px]" }, // 7 - closer
 ];
 
 function ViewIndicator() {
@@ -71,15 +86,16 @@ export default function Gallery({ images }: { images: string[] }) {
       <div className="relative z-10 grid grid-cols-2 gap-1 overflow-hidden rounded-lg bg-dark-ocean-blue md:grid-cols-4">
         {images.map((src, i) => {
           const tile = TILE_LAYOUT[i];
+          const mobileTile = MOBILE_TILE_LAYOUT[i];
           return (
           <button
             key={i}
             type="button"
             onClick={() => openLightbox(images, i)}
             aria-label={`View photo ${i + 1} of ${images.length}`}
-            className={`group relative h-[160px] cursor-zoom-in overflow-hidden md:h-[190px] ${
-              tile ? `${tile.span} ${tile.height}` : ""
-            }`}
+            className={`group relative cursor-zoom-in overflow-hidden ${
+              mobileTile ? `${mobileTile.span} ${mobileTile.height}` : "col-span-1 h-[160px]"
+            } ${tile ? `${tile.span} ${tile.height}` : ""}`}
           >
             <FadeImage
               src={src}

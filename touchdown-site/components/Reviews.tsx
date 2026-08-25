@@ -150,7 +150,7 @@ function FeaturedTestimonial({
         <span aria-hidden className="font-switzer text-6xl font-light leading-none text-cta/30 md:text-7xl">
           &ldquo;
         </span>
-        <p className="-mt-6 max-w-2xl font-switzer text-2xl font-light leading-snug text-white transition-colors duration-300 group-hover:text-white/90 md:text-[32px]">
+        <p className="-mt-6 max-w-2xl font-switzer text-xl font-light leading-snug text-white transition-colors duration-300 group-hover:text-white/90 md:text-[32px]">
           {review.quote}
         </p>
         <div className="flex flex-col items-start gap-1">

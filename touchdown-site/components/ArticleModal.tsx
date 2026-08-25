@@ -139,7 +139,7 @@ export default function ArticleModal({
 
   return createPortal(
     <div
-      className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 p-6"
+      className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 p-2.5 md:p-6"
       onClick={onClose}
     >
       {/* Narrowed from max-w-2xl (672px) to a slightly wider but more
@@ -147,9 +147,13 @@ export default function ArticleModal({
           rather than a focused reading surface. modal-scroll (globals.css)
           gives this its own slimmer, more transparent scrollbar than the
           site-wide one, since a mostly-empty white modal makes even a thin
-          thumb read as prominent. */}
+          thumb read as prominent. Mobile overlay padding cut down to a
+          near-full-screen 2.5 (from a flat 6 at every breakpoint) so the
+          reading surface itself gets the width, not the black margin
+          around it - a real "near-full-screen modal" rather than a desktop
+          dialog with its edges just barely inside a small viewport. */}
       <div
-        className="modal-scroll relative max-h-[85vh] w-full max-w-[800px] overflow-y-auto rounded-lg bg-white"
+        className="modal-scroll relative max-h-[94vh] w-full max-w-[800px] overflow-y-auto rounded-lg bg-white md:max-h-[85vh]"
         onClick={(e) => e.stopPropagation()}
         onTouchStart={onTouchStart}
         onTouchEnd={onTouchEnd}
@@ -233,7 +237,10 @@ export default function ArticleModal({
             the modal itself stays ~800px so there's real whitespace either
             side, but no line of body text runs wider than roughly 65-75
             characters. */}
-        <div className="px-8 py-8 md:px-12 md:py-10">
+        {/* Comfortable margins rather than the desktop's generous 8/8 -
+            enough to keep the text off the modal's own edges without
+            eating into the reading column on a 375-414px screen. */}
+        <div className="px-5 py-6 md:px-12 md:py-10">
           <div className="max-w-[560px]">
             {content.avatar && (
               <FadeImage
@@ -254,7 +261,7 @@ export default function ArticleModal({
                 as "here's this person, here's where to find them" rather
                 than a decoration next to the heading. */}
             <div className="flex items-center justify-between gap-3">
-              <h3 className="font-switzer text-4xl font-light tracking-tight text-dark-ocean-blue md:text-5xl">
+              <h3 className="font-switzer text-3xl font-light tracking-tight text-dark-ocean-blue md:text-5xl">
                 {content.title}
               </h3>
               {content.instagram && (

@@ -18,9 +18,11 @@ import type { HowItWorksStep } from "@/lib/content";
 // a literal typographic/photographic "growing" rhythm so the four steps
 // read as an escalation (knowledge -> application -> consistency -> depth)
 // rather than four identically-weighted stops. Numbers and the rail stay a
-// fixed size so the connecting line across the top never breaks.
-const IMAGE_HEIGHT_BY_INDEX = ["h-[150px] md:h-[160px]", "h-[150px] md:h-[185px]", "h-[150px] md:h-[210px]", "h-[150px] md:h-[240px]"];
-const TITLE_SIZE_BY_INDEX = ["md:text-[26px]", "md:text-[28px]", "md:text-[31px]", "md:text-[34px]"];
+// fixed size so the connecting line across the top never breaks. Mobile
+// gets its own (smaller-but-still-escalating) heights, not the desktop
+// values shrunk down.
+const IMAGE_HEIGHT_BY_INDEX = ["h-[140px] md:h-[160px]", "h-[160px] md:h-[185px]", "h-[180px] md:h-[210px]", "h-[200px] md:h-[240px]"];
+const TITLE_SIZE_BY_INDEX = ["text-xl md:text-[26px]", "text-xl md:text-[28px]", "text-2xl md:text-[31px]", "text-2xl md:text-[34px]"];
 
 function ProgressionStep({
   index,
@@ -32,54 +34,66 @@ function ProgressionStep({
   const { openLightbox } = useLightbox();
   const number = String(index + 1).padStart(2, "0");
   return (
-    <div className="relative flex flex-1 flex-col gap-4 md:gap-5">
-      {/* The number IS the step marker - large, thin, on the rail - not a
-          small index label sitting above a dominant photo like the old
-          card. A filled dot sits on the rail directly under it so the four
-          numbers read as beads threaded on one line. */}
-      <div className="relative flex items-center gap-3 md:block md:h-[70px]">
-        <span className="relative z-10 font-switzer text-5xl font-thin leading-none text-cta md:text-[68px]">
+    // Mobile is a real vertical sequence - a numbered timeline row (number
+    // left, content right), not the desktop's four-abreast layout stacked
+    // into a 2x2 grid. md: switches back to the column layout the rail sits
+    // on top of.
+    <div className="relative flex flex-row gap-4 md:flex-1 md:flex-col md:gap-5">
+      {/* The number IS the step marker - large, thin - not a small index
+          label sitting above a dominant photo like the old card. On mobile
+          it leads its own row with a short stem running down toward the
+          content, echoing the desktop rail's dot-on-a-line language rotated
+          into a vertical sequence. A filled dot sits on the rail directly
+          under it on desktop so the four numbers read as beads threaded on
+          one line. */}
+      <div className="relative flex w-12 shrink-0 flex-col items-center md:block md:w-auto md:h-[70px]">
+        <span className="relative z-10 font-switzer text-4xl font-thin leading-none text-cta md:text-5xl md:text-[68px]">
           {number}
         </span>
+        {index < 3 && (
+          <span aria-hidden className="mt-2 w-px flex-1 bg-gradient-to-b from-cta/30 to-cta/0 md:hidden" />
+        )}
         <span
           aria-hidden
           className="hidden size-2 rounded-full bg-cta md:absolute md:bottom-0 md:left-[6px] md:block"
         />
       </div>
 
-      <p className={`font-switzer text-2xl font-medium tracking-tight text-white ${TITLE_SIZE_BY_INDEX[index]}`}>
-        {title}
-      </p>
+      <div className="flex flex-1 flex-col gap-4 pb-2 md:gap-5 md:pb-0">
+        <p className={`font-switzer font-medium tracking-tight text-white ${TITLE_SIZE_BY_INDEX[index]}`}>
+          {title}
+        </p>
 
-      <button
-        type="button"
-        onClick={() => openLightbox([image], 0)}
-        className={`group relative w-full cursor-zoom-in overflow-hidden rounded-md ${IMAGE_HEIGHT_BY_INDEX[index]}`}
-        aria-label="View full image"
-      >
-        <FadeImage
-          src={image}
-          alt={title}
-          wrapperClassName="h-full w-full"
-          className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
-        />
-      </button>
+        <button
+          type="button"
+          onClick={() => openLightbox([image], 0)}
+          className={`group relative w-full cursor-zoom-in overflow-hidden rounded-md ${IMAGE_HEIGHT_BY_INDEX[index]}`}
+          aria-label="View full image"
+        >
+          <FadeImage
+            src={image}
+            alt={title}
+            wrapperClassName="h-full w-full"
+            className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+          />
+        </button>
 
-      <p className="line-clamp-3 font-switzer text-base font-light leading-relaxed text-white/70">
-        {paragraphs[0]}
-      </p>
+        <p className="line-clamp-3 font-switzer text-base font-light leading-relaxed text-white/70">
+          {paragraphs[0]}
+        </p>
 
-      <button
-        type="button"
-        onClick={onReadMore}
-        data-fab-avoid
-        className="group/link mt-auto flex w-fit items-center gap-1.5 pt-1 font-switzer text-sm font-medium uppercase tracking-widest text-cta transition hover:text-white"
-      >
-        Read more
-        <span aria-hidden className="transition-transform duration-200 group-hover/link:translate-x-1">
-          →
-        </span>
-      </button>
+        <button
+          type="button"
+          onClick={onReadMore}
+          data-fab-avoid
+          className="group/link mt-auto flex w-fit items-center gap-1.5 pt-1 font-switzer text-sm font-medium uppercase tracking-widest text-cta transition hover:text-white"
+        >
+          Read more
+          <span aria-hidden className="transition-transform duration-200 group-hover/link:translate-x-1">
+            →
+          </span>
+        </button>
+      </div>
     </div>
   );
 }
@@ -124,13 +138,16 @@ export default function HowItWorks({
           </p>
         </div>
       </Reveal>
-      {/* Column widths widen step by step (was a flat 4-up grid) - paired
-          with each step's own growing image/title, so the sequence reads as
-          a genuine escalation left to right, not four equal boxes. */}
-      <div className="relative z-10 grid w-full grid-cols-2 gap-x-6 gap-y-12 md:grid-cols-[21%_23.5%_26%_29.5%] md:gap-x-8 md:gap-y-0">
+      {/* Mobile: a single column, true vertical sequence (was a 2x2 grid -
+          the desktop layout stacked, not a real mobile composition).
+          Desktop: column widths widen step by step, paired with each step's
+          own growing image/title, so the sequence reads as a genuine
+          escalation left to right, not four equal boxes. */}
+      <div className="relative z-10 flex w-full flex-col gap-10 md:grid md:grid-cols-[21%_23.5%_26%_29.5%] md:gap-x-8 md:gap-y-0">
         {/* The rail - a single line threaded behind all four numbers,
-            desktop only (a horizontal line has nothing meaningful to
-            connect once the steps wrap onto a 2x2 mobile grid). */}
+            desktop only (mobile gets its own short per-step stem instead of
+            a line connecting a 2x2 grid, which had nothing meaningful to
+            connect once the steps wrapped). */}
         <div
           aria-hidden
           className="pointer-events-none absolute inset-x-0 top-[27px] hidden h-px bg-gradient-to-r from-cta/0 via-cta/35 to-cta/0 md:block"
