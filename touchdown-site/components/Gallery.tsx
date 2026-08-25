@@ -3,14 +3,11 @@
 import FadeImage from "./FadeImage";
 import { useLightbox } from "./LightboxContext";
 
-// Which of the 8 images get the larger "feature" treatment on desktop - the
-// strongest action/training shots (divers on the line, diver at the reef,
-// deep diver beneath the sun, the red-suited freediver). Everything else
-// (including the dolphin shot, whose documentary/wildlife style reads
-// differently from the rest of the underwater sports photography) sits in
-// the smaller row in between, rather than every image competing at the same
-// scale.
-const FEATURED_INDICES = new Set([0, 1, 6, 7]);
+// LOCKED LAYOUT - approved reference: a clean, uniform 4x2 grid (2x4 on
+// mobile), every tile the same size, no featured/larger tiles, no gap
+// between images, rounded corners only on the gallery's own outer edge.
+// Do not reintroduce a masonry/editorial hierarchy here without an explicit
+// new instruction.
 
 function ViewIndicator() {
   return (
@@ -53,24 +50,21 @@ export default function Gallery({ images }: { images: string[] }) {
         </p>
       </div>
 
-      {/* gap-1 (4px) on a navy-filled grid (was gap-0) so a thin seam of
-          the site's own navy shows between photographs instead of them
-          merging into one solid block. Outer corners stay rounded via
-          overflow-hidden on this wrapper; individual tiles are square so
-          the seam reads clean. Desktop mixes 2-col "feature" tiles with
-          1-col tiles for an editorial rhythm instead of a uniform 4x2
-          grid; mobile stays a plain, compact 2-column grid throughout (no
-          feature tiles) so it doesn't turn into a long uneven stack. */}
-      <div className="relative z-10 grid grid-cols-2 gap-1 overflow-hidden rounded-lg bg-dark-ocean-blue md:grid-cols-4">
+      {/* One consistent outer container: overflow-hidden + rounded-lg here
+          is the ONLY rounding in the whole grid - individual tiles are
+          plain rectangles with zero gap between them, so the 8 photos read
+          as one continuous 4x2 (2x4 on mobile) composition rather than a
+          set of separate cards. Every tile shares the same fixed height at
+          each breakpoint, so all 8 are identical in size - no featured or
+          larger tiles. */}
+      <div className="relative z-10 grid grid-cols-2 gap-0 overflow-hidden rounded-lg md:grid-cols-4">
         {images.map((src, i) => (
           <button
             key={i}
             type="button"
             onClick={() => openLightbox(images, i)}
             aria-label={`View photo ${i + 1} of ${images.length}`}
-            className={`group relative h-[160px] cursor-zoom-in overflow-hidden md:h-[190px] ${
-              FEATURED_INDICES.has(i) ? "md:col-span-2 md:h-[380px]" : ""
-            }`}
+            className="group relative h-[160px] cursor-zoom-in overflow-hidden md:h-[190px]"
           >
             <FadeImage
               src={src}
@@ -79,21 +73,10 @@ export default function Gallery({ images }: { images: string[] }) {
               className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.03]"
             />
             {/* Restrained hover: a soft dark wash + small cyan "View ->"
-                label (was hover:scale-110 with no overlay or label at all)
-                - the photograph stays dominant, this just confirms the
-                tile is clickable. */}
+                label - the photograph stays dominant, this just confirms
+                the tile is clickable. Hover-only, so it doesn't change the
+                grid's static appearance. */}
             <div className="absolute inset-0 bg-dark-ocean-blue/0 transition-colors duration-300 group-hover:bg-dark-ocean-blue/25" />
-            {/* Plate number, always on (not hover-gated) - the same thin
-                numeral language used in How It Works and Pricing, applied
-                here as a photography-book caption rather than a UI badge,
-                so the grid reads as a numbered set of plates instead of a
-                bare image tile grid. */}
-            <span
-              aria-hidden
-              className="pointer-events-none absolute bottom-3 right-3 font-switzer text-xs font-light tabular-nums tracking-widest text-white/60 [text-shadow:0_1px_4px_rgba(0,0,0,0.5)] md:bottom-4 md:right-4"
-            >
-              {String(i + 1).padStart(2, "0")}
-            </span>
             <ViewIndicator />
           </button>
         ))}
