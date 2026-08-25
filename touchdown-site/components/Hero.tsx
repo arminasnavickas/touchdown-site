@@ -166,7 +166,7 @@ export default function Hero({
             once you subtract the section's own padding, so it was
             effectively unconstrained) - now wraps into a genuinely narrow,
             deliberate column instead of running edge to edge. */}
-        <Reveal delay={80} className="max-w-[280px] font-switzer text-xl font-light text-white/90 sm:max-w-sm md:max-w-xl">
+        <Reveal delay={80} className="max-w-[280px] font-switzer text-[15px] font-light text-white/90 sm:max-w-sm md:max-w-xl">
           {subcopyLines.map((line, i) => (
             <p key={i}>
               {line}

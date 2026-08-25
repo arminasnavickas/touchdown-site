@@ -311,7 +311,7 @@ export default function ArticleModal({
                       {section.paragraphs.map((p, i) => (
                         <p
                           key={i}
-                          className="mb-3 font-switzer text-xl font-light leading-relaxed text-dark-ocean-blue/80 last:mb-0"
+                          className="mb-3 font-switzer text-[15px] font-light leading-relaxed text-dark-ocean-blue/80 last:mb-0"
                         >
                           {p}
                         </p>
@@ -323,7 +323,7 @@ export default function ArticleModal({
                 content.paragraphs.map((p, i) => (
                   <p
                     key={i}
-                    className="mb-5 font-switzer text-xl font-light leading-relaxed text-dark-ocean-blue/80 last:mb-0"
+                    className="mb-5 font-switzer text-[15px] font-light leading-relaxed text-dark-ocean-blue/80 last:mb-0"
                   >
                     {p}
                   </p>

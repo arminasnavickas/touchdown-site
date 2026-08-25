@@ -28,7 +28,7 @@ export default function WhatYouGet({
               <p className="font-switzer text-3xl font-thin leading-none tracking-tight text-cta md:text-6xl">
                 <TypewriterText text={item.title} />
               </p>
-              <p className="font-switzer text-xl font-light leading-relaxed text-white/80">
+              <p className="font-switzer text-[15px] font-light leading-relaxed text-white/80">
                 {item.copy}
               </p>
             </div>

@@ -17,9 +17,9 @@ function PricingCard({ tier, index }: { tier: PricingTier; index: number }) {
       // on desktop (a physical shift, not a floating shadowed box) so it
       // reads as genuinely elevated within the row rather than flagged with
       // a sticker. Mobile gets a full perimeter border (rounded, since each
-      // card is now a discrete swipeable panel in a carousel) instead of
-      // the desktop's single top rule between continuous columns.
-      className={`relative flex h-full w-full flex-col gap-6 rounded-lg border p-7 transition-colors duration-300 md:rounded-none md:border-0 md:border-t-2 ${
+      // card is now a discrete swipeable panel in a carousel); desktop has
+      // no border at all now (the top rule across the row was removed).
+      className={`relative flex h-full w-full flex-col gap-6 rounded-lg border p-7 transition-colors duration-300 md:rounded-none md:border-0 ${
         tier.popular ? "border-cta bg-cta/5 md:-mt-4 md:pb-11" : "border-white/15 hover:border-cta/40"
       }`}
     >
@@ -27,7 +27,7 @@ function PricingCard({ tier, index }: { tier: PricingTier; index: number }) {
           every card's name/price block still starts at the same y position
           across the row, whether or not this particular tier shows the
           "Most popular" tag. */}
-      <div className="flex min-h-[20px] items-center justify-end">
+      <div className="flex min-h-[20px] items-center justify-start">
         {tier.popular && (
           <span className="font-switzer text-xs font-semibold uppercase tracking-widest text-cta">
             Most popular
@@ -43,7 +43,7 @@ function PricingCard({ tier, index }: { tier: PricingTier; index: number }) {
           {tier.name}
         </p>
         <p className="font-switzer text-xs font-medium uppercase tracking-[0.15em] text-white/40">
-          {tier.duration} &middot; {tier.step}
+          {tier.duration}
         </p>
         <p className="mt-3 font-switzer text-6xl font-extralight tracking-tighter text-white">
           {tier.price}
@@ -57,7 +57,7 @@ function PricingCard({ tier, index }: { tier: PricingTier; index: number }) {
         </p>
         <ul className="flex flex-col gap-2">
           {tier.features.map((f) => (
-            <li key={f.label} className="font-switzer text-xl font-light leading-relaxed text-white/80">
+            <li key={f.label} className="font-switzer text-[15px] font-light leading-relaxed text-white/80">
               {f.label}
             </li>
           ))}
@@ -73,7 +73,7 @@ function PricingCard({ tier, index }: { tier: PricingTier; index: number }) {
           <p className="font-switzer text-xs font-semibold uppercase tracking-[0.2em] text-cta">
             {tier.bonus ? "Bonus" : "Good for"}
           </p>
-          <p className="mt-1 font-switzer text-xl font-light leading-relaxed text-white/80">
+          <p className="mt-1 font-switzer text-[15px] font-light leading-relaxed text-white/80">
             {tier.bonus ?? tier.goodFor}
           </p>
         </div>
@@ -82,9 +82,9 @@ function PricingCard({ tier, index }: { tier: PricingTier; index: number }) {
       {/* Testimonial - one short line with a plain attribution, kept well
           below the actual product information (what's included, what it
           costs) in visual weight. */}
-      <p className="border-t border-white/10 pt-5 font-switzer text-xl font-light italic leading-relaxed text-white/50">
+      <p className="border-t border-white/10 pt-5 font-switzer text-[15px] font-light italic leading-relaxed text-white/50">
         &ldquo;{tier.quote}&rdquo;{" "}
-        <span className="not-italic text-white/30">&mdash; {tier.quoteAuthor}</span>
+        <span className="not-italic text-white/30">{tier.quoteAuthor}</span>
       </p>
 
       {/* "Book in" -> "Book this course" - there are four distinct

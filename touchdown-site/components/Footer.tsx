@@ -110,7 +110,7 @@ export default function Footer({
               <p className="font-switzer text-3xl font-light tracking-tight sm:text-4xl md:text-6xl">
                 {tagline}
               </p>
-              <p className="font-switzer text-xl font-light leading-relaxed text-white/60">
+              <p className="font-switzer text-[15px] font-light leading-relaxed text-white/60">
                 {ctaSubcopy}
               </p>
             </div>
