@@ -119,53 +119,6 @@ function ReviewCard({
   );
 }
 
-// Full quotation mark size step down for the supporting scroller only -
-// the featured testimonial below keeps the large version.
-function FeaturedTestimonial({
-  review,
-  onOpen,
-}: {
-  review: Review;
-  onOpen: () => void;
-}) {
-  return (
-    // Asymmetric, left-aligned pairing (was centered) - a real portrait
-    // sitting beside the quote instead of a small byline avatar underneath
-    // it, so this reads as one person's proof rather than another centered
-    // block matching the rest of the page's rhythm. Breaking the page's
-    // centered pattern here is deliberate: this is the section's one
-    // dominant moment.
-    <button
-      type="button"
-      onClick={onOpen}
-      className="group relative z-10 flex w-full flex-col items-start gap-6 text-left md:flex-row md:items-center md:gap-12"
-    >
-      <FadeImage
-        src={review.image}
-        alt={review.name}
-        wrapperClassName="size-20 shrink-0 overflow-hidden rounded-full md:size-32"
-        className="h-full w-full object-cover"
-      />
-      <div className="flex flex-1 flex-col items-start gap-5 text-left">
-        <span aria-hidden className="font-switzer text-6xl font-light leading-none text-cta/30 md:text-7xl">
-          &ldquo;
-        </span>
-        <p className="-mt-6 max-w-2xl font-switzer text-xl font-light leading-snug text-white transition-colors duration-300 group-hover:text-white/90 md:text-[32px]">
-          {review.quote}
-        </p>
-        <div className="flex flex-col items-start gap-1">
-          <p className="font-switzer text-xl font-medium text-white md:text-2xl">{review.name}</p>
-          {review.role && (
-            <p className="font-switzer text-sm font-medium uppercase tracking-widest text-cta md:text-base">
-              {review.role}
-            </p>
-          )}
-        </div>
-      </div>
-    </button>
-  );
-}
-
 export default function Reviews({
   reviews,
   subtitle,
@@ -224,15 +177,6 @@ export default function Reviews({
         </div>
       </Reveal>
 
-      {/* One dominant testimonial standing in for the whole section's proof
-          before the smaller supporting row - reviews[0] carries the weight
-          a wall of equal cards used to spread thin. */}
-      {reviews[0] && (
-        <Reveal className="w-full max-w-4xl">
-          <FeaturedTestimonial review={reviews[0]} onOpen={() => setOpenIndex(0)} />
-        </Reveal>
-      )}
-
       <div className="relative z-10 w-full">
         <div
           ref={scrollerRef}
@@ -245,11 +189,12 @@ export default function Reviews({
           }`}
           style={{ scrollPaddingLeft: "1px" }}
         >
-          {reviews.map((review, i) =>
-            i === 0 ? null : (
-              <ReviewCard key={review.name} review={review} index={i} onOpen={setOpenIndex} />
-            )
-          )}
+          {/* Big featured testimonial removed - every review, including
+              what used to be reviews[0], now shows as an equal small card
+              in this scroller. */}
+          {reviews.map((review, i) => (
+            <ReviewCard key={review.name} review={review} index={i} onOpen={setOpenIndex} />
+          ))}
         </div>
 
         <button

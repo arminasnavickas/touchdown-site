@@ -23,13 +23,11 @@ function PricingCard({ tier, index }: { tier: PricingTier; index: number }) {
         tier.popular ? "border-cta bg-cta/5 md:-mt-4 md:pb-11" : "border-white/15 hover:border-cta/40"
       }`}
     >
-      {/* Package index, echoing the same numbering language used in How It
-          Works and Team elsewhere on the page - pricing reads as one more
-          part of the same editorial system instead of a bolted-on table. */}
-      <div className="flex min-h-[20px] items-center justify-between">
-        <span className="font-switzer text-sm font-light tabular-nums text-cta/70">
-          {String(index + 1).padStart(2, "0")}
-        </span>
+      {/* Package number removed - min-h-[20px] kept as a reserved spacer so
+          every card's name/price block still starts at the same y position
+          across the row, whether or not this particular tier shows the
+          "Most popular" tag. */}
+      <div className="flex min-h-[20px] items-center justify-end">
         {tier.popular && (
           <span className="font-switzer text-xs font-semibold uppercase tracking-widest text-cta">
             Most popular

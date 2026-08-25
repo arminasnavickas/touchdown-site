@@ -51,7 +51,6 @@ export default function Faq({
         <div data-fab-avoid className="flex w-full flex-col">
         {items.map((faq, i) => {
           const isOpen = openIndex === i;
-          const number = String(i + 1).padStart(2, "0");
           return (
             <Reveal key={faq.question} delay={Math.min(i * 60, 300)}>
               <div>
@@ -69,34 +68,31 @@ export default function Faq({
                   </p>
                 )}
                 <div className={`border-t border-white/15 ${i === items.length - 1 ? "border-b" : ""}`}>
-                  {/* Question number + text share one row, control on the
-                      right - generous vertical padding (was py-6) so each
-                      row reads as a substantial editorial line, not a
-                      cramped list item. items-start (not center) so the
-                      +/- stays aligned to the question's first line even if
-                      it wraps to two on mobile. */}
+                  {/* Question number removed - text now sits flush at the
+                      row's left edge instead of past a number gutter.
+                      Generous vertical padding (was py-6) so each row reads
+                      as a substantial editorial line, not a cramped list
+                      item. items-start (not center) so the +/- stays
+                      aligned to the question's first line even if it wraps
+                      to two on mobile. */}
                   <button
                     onClick={() => setOpenIndex(isOpen ? null : i)}
                     className="flex w-full items-start justify-between gap-4 py-6 text-left md:py-8"
                   >
-                    <span className="flex items-start gap-4 md:gap-6">
-                      <span className="w-7 shrink-0 pt-0.5 font-switzer text-sm font-semibold tracking-[0.2em] text-cta md:w-9 md:pt-1">
-                        {number}
-                      </span>
-                      <span className="font-switzer text-xl font-light text-white md:text-[28px]">
-                        {faq.question}
-                      </span>
+                    <span className="font-switzer text-xl font-light text-white md:text-[28px]">
+                      {faq.question}
                     </span>
                     <span className="shrink-0 font-switzer text-2xl font-light leading-none text-cta">
                       {isOpen ? "−" : "+"}
                     </span>
                   </button>
                   {isOpen && (
-                    // Indented to sit under the question text (past the
-                    // number column) and capped well short of full width -
-                    // a long answer used to run the entire viewport wide,
-                    // which is exhausting to read at this font size.
-                    <div className="flex max-w-[820px] flex-col gap-5 pb-8 pl-11 pr-4 md:pl-[60px]">
+                    // Left indent dropped along with the number column
+                    // above (was pl-11/md:pl-[60px] to sit under the
+                    // question text past the number) - now flush with the
+                    // question, still capped well short of full width so a
+                    // long answer stays comfortable to read.
+                    <div className="flex max-w-[820px] flex-col gap-5 pb-8 pr-4">
                       {faq.highlight?.label && faq.highlight?.text && (
                         <div className="flex flex-col gap-1 border-l-2 border-cta/60 pl-4">
                           <p className="font-switzer text-xs font-semibold uppercase tracking-[0.2em] text-cta">
