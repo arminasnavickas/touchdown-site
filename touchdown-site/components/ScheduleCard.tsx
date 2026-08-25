@@ -53,16 +53,21 @@ export default function ScheduleCard({
   }, []);
 
   return (
+    // Un-boxed - the old bordered, shadowed, rounded-14 card with a
+    // gradient-filled copy panel underneath is exactly the "card in a
+    // rounded rectangle with a shadow" pattern being dialed back site-wide.
+    // The photo keeps its own rounded corners (matching How It Works/Team's
+    // treatment); the copy below sits directly on the section's navy
+    // background behind a thin rule instead of inside a filled box. The
+    // mobile scroll-active state now nudges the whole block up slightly
+    // instead of lighting up a border/shadow that no longer exists.
     <div
       ref={cardRef}
-      // Radius bumped from rounded-lg (8px) to a consistent 14px - the
-      // start of standardizing a shared card radius across the site's
-      // photo cards rather than each one picking its own.
-      className={`flex h-full w-full flex-col overflow-hidden rounded-[14px] border shadow-md transition-all duration-300 md:hover:-translate-y-0.5 md:hover:border-cta/60 md:hover:shadow-lg md:hover:shadow-cta/10 ${
-        active ? "-translate-y-0.5 border-cta/60 shadow-lg shadow-cta/10" : "border-transparent"
+      className={`flex h-full w-full flex-col gap-4 transition-transform duration-300 md:hover:-translate-y-1 ${
+        active ? "-translate-y-1" : ""
       }`}
     >
-      <div className="relative h-[280px] w-full overflow-hidden">
+      <div className="relative h-[280px] w-full overflow-hidden rounded-md">
         <button
           type="button"
           onClick={() => openLightbox([image], 0)}
@@ -117,10 +122,9 @@ export default function ScheduleCard({
         </div>
       </div>
 
-      {/* Copy-only now, and noticeably shorter (px-10/pb-10/pt-6 -> tighter
-          padding below) - the old panel had a lot of empty space beneath a
-          short paragraph once the title/number moved onto the photo. */}
-      <div className="flex flex-1 flex-col bg-gradient-to-br from-[#184664] to-[#084166] px-6 py-5 md:px-8 md:py-6">
+      {/* Copy-only, on the section's own background behind a thin rule -
+          replaces the filled gradient box. */}
+      <div className="flex flex-1 flex-col border-t border-white/10 pt-4">
         <p className="font-switzer text-lg font-light leading-relaxed text-[#d3e3fd] md:text-xl">
           {copy}
         </p>

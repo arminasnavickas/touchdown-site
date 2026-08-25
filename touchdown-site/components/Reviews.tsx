@@ -129,29 +129,38 @@ function FeaturedTestimonial({
   onOpen: () => void;
 }) {
   return (
-    // One dominant testimonial instead of another card in the grid - proof,
-    // not another component. Sits directly on the section's own background
-    // (no white card) with a large opening quotation mark, oversized quote
-    // text, and the name/credential as the visual close, the way a print
-    // magazine runs its strongest pull-quote before a wall of smaller ones.
+    // Asymmetric, left-aligned pairing (was centered) - a real portrait
+    // sitting beside the quote instead of a small byline avatar underneath
+    // it, so this reads as one person's proof rather than another centered
+    // block matching the rest of the page's rhythm. Breaking the page's
+    // centered pattern here is deliberate: this is the section's one
+    // dominant moment.
     <button
       type="button"
       onClick={onOpen}
-      className="group relative z-10 flex w-full max-w-4xl flex-col items-center gap-6 text-center"
+      className="group relative z-10 flex w-full flex-col items-start gap-6 text-left md:flex-row md:items-center md:gap-12"
     >
-      <span aria-hidden className="font-switzer text-7xl font-light leading-none text-cta/30 md:text-8xl">
-        &ldquo;
-      </span>
-      <p className="-mt-10 font-switzer text-2xl font-light leading-snug text-white transition-colors duration-300 group-hover:text-white/90 md:text-[34px]">
-        {review.quote}
-      </p>
-      <div className="flex flex-col items-center gap-1 pt-2">
-        <p className="font-switzer text-xl font-medium text-white md:text-2xl">{review.name}</p>
-        {review.role && (
-          <p className="font-switzer text-sm font-medium uppercase tracking-widest text-cta md:text-base">
-            {review.role}
-          </p>
-        )}
+      <FadeImage
+        src={review.image}
+        alt={review.name}
+        wrapperClassName="size-20 shrink-0 overflow-hidden rounded-full md:size-32"
+        className="h-full w-full object-cover"
+      />
+      <div className="flex flex-1 flex-col items-start gap-5 text-left">
+        <span aria-hidden className="font-switzer text-6xl font-light leading-none text-cta/30 md:text-7xl">
+          &ldquo;
+        </span>
+        <p className="-mt-6 max-w-2xl font-switzer text-2xl font-light leading-snug text-white transition-colors duration-300 group-hover:text-white/90 md:text-[32px]">
+          {review.quote}
+        </p>
+        <div className="flex flex-col items-start gap-1">
+          <p className="font-switzer text-xl font-medium text-white md:text-2xl">{review.name}</p>
+          {review.role && (
+            <p className="font-switzer text-sm font-medium uppercase tracking-widest text-cta md:text-base">
+              {review.role}
+            </p>
+          )}
+        </div>
       </div>
     </button>
   );
@@ -219,7 +228,7 @@ export default function Reviews({
           before the smaller supporting row - reviews[0] carries the weight
           a wall of equal cards used to spread thin. */}
       {reviews[0] && (
-        <Reveal>
+        <Reveal className="w-full max-w-4xl">
           <FeaturedTestimonial review={reviews[0]} onOpen={() => setOpenIndex(0)} />
         </Reveal>
       )}

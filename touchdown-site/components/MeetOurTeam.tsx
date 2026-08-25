@@ -77,9 +77,24 @@ function TeamCard({
             {member.role}
           </p>
         </div>
+        {/* The lead record becomes a graphic stat (large thin numerals, the
+            same numeral language used everywhere else on the page) instead
+            of sitting inline as small caption text - a diver's depth or
+            record count is credibility, and it should read like one. Any
+            further records stay as the small inline list underneath. */}
         {member.records && member.records.length > 0 && (
+          <div className="flex flex-col gap-0.5">
+            <p className="font-switzer text-3xl font-thin leading-none tracking-tight text-cta md:text-4xl">
+              -{member.records[0].value}
+            </p>
+            <p className="font-switzer text-[10px] font-semibold uppercase tracking-[0.2em] text-white/35">
+              {member.records[0].label}
+            </p>
+          </div>
+        )}
+        {member.records && member.records.length > 1 && (
           <p className="font-switzer text-xs font-light text-white/45">
-            {member.records.map((record, i) => (
+            {member.records.slice(1).map((record, i) => (
               <span key={record.label}>
                 {i > 0 && <span className="mx-1.5 text-white/20">·</span>}
                 -{record.value} <span className="text-white/30">{record.label}</span>
@@ -160,14 +175,16 @@ export default function MeetOurTeam({
       className="relative flex flex-col items-center gap-14 overflow-hidden px-6 py-20 md:gap-16 md:px-16 scroll-mt-20"
     >
       <Reveal>
-        {/* Editorial intro - "Meet the team" (was "Meet our team") plus the
-            site's kicker copy restyled as a genuine supporting line rather
-            than a small uppercase caption, so this reads as a real
-            introduction before the portraits take over, not a bare heading
-            with a label underneath. */}
+        {/* "The people / Behind the practice" (was "Meet the team") - an
+            eyebrow + statement pairing, matching the editorial masthead
+            used elsewhere on the page, framing this section as being about
+            credibility and experience before a single portrait is seen. */}
         <div className="relative z-10 flex max-w-2xl flex-col items-center gap-4 text-center">
+          <p className="font-switzer text-xs font-semibold uppercase tracking-[0.25em] text-cta md:text-sm">
+            The people
+          </p>
           <h2 className="font-switzer text-4xl font-extralight tracking-tight text-white md:text-6xl">
-            Meet the team
+            Behind the practice
           </h2>
           <p className="font-switzer text-lg font-light leading-relaxed text-danish-blue md:text-xl">
             {kicker}

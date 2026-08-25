@@ -99,10 +99,15 @@ export default function Footer({
             switching to flex-row at md) - CTA on the left, brand/socials on
             the right, from the smallest screen up. Keeps the mobile footer
             compact instead of stacking these into one tall column. */}
-        <div className="grid w-full grid-cols-2 items-start gap-x-4 gap-y-6 py-6 sm:gap-x-6 md:items-center md:gap-8 md:py-10">
-          <div className="flex flex-col items-start gap-3 sm:gap-5">
-            <div className="flex flex-col gap-1 sm:gap-2">
-              <p className="font-switzer text-xl font-light tracking-tight sm:text-3xl md:text-5xl">
+        {/* This block is the page's real ending, not another footer row -
+            more vertical room (py-10 -> py-20 on desktop) and a bigger
+            tagline (5xl -> 6xl) than the pass before it, so the site
+            visibly concludes on a statement instead of just running out of
+            sections. */}
+        <div className="grid w-full grid-cols-2 items-start gap-x-4 gap-y-6 py-10 sm:gap-x-6 md:items-center md:gap-8 md:py-20">
+          <div className="flex flex-col items-start gap-4 sm:gap-6">
+            <div className="flex flex-col gap-1 sm:gap-3">
+              <p className="font-switzer text-2xl font-light tracking-tight sm:text-4xl md:text-6xl">
                 {tagline}
               </p>
               <p className="font-switzer text-sm font-light text-white/60 sm:text-base md:text-lg">

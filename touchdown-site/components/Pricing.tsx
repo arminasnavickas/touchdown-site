@@ -13,8 +13,12 @@ import BookInButton from "./BookInButton";
 function PricingCard({ tier, index }: { tier: PricingTier; index: number }) {
   return (
     <div
+      // Elevation instead of a badge - the recommended tier lifts slightly
+      // on desktop (a physical shift, not a floating shadowed box) so it
+      // reads as genuinely elevated within the row rather than flagged with
+      // a sticker.
       className={`relative flex h-full w-full flex-col gap-6 border-t-2 p-7 transition-colors duration-300 ${
-        tier.popular ? "border-cta bg-cta/5" : "border-white/15 hover:border-cta/40"
+        tier.popular ? "border-cta bg-cta/5 md:-mt-4 md:pb-11" : "border-white/15 hover:border-cta/40"
       }`}
     >
       {/* Package index, echoing the same numbering language used in How It
@@ -31,17 +35,17 @@ function PricingCard({ tier, index }: { tier: PricingTier; index: number }) {
         )}
       </div>
 
-      <div className="flex flex-col gap-1">
-        <p className="font-switzer text-xl font-semibold uppercase tracking-tight text-white">
+      {/* Three deliberately different scales - a loud name, a quiet
+          duration line, and a dominant price - instead of a header block
+          where everything sits within one step of everything else. */}
+      <div className="flex flex-col gap-1.5">
+        <p className="font-switzer text-2xl font-semibold uppercase tracking-tight text-white">
           {tier.name}
         </p>
-        {/* Duration + ladder step on one line ("1 Day · Try it") - keeps the
-            header compact and makes the Discovery -> Freedom Flow -> Deep
-            Mastery -> Ultimate progression legible at a glance. */}
-        <p className="font-switzer text-sm font-medium uppercase tracking-widest text-white/40">
+        <p className="font-switzer text-xs font-medium uppercase tracking-[0.15em] text-white/40">
           {tier.duration} &middot; {tier.step}
         </p>
-        <p className="mt-2 font-switzer text-5xl font-extralight tracking-tight text-white">
+        <p className="mt-3 font-switzer text-6xl font-extralight tracking-tighter text-white">
           {tier.price}
         </p>
       </div>

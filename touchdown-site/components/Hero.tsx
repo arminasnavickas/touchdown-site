@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 import FadeImage from "./FadeImage";
 import BookInButton from "./BookInButton";
+import Reveal from "./Reveal";
 
 const logoBadge = "/images/touchdown-stamp.svg";
 
@@ -102,7 +103,18 @@ export default function Hero({
           className="absolute inset-0"
           style={{
             backgroundImage:
-              "linear-gradient(100deg, rgba(4,12,20,0.88) 0%, rgba(4,12,20,0.64) 30%, rgba(4,12,20,0.3) 56%, rgba(4,12,20,0.08) 78%, rgba(4,12,20,0) 100%)",
+              "linear-gradient(100deg, rgba(4,12,20,0.92) 0%, rgba(4,12,20,0.7) 28%, rgba(4,12,20,0.34) 54%, rgba(4,12,20,0.1) 76%, rgba(4,12,20,0) 100%)",
+          }}
+        />
+        {/* Second, vertical layer - grounds the bottom-anchored copy block
+            (moved down from a centered composition to a lower-third title
+            card, the way a film opens on the frame before the title
+            settles) without needing a second flat scrim over the whole
+            image. */}
+        <div
+          className="absolute inset-x-0 bottom-0 h-[55%] md:h-[60%]"
+          style={{
+            backgroundImage: "linear-gradient(0deg, rgba(4,12,20,0.55) 0%, rgba(4,12,20,0) 100%)",
           }}
         />
         {/* Light bottom feather so the image collage below reads as
@@ -123,55 +135,61 @@ export default function Hero({
         className="absolute left-[13px] top-[75px] hidden h-[919px] w-[806px] rounded-[58%_42%_45%_55%/52%_48%_55%_45%] bg-[#65CEE6] opacity-60 mix-blend-screen blur-[100px] md:block"
       />
 
-      {/* Copy + CTA */}
-      <div className="relative z-10 flex h-full max-w-3xl flex-col justify-start gap-5 px-6 pt-6 md:justify-center md:gap-8 md:px-16 md:pt-0">
-        <div className="flex flex-col gap-2">
-          <p className="font-switzer text-base font-medium uppercase tracking-widest text-white/80 md:text-lg">
+      {/* Copy + CTA - bottom-anchored on desktop (was vertically centered),
+          a lower-third title-card composition instead of a mid-frame block,
+          so the top two-thirds of the photograph gets to breathe as pure
+          image before the copy grounds the frame. */}
+      <div className="relative z-10 flex h-full max-w-3xl flex-col justify-start gap-5 px-6 pt-6 md:justify-end md:gap-8 md:px-16 md:pb-20">
+        <Reveal className="flex flex-col gap-2">
+          <p className="font-switzer text-base font-medium uppercase tracking-[0.2em] text-white/80 md:text-lg">
             {headlineLines[0]}
           </p>
           {/* Mobile stays restrained at text-5xl (room for the deliberate
-              two-line break below), but desktop is pushed back up a step
-              (7xl -> 8xl) now that the taller section above gives it room -
-              the headline should be the single most confident, dominant
-              element in the hero, not one component sharing space with the
-              rest of the copy stack. */}
+              two-line break below); desktop holds at 8xl - wider than that
+              risks the headline wrapping mid-word inside its own column, so
+              scale is pushed everywhere else in the frame (gradient depth,
+              negative space, the bottom anchor above) instead of the type
+              itself. */}
           <h1 className="font-switzer text-5xl font-extralight leading-[1.05] tracking-tight text-white md:text-8xl">
             {mainLineLead}
             <br className="md:hidden" />
             {" "}
             {mainLineLastWord}
           </h1>
-        </div>
+        </Reveal>
         {/* Narrower on mobile (was max-w-xl, wider than the viewport itself
             once you subtract the section's own padding, so it was
             effectively unconstrained) - now wraps into a genuinely narrow,
             deliberate column instead of running edge to edge. */}
-        <div className="max-w-[280px] font-switzer text-xl font-light text-white/90 sm:max-w-sm md:max-w-xl">
+        <Reveal delay={80} className="max-w-[280px] font-switzer text-xl font-light text-white/90 sm:max-w-sm md:max-w-xl">
           {subcopyLines.map((line, i) => (
             <p key={i}>
               {line}
               {i < subcopyLines.length - 1 ? "." : ""}
             </p>
           ))}
-        </div>
+        </Reveal>
         {/* "Book in" -> "Book your dive" - matches the rename already made
             everywhere else the CTA appears (footer, pricing cards); this
             was the one spot still using the old generic label. */}
-        <BookInButton className="flex w-fit items-center gap-2 rounded-[6px] bg-cta px-8 py-4 font-switzer text-base font-medium uppercase tracking-wide text-white transition-all duration-200 ease-out hover:bg-aquatic hover:text-dark-ocean-blue hover:scale-105 hover:shadow-lg hover:shadow-cta/40 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cta focus-visible:ring-offset-2">
-          Book your dive
-          <span aria-hidden>→</span>
-        </BookInButton>
+        <Reveal delay={160}>
+          <BookInButton className="flex w-fit items-center gap-2 rounded-[6px] bg-cta px-8 py-4 font-switzer text-base font-medium uppercase tracking-wide text-white transition-all duration-200 ease-out hover:bg-aquatic hover:text-dark-ocean-blue hover:scale-105 hover:shadow-lg hover:shadow-cta/40 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cta focus-visible:ring-offset-2">
+            Book your dive
+            <span aria-hidden>→</span>
+          </BookInButton>
+        </Reveal>
       </div>
 
-      {/* Logo badge - kept as a supporting brand mark, not scaled back up to
-          a flat "logo in the corner" size, but given a touch more presence
-          at the new taller desktop height and nudged down nearer the
-          diver's shoulder rather than floating in open water - the stamp
-          should read as stitched into the photograph, not laid on top of it. */}
-      <div className="absolute right-6 top-[300px] block size-[72px] md:right-20 md:top-[430px] md:size-[104px]">
+      {/* Logo badge - moved from a mid-frame float to the frame's bottom
+          right corner, grounded on the same baseline as the copy block on
+          the left instead of floating independently in open water. Reads as
+          a deliberately placed insignia closing the composition, the way a
+          film's mark sits in a corner of its opening frame, rather than a
+          logo laid on top of a photo. */}
+      <Reveal delay={240} className="absolute bottom-8 right-6 block size-[64px] md:bottom-16 md:right-20 md:size-[100px]">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src={logoBadge} alt="Touchdown space badge" className="h-full w-full object-contain drop-shadow-[0_2px_12px_rgba(0,0,0,0.45)]" />
-      </div>
+      </Reveal>
     </section>
   );
 }

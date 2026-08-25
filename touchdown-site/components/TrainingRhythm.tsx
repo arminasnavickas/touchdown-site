@@ -21,6 +21,14 @@ function dayTypeInfo(label: string) {
   return { word: "REST", accentClass: "text-white/40" };
 }
 
+// Derived, not new data - a 3-letter abbreviation ("SAT", "SUN"...) pulled
+// from the existing day field so the row reads as a real weekly timeline
+// (SAT / WATER, SUN / WATER, MON / DRY...) instead of a full day name
+// sitting above the type as a small caption.
+function dayAbbrev(day: string) {
+  return day.trim().slice(0, 3).toUpperCase();
+}
+
 export default function TrainingRhythm({
   days,
   heading,
@@ -98,15 +106,20 @@ export default function TrainingRhythm({
                 data-fab-avoid
                 className="flex flex-row items-center justify-between gap-4 px-4 py-5 transition-colors duration-300 [@media(hover:hover)]:hover:bg-white/[0.03] sm:gap-6 sm:px-6 sm:py-4"
               >
-                <div className="flex flex-col gap-1">
-                  <p className="font-switzer text-xs font-medium uppercase tracking-[0.15em] text-white/40">
-                    {day}
-                  </p>
-                  <p
+                {/* Day abbreviation + type now read as one horizontal
+                    timeline pairing ("SAT WATER") rather than a small
+                    caption stacked above a large word - the day itself
+                    becomes a graphic element, tabular and thin, instead of
+                    a UI label. */}
+                <div className="flex items-baseline gap-3 sm:gap-5">
+                  <span className="font-switzer text-2xl font-extralight tabular-nums tracking-tight text-white/25 sm:text-4xl">
+                    {dayAbbrev(day)}
+                  </span>
+                  <span
                     className={`font-switzer text-2xl font-medium tracking-tight sm:text-3xl ${info.accentClass}`}
                   >
                     {info.word}
-                  </p>
+                  </span>
                 </div>
 
                 <div className="flex items-center">

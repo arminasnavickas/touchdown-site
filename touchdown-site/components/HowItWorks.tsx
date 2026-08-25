@@ -14,6 +14,14 @@ import type { HowItWorksStep } from "@/lib/content";
 // steps into one continuous line so the section reads as "we build
 // progression" at a glance, before a single word of copy is read, rather
 // than four separate, unrelated stops.
+// Image height and title size both step up across the sequence (01 -> 04) -
+// a literal typographic/photographic "growing" rhythm so the four steps
+// read as an escalation (knowledge -> application -> consistency -> depth)
+// rather than four identically-weighted stops. Numbers and the rail stay a
+// fixed size so the connecting line across the top never breaks.
+const IMAGE_HEIGHT_BY_INDEX = ["h-[150px] md:h-[160px]", "h-[150px] md:h-[185px]", "h-[150px] md:h-[210px]", "h-[150px] md:h-[240px]"];
+const TITLE_SIZE_BY_INDEX = ["md:text-[26px]", "md:text-[28px]", "md:text-[31px]", "md:text-[34px]"];
+
 function ProgressionStep({
   index,
   title,
@@ -39,14 +47,14 @@ function ProgressionStep({
         />
       </div>
 
-      <p className="font-switzer text-2xl font-medium tracking-tight text-white md:text-[28px]">
+      <p className={`font-switzer text-2xl font-medium tracking-tight text-white ${TITLE_SIZE_BY_INDEX[index]}`}>
         {title}
       </p>
 
       <button
         type="button"
         onClick={() => openLightbox([image], 0)}
-        className="group relative h-[150px] w-full cursor-zoom-in overflow-hidden rounded-md md:h-[180px]"
+        className={`group relative w-full cursor-zoom-in overflow-hidden rounded-md ${IMAGE_HEIGHT_BY_INDEX[index]}`}
         aria-label="View full image"
       >
         <FadeImage
@@ -98,11 +106,13 @@ export default function HowItWorks({
       {/* Glow removed - the numbered rail and photography carry this
           section on their own; the page's three deliberate glow moments are
           now Hero, Pricing, and the final CTA in the footer only. */}
-      <Reveal>
-        <div className="relative z-10 flex flex-col items-center gap-3 text-center">
-          {/* Small eyebrow - matches the masthead treatment used across the
-              page (Gallery, About, FAQ) so this reads as one more entry in
-              the same editorial system rather than its own one-off style. */}
+      {/* Left-aligned masthead (was centered, matching every other section's
+          intro) - a magazine section-opener reads left, not centered, and
+          breaking the page's centered-everything rhythm here signals this
+          is the page's signature editorial moment before a single number
+          is seen. */}
+      <Reveal className="w-full">
+        <div className="relative z-10 flex w-full flex-col items-start gap-3 text-left">
           <p className="font-switzer text-xs font-semibold uppercase tracking-[0.25em] text-cta md:text-sm">
             Our method
           </p>
@@ -114,7 +124,10 @@ export default function HowItWorks({
           </p>
         </div>
       </Reveal>
-      <div className="relative z-10 grid w-full grid-cols-2 gap-x-6 gap-y-12 md:grid-cols-4 md:gap-x-10 md:gap-y-0">
+      {/* Column widths widen step by step (was a flat 4-up grid) - paired
+          with each step's own growing image/title, so the sequence reads as
+          a genuine escalation left to right, not four equal boxes. */}
+      <div className="relative z-10 grid w-full grid-cols-2 gap-x-6 gap-y-12 md:grid-cols-[21%_23.5%_26%_29.5%] md:gap-x-8 md:gap-y-0">
         {/* The rail - a single line threaded behind all four numbers,
             desktop only (a horizontal line has nothing meaningful to
             connect once the steps wrap onto a 2x2 mobile grid). */}

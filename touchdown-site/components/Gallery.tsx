@@ -3,14 +3,21 @@
 import FadeImage from "./FadeImage";
 import { useLightbox } from "./LightboxContext";
 
-// Which of the 8 images get the larger "feature" treatment on desktop - the
-// strongest action/training shots (divers on the line, diver at the reef,
-// deep diver beneath the sun, the red-suited freediver). Everything else
-// (including the dolphin shot, whose documentary/wildlife style reads
-// differently from the rest of the underwater sports photography) sits in
-// the smaller row in between, rather than every image competing at the same
-// scale.
-const FEATURED_INDICES = new Set([0, 1, 6, 7]);
+// Real hierarchy instead of a uniform "featured vs. small" split - one
+// hero, a tall companion beside it, two supporting mid-size images, three
+// smaller images with a deliberate empty fourth cell (negative space, not a
+// bug), then one final full-bleed image as a closing statement. Desktop
+// only; mobile stays the plain, compact 2-column grid below.
+const TILE_LAYOUT = [
+  { span: "md:col-span-3", height: "md:h-[460px]" }, // 0 - hero
+  { span: "md:col-span-1", height: "md:h-[460px]" }, // 1 - tall companion
+  { span: "md:col-span-2", height: "md:h-[240px]" }, // 2 - supporting
+  { span: "md:col-span-2", height: "md:h-[240px]" }, // 3 - supporting
+  { span: "md:col-span-1", height: "md:h-[170px]" }, // 4 - small
+  { span: "md:col-span-1", height: "md:h-[170px]" }, // 5 - small
+  { span: "md:col-span-1", height: "md:h-[170px]" }, // 6 - small (4th column of this row left empty on purpose)
+  { span: "md:col-span-4", height: "md:h-[440px]" }, // 7 - closing full-bleed image
+];
 
 function ViewIndicator() {
   return (
@@ -62,14 +69,16 @@ export default function Gallery({ images }: { images: string[] }) {
           grid; mobile stays a plain, compact 2-column grid throughout (no
           feature tiles) so it doesn't turn into a long uneven stack. */}
       <div className="relative z-10 grid grid-cols-2 gap-1 overflow-hidden rounded-lg bg-dark-ocean-blue md:grid-cols-4">
-        {images.map((src, i) => (
+        {images.map((src, i) => {
+          const tile = TILE_LAYOUT[i];
+          return (
           <button
             key={i}
             type="button"
             onClick={() => openLightbox(images, i)}
             aria-label={`View photo ${i + 1} of ${images.length}`}
             className={`group relative h-[160px] cursor-zoom-in overflow-hidden md:h-[190px] ${
-              FEATURED_INDICES.has(i) ? "md:col-span-2 md:h-[380px]" : ""
+              tile ? `${tile.span} ${tile.height}` : ""
             }`}
           >
             <FadeImage
@@ -96,7 +105,8 @@ export default function Gallery({ images }: { images: string[] }) {
             </span>
             <ViewIndicator />
           </button>
-        ))}
+          );
+        })}
       </div>
     </section>
   );

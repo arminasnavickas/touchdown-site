@@ -159,7 +159,7 @@ export default function LightboxProvider({ children }: { children: React.ReactNo
           role="dialog"
           aria-modal="true"
           aria-label="Photo gallery"
-          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/78 p-6 backdrop-blur-md"
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/78 p-3 backdrop-blur-md md:p-6"
           onClick={onOverlayClick}
           onTouchStart={onTouchStart}
           onTouchEnd={onTouchEnd}
@@ -214,7 +214,7 @@ export default function LightboxProvider({ children }: { children: React.ReactNo
             src={state.images[state.index]}
             alt=""
             onClick={(e) => e.stopPropagation()}
-            className="max-h-[82vh] max-w-[85vw] rounded-lg object-contain"
+            className="max-h-[90vh] max-w-[94vw] rounded-md object-contain md:max-h-[85vh] md:max-w-[87vw] md:rounded-lg"
           />
 
           {state.images.length > 1 && (
