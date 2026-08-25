@@ -903,7 +903,13 @@ export type SiteContent = {
 };
 
 export const fallbackSiteContent: SiteContent = {
-  heroHeadline: "Freediving school\nConsistently delivering quality",
+  // Rewritten so the literal keywords "Freediving" and "Dahab" both land
+  // inside the rendered <h1> (Hero.tsx renders everything after the first
+  // line as the H1) - the old H1 text ("Consistently delivering quality")
+  // had neither, which is exactly what hurts on-page SEO for a "freediving
+  // Dahab" search even though the page <title>/meta description already
+  // had both.
+  heroHeadline: "Touchdown Freediving School\nFreediving in Dahab",
   heroSubcopy:
     "Join TOUCHDOWN team and experience real results in an environment built to support you daily on every step of your path.",
   whoWeAreHeading: "Who we are",
