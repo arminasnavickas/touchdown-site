@@ -47,13 +47,8 @@ export default function TrainingRhythm({
     >
       <Reveal>
         <div className="relative z-10 flex flex-col items-center gap-3 text-center">
-          {/* "The training system" frames this section plus the Water/Dry
-              schedules right after it as three parts of one methodology
-              (Part 01/02/03, echoed on each) rather than three unrelated
-              sections that happen to sit next to each other. */}
-          <p className="font-switzer text-xs font-semibold uppercase tracking-[0.25em] text-cta md:text-sm">
-            The training system · Part 01
-          </p>
+          {/* "The training system · Part 01" kicker removed - this section
+              no longer frames itself as part of a numbered system. */}
           <h2 className="text-center font-switzer text-4xl font-extralight tracking-tight text-white md:text-6xl">
             {heading}
           </h2>
@@ -64,11 +59,10 @@ export default function TrainingRhythm({
           communicate the *rhythm* itself at a glance (why the week is
           shaped this way) before the reader gets into individual days.
           Derived from the same days array so it can never drift out of
-          sync with the list below it. */}
+          sync with the list below it. The small "Weekly training rhythm"
+          label above it was removed - the heading above now already reads
+          "Weekly Training Rhythm", so the label was a duplicate. */}
       <Reveal className="relative z-10 flex flex-col items-center gap-3">
-        <p className="font-switzer text-xs font-medium uppercase tracking-[0.15em] text-white/40">
-          Weekly training rhythm
-        </p>
         <div className="flex flex-wrap items-center justify-center gap-x-2.5 gap-y-2">
           {days.map((d, i) => {
             const info = dayTypeInfo(d.label);

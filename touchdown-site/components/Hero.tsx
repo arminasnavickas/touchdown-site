@@ -193,7 +193,7 @@ export default function Hero({
           logo laid on top of a photo. Bottom offset raised (bottom-8/16 ->
           bottom-[80px]/md:bottom-[180px]) in step with the copy block above,
           so the stamp clears the Gallery overlap zone the same way. */}
-      <Reveal delay={240} className="absolute bottom-[80px] right-6 block size-[64px] md:bottom-[180px] md:right-20 md:size-[100px]">
+      <Reveal delay={240} className="absolute bottom-[80px] right-6 block size-[64px] md:bottom-[180px] md:right-20 md:size-[150px]">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src={logoBadge} alt="Touchdown space badge" className="h-full w-full object-contain drop-shadow-[0_2px_12px_rgba(0,0,0,0.45)]" />
       </Reveal>

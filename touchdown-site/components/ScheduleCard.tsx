@@ -86,7 +86,7 @@ export default function ScheduleCard({
             directly on the photo and stay legible, instead of needing a
             separate solid-color block underneath just to hold the title -
             this is what lets the panel below shrink so much. */}
-        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-dark-ocean-blue/90 via-dark-ocean-blue/30 to-transparent" />
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-black/90 via-black/30 to-transparent" />
 
         {/* Time badge now carries meaning on its own ("07:00 · PICK-UP")
             instead of a bare number floating over the photo - it reads as
@@ -108,14 +108,8 @@ export default function ScheduleCard({
           )}
         </div>
 
-        {/* Step number + title moved onto the photo (over the gradient
-            above) rather than into the panel below - gives this card the
-            same "01 / 02 / 03..." journey system as the rest of the site,
-            and frees the panel below to be copy-only. */}
+        {/* Step number removed - just the title sits on the photo now. */}
         <div className="pointer-events-none absolute inset-x-5 bottom-4 flex flex-col gap-0.5">
-          <span className="font-switzer text-xs font-semibold tracking-[0.2em] text-aquatic">
-            {String(index + 1).padStart(2, "0")}
-          </span>
           <span className="font-switzer text-2xl font-medium tracking-tight text-white md:text-3xl">
             {title}
           </span>

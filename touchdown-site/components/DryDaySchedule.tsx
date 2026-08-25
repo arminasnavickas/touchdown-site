@@ -17,14 +17,8 @@ export default function DryDaySchedule({
     <section className="relative flex flex-col items-center gap-10 overflow-hidden px-6 py-14 md:gap-12 md:px-16 md:py-16">
       <Reveal>
         <div className="relative z-10 flex max-w-3xl flex-col items-center gap-10 text-center">
-          {/* Closes the Part 01/02/03 system started on Training Rhythm -
-              rest/recovery is already covered inline as the "REST" row in
-              the weekly rhythm list above, so this closes the loop as the
-              third and final chapter rather than needing its own section. */}
+          {/* "The training system · Part 03" kicker removed. */}
           <div className="flex flex-col items-center gap-3">
-            <p className="font-switzer text-xs font-semibold uppercase tracking-[0.25em] text-cta md:text-sm">
-              The training system · Part 03
-            </p>
             <h2 className="font-switzer text-4xl font-extralight tracking-tight text-white md:text-6xl">
               {heading}
             </h2>

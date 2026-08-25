@@ -915,7 +915,7 @@ export const fallbackSiteContent: SiteContent = {
   pricingKicker: "Group Training Experience",
   teamKicker: "Your Dreams Are Our Goals!",
   reviewsSubtitle: "We Love our students so much and they love us too :)",
-  trainingRhythmHeading: "Training Rhythm",
+  trainingRhythmHeading: "Weekly Training Rhythm",
   waterDayHeading: "Water Day Schedule",
   waterDaySubcopy:
     "Our water days are designed to help you live and breathe the freediving lifestyle.\nWith expert guidance at Dahab's legendary Blue Hole, each session blends training, recovery, and refinement to take your diving further.",
