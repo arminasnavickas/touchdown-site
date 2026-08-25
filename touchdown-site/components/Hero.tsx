@@ -138,8 +138,13 @@ export default function Hero({
       {/* Copy + CTA - bottom-anchored on desktop (was vertically centered),
           a lower-third title-card composition instead of a mid-frame block,
           so the top two-thirds of the photograph gets to breathe as pure
-          image before the copy grounds the frame. */}
-      <div className="relative z-10 flex h-full max-w-3xl flex-col justify-start gap-5 px-6 pt-6 md:justify-end md:gap-8 md:px-16 md:pb-20">
+          image before the copy grounds the frame. Bottom padding pushed up
+          further (pb-20/no mobile pb -> pb-[95px]/md:pb-[195px]) now that
+          Gallery overlaps the hero's own bottom edge again (-mt-16/-mt-24,
+          ~51px/~115px of overlap) - this keeps the whole block's bottom
+          clear of that overlap zone with real breathing room to spare,
+          without touching the gallery itself. */}
+      <div className="relative z-10 flex h-full max-w-3xl flex-col justify-start gap-5 px-6 pb-[95px] pt-6 md:justify-end md:gap-8 md:px-16 md:pb-[195px]">
         <Reveal className="flex flex-col gap-2">
           <p className="font-switzer text-base font-medium uppercase tracking-[0.2em] text-white/80 md:text-lg">
             {headlineLines[0]}
@@ -185,8 +190,10 @@ export default function Hero({
           the left instead of floating independently in open water. Reads as
           a deliberately placed insignia closing the composition, the way a
           film's mark sits in a corner of its opening frame, rather than a
-          logo laid on top of a photo. */}
-      <Reveal delay={240} className="absolute bottom-8 right-6 block size-[64px] md:bottom-16 md:right-20 md:size-[100px]">
+          logo laid on top of a photo. Bottom offset raised (bottom-8/16 ->
+          bottom-[80px]/md:bottom-[180px]) in step with the copy block above,
+          so the stamp clears the Gallery overlap zone the same way. */}
+      <Reveal delay={240} className="absolute bottom-[80px] right-6 block size-[64px] md:bottom-[180px] md:right-20 md:size-[100px]">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src={logoBadge} alt="Touchdown space badge" className="h-full w-full object-contain drop-shadow-[0_2px_12px_rgba(0,0,0,0.45)]" />
       </Reveal>
