@@ -920,7 +920,7 @@ export const fallbackSiteContent: SiteContent = {
   howItWorksSubtitle: "Learn the fundamentals. Practice with guidance. Progress with confidence.",
   pricingKicker: "Group Training Experience",
   teamKicker: "Your Dreams Are Our Goals!",
-  reviewsSubtitle: "We Love our students so much and they love us too :)",
+  reviewsSubtitle: "We love our students so much and they love us too :)",
   trainingRhythmHeading: "Weekly Training Rhythm",
   waterDayHeading: "Water Day Schedule",
   waterDaySubcopy:
@@ -934,7 +934,7 @@ export const fallbackSiteContent: SiteContent = {
     "We couldn't find the page you were looking for. It may have moved, or the link might be out of date.",
   notFoundImage: "/images/404-diver.jpg",
   footerEmail: "info@touchdownfreediving.com",
-  footerPhone: "+20XXXXXXXXX",
+  footerPhone: "+20 115 4061629",
   footerLocation: "Dahab, Egypt",
   footerTagline: "Ready to Dive In?",
   footerCtaSubcopy: "Your next dive starts here.",
@@ -1008,7 +1008,7 @@ export const fallbackWaterDayCards: ScheduleCard[] = [
   {
     title: "Preparation",
     image: "/images/water-day-preparation.jpg",
-    copy: "The day begins with a scenic drive to the Blue Hole. Use the time to settle in, gear up, and get mentally ready before the first line goes in.",
+    copy: "The day begins with a scenic drive to the Blue Hole. Use the time to settle in, gear up, and get mentally ready before the first line goes in. Before hitting the water, we run through warm-up, breathing exercises, and EQ (equalization) practice to make sure you're fully prepared.",
     time: "07:00",
     badge: "Pick-up",
   },
@@ -1110,7 +1110,7 @@ export const fallbackHowItWorksSteps: HowItWorksStep[] = [
     title: "Practice",
     image: "/images/howitworks-practice.jpg",
     paragraphs: [
-      "Apply your learning in real-time with expert instructors and safety teams by your side. Training takes place in world-renowned dive sites such as Egypt's Blue Hole, giving you the chance to experience depth while building trust and skill in open water.",
+      "Apply your learning in real-time with expert instructors and safety teams by your side. Training takes place at Egypt's world-renowned Blue Hole, where 90 metres of depth sit just a few steps from shore, sheltered from current and waves. This will give you the chance to experience real depth in calm, forgiving conditions while building trust and skill in open water. Our school keeps a dedicated space right at the site, so your equipment is always close at hand.",
     ],
     learnPoints: [
       {
