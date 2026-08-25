@@ -120,20 +120,19 @@ export default function HowItWorks({
       {/* Glow removed - the numbered rail and photography carry this
           section on their own; the page's three deliberate glow moments are
           now Hero, Pricing, and the final CTA in the footer only. */}
-      {/* Left-aligned masthead (was centered, matching every other section's
-          intro) - a magazine section-opener reads left, not centered, and
-          breaking the page's centered-everything rhythm here signals this
-          is the page's signature editorial moment before a single number
-          is seen. */}
+      {/* Centered masthead, sitting above the full 4-column grid (was
+          left-aligned) - the heading now reads as centered over the whole
+          progression rather than over just the first column. The four
+          steps below stay left-aligned internally; only this block moves. */}
       <Reveal className="w-full">
-        <div className="relative z-10 flex w-full flex-col items-start gap-3 text-left">
+        <div className="relative z-10 mx-auto flex w-full max-w-xl flex-col items-center gap-3 text-center">
           <p className="font-switzer text-xs font-semibold uppercase tracking-[0.25em] text-cta md:text-sm">
             Our method
           </p>
           <h2 className="font-switzer text-4xl font-extralight tracking-tight text-white md:text-6xl">
             {heading}
           </h2>
-          <p className="max-w-xl font-switzer text-lg font-light leading-relaxed text-danish-blue md:text-xl">
+          <p className="font-switzer text-lg font-light leading-relaxed text-danish-blue md:text-xl">
             {subtitle}
           </p>
         </div>

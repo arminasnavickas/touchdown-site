@@ -109,22 +109,16 @@ function TeamCard({
         <p className="line-clamp-2 font-switzer text-base font-light leading-relaxed text-white/70">
           {member.bio}
         </p>
-        {/* Personalized CTA ("Meet Gus") replacing the generic "Read more" -
-            styled like How It Works' demoted read-more link (small
-            uppercase text + arrow) rather than the old underline-on-hover
-            treatment, to match the rest of the site's secondary-link style. */}
-        <button
-          type="button"
-          onClick={() => onOpen(index)}
-          className="group/link flex w-fit shrink-0 self-end items-center gap-1.5 pt-1 font-switzer text-sm font-medium uppercase tracking-widest text-cta transition hover:text-white"
-        >
-          Meet {member.name.split(" ")[0]}
-          <span aria-hidden className="transition-transform duration-200 group-hover/link:translate-x-1">
-            →
-          </span>
-        </button>
-        {(member.instagram || member.website) && (
-          <div className="mt-auto flex items-center gap-4 border-t border-white/10 pt-3">
+        {/* Bottom action row - Instagram (secondary, left, muted) and Meet
+            (primary, right, cyan) now share one baseline instead of Meet
+            sitting in its own row above the divider. The left wrapper
+            always renders (even with no instagram/website) so
+            justify-between always has two flex children and Meet stays
+            pinned to the row's right edge; mt-auto keeps this whole row at
+            the same vertical position across every card regardless of how
+            long each member's bio runs. */}
+        <div className="mt-auto flex items-center justify-between gap-4 border-t border-white/10 pt-3">
+          <div className="flex items-center gap-4">
             {/* Instagram as an intentional "Instagram ->" text link instead
                 of a lone icon - matches the treatment used in the modal
                 header, rather than an unlabeled glyph sitting on its own. */}
@@ -151,7 +145,23 @@ function TeamCard({
               </a>
             )}
           </div>
-        )}
+          {/* Personalized CTA ("Meet Gus") replacing the generic "Read more" -
+              styled like How It Works' demoted read-more link (small
+              uppercase text + arrow) rather than the old underline-on-hover
+              treatment, to match the rest of the site's secondary-link
+              style. Now the row's primary action, right-aligned opposite
+              Instagram. */}
+          <button
+            type="button"
+            onClick={() => onOpen(index)}
+            className="group/link flex shrink-0 items-center gap-1.5 font-switzer text-sm font-medium uppercase tracking-widest text-cta transition hover:text-white"
+          >
+            Meet {member.name.split(" ")[0]}
+            <span aria-hidden className="transition-transform duration-200 group-hover/link:translate-x-1">
+              →
+            </span>
+          </button>
+        </div>
       </div>
     </div>
   );
