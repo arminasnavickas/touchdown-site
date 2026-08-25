@@ -26,9 +26,18 @@ export default function Faq({
           it matters") instead of a bare word floating in space. Gap to the
           list below tightened from gap-24 to the section's own gap-10, so
           the header reads as introducing the accordion rather than sitting
-          in its own separate block. */}
+          in its own separate block.
+
+          w-full instead of max-w-3xl: the section wrapper centers its
+          children (items-center, shared with the rest of the page's
+          sections), so a narrower max-w-3xl box was being centered as a
+          block while the accordion below it - which has no max-width - was
+          always flush left. That's what produced the "centered heading over
+          a left-aligned list" mismatch. Dropping the cap here means both
+          share the exact same left/right edges since they're both
+          unconstrained w-full children of the same section. */}
       <Reveal>
-        <div className="relative z-10 flex w-full max-w-3xl flex-col items-start gap-4 text-left">
+        <div className="relative z-10 flex w-full flex-col items-start gap-4 text-left">
           <p className="font-switzer text-xs font-semibold uppercase tracking-[0.25em] text-cta md:text-sm">
             Before you dive
           </p>
