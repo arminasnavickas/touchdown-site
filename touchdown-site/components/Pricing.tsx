@@ -50,22 +50,15 @@ function PricingCard({ tier, index }: { tier: PricingTier; index: number }) {
         </p>
       </div>
 
-      {/* Numeric benefit system - reads and compares across cards far
-          faster than a bulleted sentence, especially scanning four cards
-          side by side. */}
+      {/* Count numeral removed - just the label list now, one per line. */}
       <div className="flex flex-col gap-2.5 border-t border-white/10 pt-5">
         <p className="font-switzer text-xs font-semibold uppercase tracking-[0.2em] text-cta">
           Includes
         </p>
         <ul className="flex flex-col gap-2">
           {tier.features.map((f) => (
-            <li key={f.label} className="flex items-baseline gap-3">
-              <span className="w-6 shrink-0 font-switzer text-sm font-semibold tabular-nums text-cta">
-                {f.count}
-              </span>
-              <span className="font-switzer text-base font-light text-white/80">
-                {f.label}
-              </span>
+            <li key={f.label} className="font-switzer text-base font-light text-white/80">
+              {f.label}
             </li>
           ))}
         </ul>
