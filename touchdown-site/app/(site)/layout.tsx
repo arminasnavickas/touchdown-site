@@ -1,6 +1,5 @@
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
-import PageBlobs from "@/components/PageBlobs";
 import { getSiteContent } from "@/lib/content";
 
 export default async function SiteLayout({
@@ -18,8 +17,13 @@ export default async function SiteLayout({
         whatsapp={siteContent.socialWhatsapp}
         navLinks={siteContent.headerNavLinks}
       />
+      {/* The two page-wide ambient blobs that used to live here are gone -
+          combined with every section's own local Blob, cyan glow was
+          showing up almost everywhere on the page rather than reading as a
+          deliberate accent. Glow now only appears at the three strongest
+          information moments (Hero, How It Works, Pricing), each via its
+          own local Blob. */}
       <div className="relative z-0">
-        <PageBlobs />
         <div className="relative z-10">
           {children}
           <Footer

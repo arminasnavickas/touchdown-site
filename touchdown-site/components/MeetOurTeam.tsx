@@ -5,7 +5,6 @@ import FadeImage from "./FadeImage";
 import { useLightbox } from "./LightboxContext";
 import type { TeamMember } from "@/lib/content";
 import { GlobeIcon } from "./SocialIcons";
-import Blob from "./Blob";
 import Reveal from "./Reveal";
 import ArticleModal from "./ArticleModal";
 
@@ -172,12 +171,13 @@ export default function MeetOurTeam({
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   return (
+    // Glow removed - the team's own photography carries this section, and
+    // cyan glow is now reserved for Hero/How It Works/Pricing only. Gap
+    // trimmed from the old flat gap-[100px] to something more intentional.
     <section
       id="team"
-      className="relative flex flex-col items-center gap-[100px] overflow-hidden px-6 py-20 md:px-16 scroll-mt-20"
+      className="relative flex flex-col items-center gap-14 overflow-hidden px-6 py-20 md:gap-16 md:px-16 scroll-mt-20"
     >
-      <Blob className="left-0 top-[8%] h-[320px] w-[320px]" />
-      <Blob className="bottom-[6%] right-0 h-[340px] w-[340px]" />
       <Reveal>
         <div className="relative z-10 flex flex-col items-center gap-10 text-center">
           <h2 className="font-switzer text-4xl font-extralight tracking-tight text-white md:text-6xl">

@@ -1,4 +1,3 @@
-import Blob from "./Blob";
 import BookInButton from "./BookInButton";
 import { Clock } from "lucide-react";
 import Reveal from "./Reveal";
@@ -30,11 +29,14 @@ export default function TrainingRhythm({
   heading: string;
 }) {
   return (
+    // Glow removed and padding/gap tightened - this section, plus the
+    // Water/Dry day schedules right after it, are meant to read as a
+    // compact, scannable programme rather than another spacious showcase
+    // section, so it no longer matches the site's flat py-20 default.
     <section
       id="schedule"
-      className="relative flex flex-col items-center gap-12 overflow-hidden px-6 py-20 md:px-16 scroll-mt-20"
+      className="relative flex flex-col items-center gap-8 overflow-hidden px-6 py-16 md:gap-10 md:px-16 md:py-20 scroll-mt-20"
     >
-      <Blob className="right-0 top-[55%] h-[320px] w-[320px] -translate-y-1/2" />
       <Reveal>
         <h2 className="relative z-10 text-center font-switzer text-4xl font-extralight tracking-tight text-white md:text-6xl">
           {heading}

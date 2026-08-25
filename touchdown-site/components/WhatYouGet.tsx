@@ -10,7 +10,12 @@ export default function WhatYouGet({
   heading: string;
 }) {
   return (
-    <section className="relative flex flex-col items-center gap-14 overflow-hidden px-6 py-20 md:px-16">
+    // A light supporting beat between How It Works and Training Rhythm, not
+    // a section of its own weight - py and the heading-to-list gap trimmed
+    // down from the site's flat py-20/gap-14 so a handful of short
+    // title/copy rows doesn't sit inside as much empty space as the bigger
+    // sections around it.
+    <section className="relative flex flex-col items-center gap-10 overflow-hidden px-6 py-14 md:px-16 md:py-16">
       <Reveal className="relative z-10">
         <h2 className="text-center font-switzer text-4xl font-extralight tracking-tight text-white md:text-6xl">
           {heading}

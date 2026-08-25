@@ -103,9 +103,12 @@ export default function HowItWorks({
     // Heading-to-cards gap tightened from gap-10 to gap-6 (-40%) so the
     // heading reads as introducing the cards directly below it rather than
     // sitting above them as its own separate block.
+    // One of the page's three strongest information moments (with Hero and
+    // Pricing) - py bumped up from the site's flat py-20 default so it
+    // reads as a bigger beat than the supporting sections around it.
     <section
       id="courses"
-      className="relative flex flex-col items-center gap-6 overflow-hidden px-6 py-20 md:px-16 scroll-mt-20"
+      className="relative flex flex-col items-center gap-6 overflow-hidden px-6 py-24 md:px-16 md:py-28 scroll-mt-20"
     >
       <Blob className="left-0 top-[55%] h-[340px] w-[340px] -translate-y-1/2" />
       <Reveal>

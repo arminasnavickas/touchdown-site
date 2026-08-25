@@ -2,7 +2,6 @@
 
 import FadeImage from "./FadeImage";
 import { useLightbox } from "./LightboxContext";
-import Blob from "./Blob";
 import Reveal from "./Reveal";
 import BookInButton from "./BookInButton";
 
@@ -23,15 +22,22 @@ export default function WhoWeAre({
       id="about-us"
       className="relative flex flex-col items-center gap-10 overflow-hidden px-6 py-20 md:flex-row md:items-center md:justify-between md:gap-16 md:px-16 scroll-mt-20"
     >
-      <Blob className="left-0 top-[45%] h-[360px] w-[360px] -translate-y-1/2" />
       {/* order-2/order-1 put the photo above the text on mobile (where the
           section stacks in a single column) without touching the desktop
           layout, which keeps the original text-left/photo-right order via
           md:order-none. */}
       <div className="relative z-10 order-2 flex w-full max-w-xl flex-col gap-10 md:order-none">
-        <h2 className="font-switzer text-4xl font-extralight tracking-tight text-white md:text-6xl">
-          {heading}
-        </h2>
+        <div className="flex flex-col gap-3">
+          {/* Small eyebrow - matches the kicker treatment already used
+              elsewhere (Gallery, FAQ) so About gets its own masthead moment
+              instead of opening straight on the heading. */}
+          <p className="font-switzer text-xs font-semibold uppercase tracking-[0.25em] text-cta md:text-sm">
+            About us
+          </p>
+          <h2 className="font-switzer text-4xl font-extralight tracking-tight text-white md:text-6xl">
+            {heading}
+          </h2>
+        </div>
         <div className="font-switzer text-xl font-light leading-relaxed text-white/80">
           {paragraphs.map((p, i) => (
             <p key={i} className={i < paragraphs.length - 1 ? "mb-4" : ""}>

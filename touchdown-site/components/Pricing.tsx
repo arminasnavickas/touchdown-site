@@ -122,9 +122,13 @@ export default function Pricing({
   kicker: string;
 }) {
   return (
+    // One of the page's three strongest information moments (with Hero and
+    // How It Works) - py bumped up so it reads as a bigger beat than the
+    // supporting sections around it, while the old flat gap-[100px] is
+    // trimmed to a still-generous but more deliberate gap-16/20.
     <section
       id="prices"
-      className="relative flex flex-col items-center gap-[100px] overflow-hidden px-6 py-20 md:px-16 scroll-mt-20"
+      className="relative flex flex-col items-center gap-16 overflow-hidden px-6 py-24 md:gap-20 md:px-16 md:py-28 scroll-mt-20"
     >
       {/* One contained glow behind the recommended plan (3rd of 4 columns)
           instead of two broad blobs washing the whole row in cyan - the

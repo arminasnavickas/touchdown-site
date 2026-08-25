@@ -1,5 +1,4 @@
 import ScheduleCard from "./ScheduleCard";
-import Blob from "./Blob";
 import Reveal from "./Reveal";
 import type { ScheduleCard as ScheduleCardData } from "@/lib/content";
 
@@ -14,9 +13,11 @@ export default function WaterDaySchedule({
 }) {
   const subcopyLines = subcopy.split("\n").filter(Boolean);
   return (
-    <section id="water-schedule" className="relative flex flex-col items-center gap-[100px] overflow-hidden px-6 py-20 md:px-16 scroll-mt-20">
-      <Blob className="left-0 top-[8%] h-[260px] w-[260px]" />
-      <Blob className="right-0 top-[65%] h-[280px] w-[280px] -translate-y-1/2" />
+    // Glow removed (part of the page-wide cut to strategic-only cyan glow)
+    // and the gap/padding brought down from the old gap-[100px]/py-20 -
+    // this is a compact, scannable schedule, not a showcase section, so it
+    // shouldn't carry the same amount of empty space as one.
+    <section id="water-schedule" className="relative flex flex-col items-center gap-10 overflow-hidden px-6 py-14 md:gap-12 md:px-16 md:py-16 scroll-mt-20">
       <Reveal>
         <div className="relative z-10 flex max-w-3xl flex-col items-center gap-10 text-center">
           <h2 className="font-switzer text-4xl font-extralight tracking-tight text-white md:text-6xl">

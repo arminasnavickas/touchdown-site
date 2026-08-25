@@ -62,34 +62,27 @@ function ReviewCard({
   }, [review.quote]);
 
   return (
+    // Quote-led, not card-led: chrome dialed back from a hover-lifting
+    // product card (shadow escalation, border-color shift, translate) to a
+    // quiet printed block - a flat shadow-sm that barely deepens on hover,
+    // no border, no lift. The quote is now the first and largest thing in
+    // the block; the reviewer's photo/name/rating moved into a small byline
+    // underneath instead of introducing them first, closer to a magazine
+    // pull-quote than a testimonial card.
     <div
-      className="flex h-full w-[85%] shrink-0 flex-col gap-3 rounded-lg border border-transparent p-8 shadow-md transition-all duration-300 hover:-translate-y-0.5 hover:border-cta/60 hover:shadow-lg hover:shadow-cta/10 snap-start sm:w-[360px]"
+      className="flex h-full w-[85%] shrink-0 flex-col gap-4 rounded-lg p-8 shadow-sm transition-shadow duration-300 hover:shadow-md snap-start sm:w-[360px]"
       style={{
         backgroundImage:
           "linear-gradient(180deg, #FFFFFF 24.83%, rgba(208,235,242,0.1) 98.162%), linear-gradient(#FFFFFF, #FFFFFF)",
       }}
     >
-      <div className="flex items-center gap-3">
-        <FadeImage
-          src={review.image}
-          alt={review.name}
-          wrapperClassName="size-[80px] shrink-0 rounded-full"
-          className="h-full w-full object-cover transition-transform duration-300 hover:scale-110"
-        />
-        <div className="flex flex-1 flex-col gap-1">
-          <p className="font-switzer text-2xl font-light tracking-tight text-navy">
-            {review.name}
-          </p>
-          {review.role && (
-            <p className="font-switzer text-base text-dark-ocean-blue/80">{review.role}</p>
-          )}
-          <div className="flex items-center gap-2">
-            <StarRating rating={review.rating} />
-            <p className="font-switzer text-base text-black">{review.rating}</p>
-          </div>
-        </div>
-      </div>
-      <p ref={quoteRef} className="line-clamp-4 font-switzer text-lg font-light text-dark-ocean-blue/90">
+      <span aria-hidden className="font-switzer text-5xl font-light leading-none text-cta/25">
+        &ldquo;
+      </span>
+      <p
+        ref={quoteRef}
+        className="-mt-4 line-clamp-5 font-switzer text-xl font-light leading-relaxed text-dark-ocean-blue"
+      >
         {review.quote}
       </p>
       {overflows && (
@@ -102,6 +95,26 @@ function ReviewCard({
           <span className="absolute -bottom-1 left-0 h-[2px] w-0 bg-cta transition-all duration-300 group-hover:w-full" />
         </button>
       )}
+      {/* Byline - photo/name/role/rating, all demoted from the card's
+          opening block to a small attribution line at the close, the way a
+          printed pull-quote credits its source rather than leading with it. */}
+      <div className="mt-auto flex items-center gap-3 border-t border-dark-ocean-blue/10 pt-4">
+        <FadeImage
+          src={review.image}
+          alt={review.name}
+          wrapperClassName="size-11 shrink-0 rounded-full"
+          className="h-full w-full object-cover"
+        />
+        <div className="flex flex-1 flex-col gap-0.5">
+          <p className="font-switzer text-base font-medium text-navy">
+            {review.name}
+          </p>
+          {review.role && (
+            <p className="font-switzer text-sm text-dark-ocean-blue/60">{review.role}</p>
+          )}
+        </div>
+        <StarRating rating={review.rating} />
+      </div>
     </div>
   );
 }
@@ -148,7 +161,7 @@ export default function Reviews({
   return (
     <section
       id="reviews"
-      className="relative flex flex-col items-center gap-[70px] overflow-hidden px-6 py-20 md:px-16 scroll-mt-20"
+      className="relative flex flex-col items-center gap-12 overflow-hidden px-6 py-20 md:gap-16 md:px-16 scroll-mt-20"
     >
       <Reveal>
         <div className="relative z-10 flex flex-col items-center gap-10 text-center">
