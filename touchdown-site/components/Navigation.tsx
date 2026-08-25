@@ -307,22 +307,18 @@ export default function Navigation({
         }`}
       >
         <nav className="flex flex-col px-6 py-2">
-          {/* Bigger, lighter, numbered - matching the editorial type
-              language used through the rest of the redesign (large,
-              extralight, a thin tracked number leading each line) instead
-              of a small uppercase UI-label list. */}
+          {/* Bigger, lighter - matching the editorial type language used
+              through the rest of the redesign (large, extralight text)
+              instead of a small uppercase UI-label list. Numbers removed. */}
           {navLinks.map((link, i) => (
             <a
               key={link.id}
               href={hrefById[link.id] ?? "#"}
               onClick={() => setOpen(false)}
-              className={`flex items-center gap-4 py-4 font-switzer text-2xl font-light uppercase tracking-tight transition hover:text-horizon ${
+              className={`flex items-center py-4 font-switzer text-2xl font-light uppercase tracking-tight transition hover:text-horizon ${
                 i > 0 ? "border-t border-danish-blue/20" : ""
               } ${isActive(link.id) ? "text-horizon" : "text-dark-ocean-blue"}`}
             >
-              <span className="font-switzer text-xs font-medium tabular-nums tracking-widest text-cta/70">
-                {String(i + 1).padStart(2, "0")}
-              </span>
               {link.label}
             </a>
           ))}
