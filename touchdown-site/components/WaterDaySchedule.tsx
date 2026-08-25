@@ -26,7 +26,7 @@ export default function WaterDaySchedule({
               {heading}
             </h2>
           </div>
-          <div className="w-full font-switzer text-[15px] font-light leading-relaxed text-[#d3e3fd] text-left">
+          <div className="font-switzer text-[15px] font-light leading-relaxed text-[#d3e3fd]">
             {subcopyLines.map((line, i) => (
               <p key={i}>{line}</p>
             ))}
