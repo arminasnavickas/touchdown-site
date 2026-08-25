@@ -28,13 +28,23 @@ export default function Gallery({ images }: { images: string[] }) {
   const { openLightbox } = useLightbox();
 
   return (
-    <section className="relative z-20 -mt-24 px-6 md:-mt-32 md:px-16">
-      {/* Small editorial intro - sits in the space the negative margin
-          below reclaims from the hero, understated on purpose (no large
-          h2 - just an eyebrow line and one quiet supporting line, matching
-          the site's existing eyebrow/kicker treatment rather than
-          introducing a new heading style). */}
-      <div className="relative z-10 mb-4 flex flex-col gap-1 md:mb-6">
+    // Overlap with the hero above brought way down (was -mt-24/-mt-32, a
+    // near-full pull into the hero's own h-24/h-32 bottom feather) and
+    // paired with real top padding (previously none) - the old version
+    // pulled the eyebrow/description up into the hero image itself with no
+    // breathing room of its own, which is what made the heading read as
+    // cramped/disconnected rather than as its own line of hierarchy. Now
+    // the pull only grazes the very end of the hero's feather (a small,
+    // still-connected transition) and the padding gives the eyebrow a
+    // consistent ~48-64px of clear space below that, so it's always
+    // sitting on plain background, never on the photograph.
+    <section className="relative z-20 -mt-10 px-6 pt-12 md:-mt-14 md:px-16 md:pt-16">
+      {/* Small editorial intro - eyebrow + one quiet supporting line,
+          unchanged in typography/colour. Gap below tightened to a
+          controlled 24px/32px (was mb-4/mb-6, 16px/24px) so the gallery
+          starts shortly after the description instead of drifting further
+          down the page. */}
+      <div className="relative z-10 mb-6 flex flex-col gap-1 md:mb-8">
         <p className="font-switzer text-xs font-semibold uppercase tracking-[0.25em] text-cta md:text-sm">
           The Touchdown Experience
         </p>
