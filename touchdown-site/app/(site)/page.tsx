@@ -1,6 +1,7 @@
 import Hero from "@/components/Hero";
 import Gallery from "@/components/Gallery";
 import WhoWeAre from "@/components/WhoWeAre";
+import OurFacility from "@/components/OurFacility";
 import HowItWorks from "@/components/HowItWorks";
 import WhatYouGet from "@/components/WhatYouGet";
 import TrainingRhythm from "@/components/TrainingRhythm";
@@ -68,6 +69,7 @@ export default async function Home() {
         copy={siteContent.whoWeAreCopy}
         image={siteContent.whoWeAreImage}
       />
+      <OurFacility />
       <HowItWorks
         heading={siteContent.howItWorksHeading}
         subtitle={siteContent.howItWorksSubtitle}
