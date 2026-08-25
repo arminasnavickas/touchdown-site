@@ -50,7 +50,7 @@ function TeamCard({
     // (no card chrome at all beyond the photo's own rounded corners), taller
     // and genuinely portrait-shaped (was a short 6/3.6 landscape crop) so
     // the person, not the card, is what the eye lands on.
-    <div className="group flex h-full w-full flex-col gap-4">
+    <div className="group flex h-full w-full flex-col gap-3">
       <button
         type="button"
         onClick={() => openLightbox([member.image], 0)}
@@ -68,8 +68,10 @@ function TeamCard({
 
       {/* data-fab-avoid: same floating Book In/back-to-top overlap issue we
           hit on How It Works, Training Rhythm, and the footer links. */}
-      <div data-fab-avoid className="flex flex-1 flex-col gap-2">
-        <div className="flex flex-col gap-0.5">
+      <div data-fab-avoid className="flex flex-1 flex-col gap-3">
+        <div className="flex flex-col gap-1">
+          {/* Name is the primary text element right after the photo -
+              deliberately the largest, boldest-weight text on the card. */}
           <p className="font-switzer text-2xl font-light tracking-tight text-aquatic">
             {member.name}
           </p>
@@ -85,8 +87,10 @@ function TeamCard({
         {/* Clamped to 2 lines (was the full bio, uncapped) - now that the
             photo is the dominant element and taller, letting every card's
             bio run to a different length made the grid's bottom edge
-            ragged; the popup is still one tap away for the rest. */}
-        <p className="line-clamp-2 font-switzer text-[15px] font-light leading-relaxed text-white/70">
+            ragged; the popup is still one tap away for the rest. Width
+            capped to 90% so the paragraph doesn't stretch edge-to-edge
+            across the card. */}
+        <p className="line-clamp-2 w-[90%] font-switzer text-[15px] font-light leading-relaxed text-white/70">
           {member.bio}
         </p>
         {/* Bottom action row - Instagram (secondary, left, muted) and Meet
@@ -96,8 +100,9 @@ function TeamCard({
             justify-between always has two flex children and Meet stays
             pinned to the row's right edge; mt-auto keeps this whole row at
             the same vertical position across every card regardless of how
-            long each member's bio runs. */}
-        <div className="mt-auto flex items-center justify-between gap-4 border-t border-white/10 pt-3">
+            long each member's bio runs. pt-4 (was pt-3) gives the divider
+            slightly more breathing room before the action row below it. */}
+        <div className="mt-auto flex items-center justify-between gap-4 border-t border-white/10 pt-4">
           <div className="flex items-center gap-4">
             {/* Instagram as an intentional "Instagram ->" text link instead
                 of a lone icon - matches the treatment used in the modal

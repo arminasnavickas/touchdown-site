@@ -27,7 +27,7 @@ export default function WhoWeAre({
           layout, which keeps the original text-left/photo-right order via
           md:order-none. */}
       <div className="relative z-10 order-2 flex w-full max-w-xl flex-col gap-10 md:order-none">
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col items-center gap-3 text-center">
           {/* Small eyebrow - matches the kicker treatment already used
               elsewhere (Gallery, FAQ) so About gets its own masthead moment
               instead of opening straight on the heading. */}
@@ -38,7 +38,7 @@ export default function WhoWeAre({
             {heading}
           </h2>
         </div>
-        <div className="font-switzer text-[15px] font-light leading-relaxed text-white/80">
+        <div className="text-center font-switzer text-[15px] font-light leading-relaxed text-white/80">
           {paragraphs.map((p, i) => (
             <p key={i} className={i < paragraphs.length - 1 ? "mb-4" : ""}>
               {p}

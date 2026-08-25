@@ -19,8 +19,14 @@ function PricingCard({ tier, index }: { tier: PricingTier; index: number }) {
       // a sticker. Mobile gets a full perimeter border (rounded, since each
       // card is now a discrete swipeable panel in a carousel); desktop has
       // no border at all now (the top rule across the row was removed).
+      // The lift itself is a transform (was a negative margin + extra
+      // bottom padding) - a margin shift moves the card's whole box,
+      // including its flush-bottom "Book this course" button, out of line
+      // with the other three cards' buttons; a transform is paint-only, so
+      // every card keeps the same real height and every CTA lands on the
+      // same baseline.
       className={`relative flex h-full w-full flex-col gap-6 rounded-lg border p-7 transition-colors duration-300 md:rounded-none md:border-0 ${
-        tier.popular ? "border-cta bg-cta/5 md:-mt-4 md:pb-11" : "border-white/15 hover:border-cta/40"
+        tier.popular ? "border-cta bg-cta/5 md:-translate-y-4" : "border-white/15 hover:border-cta/40"
       }`}
     >
       {/* Package number removed - min-h-[20px] kept as a reserved spacer so
@@ -50,8 +56,11 @@ function PricingCard({ tier, index }: { tier: PricingTier; index: number }) {
         </p>
       </div>
 
-      {/* Count numeral removed - just the label list now, one per line. */}
-      <div className="flex flex-col gap-2.5 border-t border-white/10 pt-5">
+      {/* Count numeral removed - just the label list now, one per line.
+          -mx-7 px-7 pulls the rule out to the card's full outer edge (so it
+          lines up with the card's own border/background) while keeping the
+          text content at its original padded position. */}
+      <div className="-mx-7 flex flex-col gap-2.5 border-t border-white/10 px-7 pt-5">
         <p className="font-switzer text-xs font-semibold uppercase tracking-[0.2em] text-cta">
           Includes
         </p>
@@ -69,7 +78,7 @@ function PricingCard({ tier, index }: { tier: PricingTier; index: number }) {
           otherwise a "Good for" positioning line) so the rhythm of rules
           down the card never skips a beat. */}
       {(tier.bonus || tier.goodFor) && (
-        <div className="border-t border-white/10 pt-5">
+        <div className="-mx-7 border-t border-white/10 px-7 pt-5">
           <p className="font-switzer text-xs font-semibold uppercase tracking-[0.2em] text-cta">
             {tier.bonus ? "Bonus" : "Good for"}
           </p>
@@ -82,7 +91,7 @@ function PricingCard({ tier, index }: { tier: PricingTier; index: number }) {
       {/* Testimonial - one short line with a plain attribution, kept well
           below the actual product information (what's included, what it
           costs) in visual weight. */}
-      <p className="border-t border-white/10 pt-5 font-switzer text-[15px] font-light italic leading-relaxed text-white/50">
+      <p className="-mx-7 border-t border-white/10 px-7 pt-5 font-switzer text-[15px] font-light italic leading-relaxed text-white/50">
         &ldquo;{tier.quote}&rdquo;{" "}
         <span className="not-italic text-white/30">{tier.quoteAuthor}</span>
       </p>
