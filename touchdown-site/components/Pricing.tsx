@@ -57,7 +57,7 @@ function PricingCard({ tier, index }: { tier: PricingTier; index: number }) {
         </p>
         <ul className="flex flex-col gap-2">
           {tier.features.map((f) => (
-            <li key={f.label} className="font-switzer text-base font-light text-white/80">
+            <li key={f.label} className="font-switzer text-xl font-light leading-relaxed text-white/80">
               {f.label}
             </li>
           ))}
@@ -73,7 +73,7 @@ function PricingCard({ tier, index }: { tier: PricingTier; index: number }) {
           <p className="font-switzer text-xs font-semibold uppercase tracking-[0.2em] text-cta">
             {tier.bonus ? "Bonus" : "Good for"}
           </p>
-          <p className="mt-1 font-switzer text-base font-light text-white/80">
+          <p className="mt-1 font-switzer text-xl font-light leading-relaxed text-white/80">
             {tier.bonus ?? tier.goodFor}
           </p>
         </div>
@@ -82,7 +82,7 @@ function PricingCard({ tier, index }: { tier: PricingTier; index: number }) {
       {/* Testimonial - one short line with a plain attribution, kept well
           below the actual product information (what's included, what it
           costs) in visual weight. */}
-      <p className="border-t border-white/10 pt-5 font-switzer text-sm font-light italic leading-relaxed text-white/50">
+      <p className="border-t border-white/10 pt-5 font-switzer text-xl font-light italic leading-relaxed text-white/50">
         &ldquo;{tier.quote}&rdquo;{" "}
         <span className="not-italic text-white/30">&mdash; {tier.quoteAuthor}</span>
       </p>

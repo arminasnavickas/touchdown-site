@@ -99,7 +99,7 @@ function ReviewCard({
       </span>
       <p
         ref={quoteRef}
-        className="-mt-3 line-clamp-4 font-switzer text-base font-light leading-relaxed text-dark-ocean-blue"
+        className="-mt-3 line-clamp-4 font-switzer text-xl font-light leading-relaxed text-dark-ocean-blue"
       >
         {review.quote}
       </p>
