@@ -80,7 +80,7 @@ function ProgressionStep({
           />
         </button>
 
-        <p className="line-clamp-3 font-switzer text-[17px] font-light leading-relaxed text-white/70 md:text-[20px]">
+        <p className="line-clamp-3 font-switzer text-base font-light leading-relaxed text-white/70">
           {paragraphs[0]}
         </p>
 

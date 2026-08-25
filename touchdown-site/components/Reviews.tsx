@@ -99,7 +99,7 @@ function ReviewCard({
       </span>
       <p
         ref={quoteRef}
-        className="-mt-3 line-clamp-4 font-switzer text-[17px] font-light leading-relaxed text-dark-ocean-blue md:text-[20px]"
+        className="-mt-3 line-clamp-4 font-switzer text-base font-light leading-relaxed text-dark-ocean-blue"
       >
         {review.quote}
       </p>
@@ -169,7 +169,7 @@ export default function Reviews({
           <h2 className="font-switzer text-4xl font-extralight tracking-tight text-danish-blue md:text-6xl">
             Reviews
           </h2>
-          <p className="font-switzer text-lg font-light leading-relaxed text-danish-blue md:text-xl">
+          <p className="font-switzer text-xl font-light text-danish-blue">
             {subtitle}
           </p>
         </div>

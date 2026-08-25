@@ -86,7 +86,7 @@ function TeamCard({
             photo is the dominant element and taller, letting every card's
             bio run to a different length made the grid's bottom edge
             ragged; the popup is still one tap away for the rest. */}
-        <p className="line-clamp-2 font-switzer text-[17px] font-light leading-relaxed text-white/70 md:text-[20px]">
+        <p className="line-clamp-2 font-switzer text-base font-light leading-relaxed text-white/70">
           {member.bio}
         </p>
         {/* Bottom action row - Instagram (secondary, left, muted) and Meet
