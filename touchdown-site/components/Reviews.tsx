@@ -70,18 +70,18 @@ function ReviewCard({
     // underneath instead of introducing them first, closer to a magazine
     // pull-quote than a testimonial card.
     <div
-      className="flex h-full w-[85%] shrink-0 flex-col gap-4 rounded-lg p-8 shadow-sm transition-shadow duration-300 hover:shadow-md snap-start sm:w-[360px]"
+      className="flex h-full w-[80%] shrink-0 flex-col gap-3 rounded-lg p-6 shadow-sm transition-shadow duration-300 hover:shadow-md snap-start sm:w-[320px]"
       style={{
         backgroundImage:
           "linear-gradient(180deg, #FFFFFF 24.83%, rgba(208,235,242,0.1) 98.162%), linear-gradient(#FFFFFF, #FFFFFF)",
       }}
     >
-      <span aria-hidden className="font-switzer text-5xl font-light leading-none text-cta/25">
+      <span aria-hidden className="font-switzer text-4xl font-light leading-none text-cta/25">
         &ldquo;
       </span>
       <p
         ref={quoteRef}
-        className="-mt-4 line-clamp-5 font-switzer text-xl font-light leading-relaxed text-dark-ocean-blue"
+        className="-mt-3 line-clamp-4 font-switzer text-base font-light leading-relaxed text-dark-ocean-blue"
       >
         {review.quote}
       </p>
@@ -98,24 +98,62 @@ function ReviewCard({
       {/* Byline - photo/name/role/rating, all demoted from the card's
           opening block to a small attribution line at the close, the way a
           printed pull-quote credits its source rather than leading with it. */}
-      <div className="mt-auto flex items-center gap-3 border-t border-dark-ocean-blue/10 pt-4">
+      <div className="mt-auto flex items-center gap-2.5 border-t border-dark-ocean-blue/10 pt-3">
         <FadeImage
           src={review.image}
           alt={review.name}
-          wrapperClassName="size-11 shrink-0 rounded-full"
+          wrapperClassName="size-9 shrink-0 rounded-full"
           className="h-full w-full object-cover"
         />
         <div className="flex flex-1 flex-col gap-0.5">
-          <p className="font-switzer text-base font-medium text-navy">
+          <p className="font-switzer text-sm font-medium text-navy">
             {review.name}
           </p>
           {review.role && (
-            <p className="font-switzer text-sm text-dark-ocean-blue/60">{review.role}</p>
+            <p className="font-switzer text-xs text-dark-ocean-blue/60">{review.role}</p>
           )}
         </div>
         <StarRating rating={review.rating} />
       </div>
     </div>
+  );
+}
+
+// Full quotation mark size step down for the supporting scroller only -
+// the featured testimonial below keeps the large version.
+function FeaturedTestimonial({
+  review,
+  onOpen,
+}: {
+  review: Review;
+  onOpen: () => void;
+}) {
+  return (
+    // One dominant testimonial instead of another card in the grid - proof,
+    // not another component. Sits directly on the section's own background
+    // (no white card) with a large opening quotation mark, oversized quote
+    // text, and the name/credential as the visual close, the way a print
+    // magazine runs its strongest pull-quote before a wall of smaller ones.
+    <button
+      type="button"
+      onClick={onOpen}
+      className="group relative z-10 flex w-full max-w-4xl flex-col items-center gap-6 text-center"
+    >
+      <span aria-hidden className="font-switzer text-7xl font-light leading-none text-cta/30 md:text-8xl">
+        &ldquo;
+      </span>
+      <p className="-mt-10 font-switzer text-2xl font-light leading-snug text-white transition-colors duration-300 group-hover:text-white/90 md:text-[34px]">
+        {review.quote}
+      </p>
+      <div className="flex flex-col items-center gap-1 pt-2">
+        <p className="font-switzer text-xl font-medium text-white md:text-2xl">{review.name}</p>
+        {review.role && (
+          <p className="font-switzer text-sm font-medium uppercase tracking-widest text-cta md:text-base">
+            {review.role}
+          </p>
+        )}
+      </div>
+    </button>
   );
 }
 
@@ -164,7 +202,10 @@ export default function Reviews({
       className="relative flex flex-col items-center gap-12 overflow-hidden px-6 py-20 md:gap-16 md:px-16 scroll-mt-20"
     >
       <Reveal>
-        <div className="relative z-10 flex flex-col items-center gap-10 text-center">
+        <div className="relative z-10 flex flex-col items-center gap-4 text-center">
+          <p className="font-switzer text-xs font-semibold uppercase tracking-[0.25em] text-cta md:text-sm">
+            Proof
+          </p>
           <h2 className="font-switzer text-4xl font-extralight tracking-tight text-danish-blue md:text-6xl">
             Reviews
           </h2>
@@ -173,6 +214,15 @@ export default function Reviews({
           </p>
         </div>
       </Reveal>
+
+      {/* One dominant testimonial standing in for the whole section's proof
+          before the smaller supporting row - reviews[0] carries the weight
+          a wall of equal cards used to spread thin. */}
+      {reviews[0] && (
+        <Reveal>
+          <FeaturedTestimonial review={reviews[0]} onOpen={() => setOpenIndex(0)} />
+        </Reveal>
+      )}
 
       <div className="relative z-10 w-full">
         <div
@@ -186,9 +236,11 @@ export default function Reviews({
           }`}
           style={{ scrollPaddingLeft: "1px" }}
         >
-          {reviews.map((review, i) => (
-            <ReviewCard key={review.name} review={review} index={i} onOpen={setOpenIndex} />
-          ))}
+          {reviews.map((review, i) =>
+            i === 0 ? null : (
+              <ReviewCard key={review.name} review={review} index={i} onOpen={setOpenIndex} />
+            )
+          )}
         </div>
 
         <button

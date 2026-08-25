@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { InstagramIcon, TelegramIcon, FacebookIcon, WhatsappIcon } from "./SocialIcons";
 import BookInButton from "./BookInButton";
+import Blob from "./Blob";
 import type { FooterLink } from "@/lib/content";
 
 const logo = "/images/logo-white.svg";
@@ -75,19 +76,25 @@ export default function Footer({
   contactTitle: string;
 }) {
   return (
-    <footer id="site-footer" className="w-full flex flex-col items-center text-white" style={{ backgroundColor: "#003252" }}>
+    <footer id="site-footer" className="relative w-full flex flex-col items-center overflow-hidden text-white" style={{ backgroundColor: "#003252" }}>
+      {/* Third and final glow of exactly three on the page (Hero, Pricing,
+          and here) - sits behind the closing "Ready to Dive In?" CTA so the
+          page's last beat gets the same quiet emphasis as its first,
+          rather than ending on flat navy. */}
+      <Blob className="left-[10%] top-[10%] h-[300px] w-[300px] -translate-y-1/3" />
+
       {/* Subtle top seam - a thin gradient line instead of the same flat
           navy the page above already uses, so the footer reads as a
           deliberate final section rather than just where the last section
           happened to stop. */}
-      <div className="h-px w-full shrink-0 bg-gradient-to-r from-transparent via-aquatic/40 to-transparent" />
+      <div className="relative z-10 h-px w-full shrink-0 bg-gradient-to-r from-transparent via-aquatic/40 to-transparent" />
 
       {/* Left-aligned at every breakpoint, including mobile - this used to
           center everything below md, which combined with the old
           flex-col-then-row CTA/brand block made mobile read as "a desktop
           footer collapsed into one column" rather than a deliberately
           designed compact layout. */}
-      <div className="flex w-full flex-col items-start divide-y divide-white/10 px-6 text-left md:px-16">
+      <div className="relative z-10 flex w-full flex-col items-start divide-y divide-white/10 px-6 text-left md:px-16">
         {/* A real 2-column grid at every breakpoint (not flex-col on mobile
             switching to flex-row at md) - CTA on the left, brand/socials on
             the right, from the smallest screen up. Keeps the mobile footer
@@ -177,7 +184,7 @@ export default function Footer({
       {/* Legal lives here now as a compact inline list next to the
           copyright, instead of a whole column above for two short links -
           also lets Back to top keep its exact spot at the far right. */}
-      <div className="relative flex w-full flex-col items-start gap-3 border-t border-aquatic/50 px-6 py-5 text-left md:flex-row md:items-center md:justify-between md:gap-6 md:px-16">
+      <div className="relative z-10 flex w-full flex-col items-start gap-3 border-t border-aquatic/50 px-6 py-5 text-left md:flex-row md:items-center md:justify-between md:gap-6 md:px-16">
         <p className="font-switzer text-sm font-light text-aquatic/80">
           © {new Date().getFullYear()} Touchdown Space. All rights reserved.
           <br />

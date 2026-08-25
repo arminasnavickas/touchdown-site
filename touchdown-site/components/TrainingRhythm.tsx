@@ -38,9 +38,18 @@ export default function TrainingRhythm({
       className="relative flex flex-col items-center gap-8 overflow-hidden px-6 py-16 md:gap-10 md:px-16 md:py-20 scroll-mt-20"
     >
       <Reveal>
-        <h2 className="relative z-10 text-center font-switzer text-4xl font-extralight tracking-tight text-white md:text-6xl">
-          {heading}
-        </h2>
+        <div className="relative z-10 flex flex-col items-center gap-3 text-center">
+          {/* "The training system" frames this section plus the Water/Dry
+              schedules right after it as three parts of one methodology
+              (Part 01/02/03, echoed on each) rather than three unrelated
+              sections that happen to sit next to each other. */}
+          <p className="font-switzer text-xs font-semibold uppercase tracking-[0.25em] text-cta md:text-sm">
+            The training system · Part 01
+          </p>
+          <h2 className="text-center font-switzer text-4xl font-extralight tracking-tight text-white md:text-6xl">
+            {heading}
+          </h2>
+        </div>
       </Reveal>
 
       {/* The pattern strip - WATER · WATER · DRY · ... - exists purely to

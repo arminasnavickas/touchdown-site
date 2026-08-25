@@ -64,14 +64,13 @@ export default function Hero({
   }, []);
 
   return (
-    // Mobile height brought down from 500px - the old height plus a
-    // text-6xl headline meant the copy/CTA stack routinely ran right up to
-    // (or past) the hero's own bottom edge, pushing the stamp and diver out
-    // of the first viewport and forcing a scroll just to see them. A
-    // shorter section combined with the smaller headline below fits the
-    // full "eyebrow -> headline -> copy -> CTA -> stamp/diver" stack
-    // comfortably without shrinking the photo down to a sliver.
-    <section className="relative h-[460px] w-full overflow-hidden bg-dark-ocean-blue md:h-[700px]">
+    // Mobile height stays tuned to fit the full content stack without
+    // scrolling (see comment history below). Desktop pushed taller
+    // (700 -> 780) - this is the first, iconic impression of the page, and
+    // the extra height lets the headline scale up a full step below without
+    // ever feeling cramped against the section's own edges - closer to a
+    // campaign key visual than a website header banner.
+    <section className="relative h-[460px] w-full overflow-hidden bg-dark-ocean-blue md:h-[780px]">
       {/* Background underwater image (parallax) */}
       <div
         ref={parallaxRef}
@@ -103,7 +102,7 @@ export default function Hero({
           className="absolute inset-0"
           style={{
             backgroundImage:
-              "linear-gradient(100deg, rgba(4,12,20,0.82) 0%, rgba(4,12,20,0.6) 32%, rgba(4,12,20,0.28) 58%, rgba(4,12,20,0.08) 78%, rgba(4,12,20,0) 100%)",
+              "linear-gradient(100deg, rgba(4,12,20,0.88) 0%, rgba(4,12,20,0.64) 30%, rgba(4,12,20,0.3) 56%, rgba(4,12,20,0.08) 78%, rgba(4,12,20,0) 100%)",
           }}
         />
         {/* Light bottom feather so the image collage below reads as
@@ -130,12 +129,13 @@ export default function Hero({
           <p className="font-switzer text-base font-medium uppercase tracking-widest text-white/80 md:text-lg">
             {headlineLines[0]}
           </p>
-          {/* Sized down a step (was text-6xl/text-8xl) - a slightly more
-              restrained headline reads as a deliberate typographic choice
-              rather than the biggest thing that would fit, and gives the
-              mobile two-line break (below) room to land cleanly instead of
-              nearly filling the viewport on its own. */}
-          <h1 className="font-switzer text-5xl font-extralight leading-[1.05] tracking-tight text-white md:text-7xl">
+          {/* Mobile stays restrained at text-5xl (room for the deliberate
+              two-line break below), but desktop is pushed back up a step
+              (7xl -> 8xl) now that the taller section above gives it room -
+              the headline should be the single most confident, dominant
+              element in the hero, not one component sharing space with the
+              rest of the copy stack. */}
+          <h1 className="font-switzer text-5xl font-extralight leading-[1.05] tracking-tight text-white md:text-8xl">
             {mainLineLead}
             <br className="md:hidden" />
             {" "}
@@ -163,12 +163,12 @@ export default function Hero({
         </BookInButton>
       </div>
 
-      {/* Logo badge - scaled down (was a flat 100x100px at every
-          breakpoint) so it reads as a supporting brand mark rather than
-          competing with the headline for attention, and repositioned
-          slightly to stay clear of both the shorter mobile hero's content
-          stack above it and the image collage's overlap below it. */}
-      <div className="absolute right-6 top-[300px] block size-[72px] md:right-24 md:top-[380px] md:size-[92px]">
+      {/* Logo badge - kept as a supporting brand mark, not scaled back up to
+          a flat "logo in the corner" size, but given a touch more presence
+          at the new taller desktop height and nudged down nearer the
+          diver's shoulder rather than floating in open water - the stamp
+          should read as stitched into the photograph, not laid on top of it. */}
+      <div className="absolute right-6 top-[300px] block size-[72px] md:right-20 md:top-[430px] md:size-[104px]">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src={logoBadge} alt="Touchdown space badge" className="h-full w-full object-contain drop-shadow-[0_2px_12px_rgba(0,0,0,0.45)]" />
       </div>

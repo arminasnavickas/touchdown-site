@@ -83,6 +83,17 @@ export default function Gallery({ images }: { images: string[] }) {
                 - the photograph stays dominant, this just confirms the
                 tile is clickable. */}
             <div className="absolute inset-0 bg-dark-ocean-blue/0 transition-colors duration-300 group-hover:bg-dark-ocean-blue/25" />
+            {/* Plate number, always on (not hover-gated) - the same thin
+                numeral language used in How It Works and Pricing, applied
+                here as a photography-book caption rather than a UI badge,
+                so the grid reads as a numbered set of plates instead of a
+                bare image tile grid. */}
+            <span
+              aria-hidden
+              className="pointer-events-none absolute bottom-3 right-3 font-switzer text-xs font-light tabular-nums tracking-widest text-white/60 [text-shadow:0_1px_4px_rgba(0,0,0,0.5)] md:bottom-4 md:right-4"
+            >
+              {String(i + 1).padStart(2, "0")}
+            </span>
             <ViewIndicator />
           </button>
         ))}

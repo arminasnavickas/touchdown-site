@@ -20,9 +20,17 @@ export default function WaterDaySchedule({
     <section id="water-schedule" className="relative flex flex-col items-center gap-10 overflow-hidden px-6 py-14 md:gap-12 md:px-16 md:py-16 scroll-mt-20">
       <Reveal>
         <div className="relative z-10 flex max-w-3xl flex-col items-center gap-10 text-center">
-          <h2 className="font-switzer text-4xl font-extralight tracking-tight text-white md:text-6xl">
-            {heading}
-          </h2>
+          {/* Continues the Part 01/02/03 system label started on Training
+              Rhythm above - reads as chapter two of one methodology, not a
+              new, unrelated section. */}
+          <div className="flex flex-col items-center gap-3">
+            <p className="font-switzer text-xs font-semibold uppercase tracking-[0.25em] text-cta md:text-sm">
+              The training system · Part 02
+            </p>
+            <h2 className="font-switzer text-4xl font-extralight tracking-tight text-white md:text-6xl">
+              {heading}
+            </h2>
+          </div>
           <div className="font-switzer text-xl font-light leading-relaxed text-[#d3e3fd]">
             {subcopyLines.map((line, i) => (
               <p key={i}>{line}</p>

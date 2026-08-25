@@ -44,73 +44,54 @@ function TeamCard({
 }) {
   const { openLightbox } = useLightbox();
   return (
-    <div className="group flex h-full w-full flex-col overflow-hidden rounded-lg bg-dark-ocean-blue shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-cta/10">
+    // Un-boxed - the old dark-ocean-blue rounded card with its own shadow
+    // and hover-lift made a grid of eight read as a dense wall of tiles.
+    // The portrait now sits straight on the section's own navy background
+    // (no card chrome at all beyond the photo's own rounded corners), taller
+    // and genuinely portrait-shaped (was a short 6/3.6 landscape crop) so
+    // the person, not the card, is what the eye lands on.
+    <div className="group flex h-full w-full flex-col gap-4">
       <button
         type="button"
         onClick={() => openLightbox([member.image], 0)}
-        className="relative -mb-px aspect-[6/3.6] w-full cursor-zoom-in overflow-hidden"
+        className="relative aspect-[4/5] w-full cursor-zoom-in overflow-hidden rounded-md"
         aria-label="View full image"
       >
-        {/* object-top-cropped photos were showing a large flat block of the
-            subject's dark shirt at the bottom of the frame, which visually
-            merged into the card's own dark-ocean-blue background below it -
-            reading as one big black slab rather than a photo + card. A
-            shorter crop keeps the frame on face/shoulders and trims that
-            excess torso, so the photo's own bottom edge stays visible.
-
-            The Y offset defaults to 0% (top-anchored, same as before) and
-            is only overridden per-member via PHOTO_Y_OFFSET_BY_NAME above -
-            set as an inline style since Tailwind can't generate an
-            arbitrary-value class from a runtime variable.
-
-            The wrapping div here bleeds 1px past the left/right edges
-            (clipped by this button's own overflow-hidden either way), and
-            the image itself is scaled up slightly (scale-105) so it
-            overshoots its box on every side - between the two, any
-            subpixel width-rounding gap that was showing the card's
-            dark-ocean-blue background as a thin dark line down the right
-            edge of the photo is fully covered. */}
-        <div className="absolute -inset-x-px inset-y-0">
-          <FadeImage
-            src={member.image}
-            alt={member.name}
-            wrapperClassName="h-full w-full"
-            className="h-full w-full scale-105 object-cover"
-            style={{ objectPosition: `50% ${PHOTO_Y_OFFSET_BY_NAME[member.name] ?? 0}%` }}
-          />
-        </div>
+        <FadeImage
+          src={member.image}
+          alt={member.name}
+          wrapperClassName="h-full w-full"
+          className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+          style={{ objectPosition: `50% ${PHOTO_Y_OFFSET_BY_NAME[member.name] ?? 0}%` }}
+        />
       </button>
 
       {/* data-fab-avoid: same floating Book In/back-to-top overlap issue we
-          hit on How It Works, Training Rhythm, and the footer links - the
-          floating stack sits over this card's bio text and CTA link when
-          scrolled into that position. Tagging the whole content block (not
-          just the button) so the fade-out triggers as soon as any of the
-          bio/CTA is covered, not only once the button itself is hit. */}
-      <div data-fab-avoid className="flex flex-1 flex-col gap-3 p-5">
-        {/* Name -> short role tags -> compact records line -> description,
-            in that order, so the card reads "who / what they do / what
-            they've done / a bit about them" top to bottom instead of
-            burying the role under a name-sized records line. */}
-        <div className="flex flex-col gap-1">
-          <p className="font-switzer text-3xl font-light tracking-tight text-aquatic">
+          hit on How It Works, Training Rhythm, and the footer links. */}
+      <div data-fab-avoid className="flex flex-1 flex-col gap-2">
+        <div className="flex flex-col gap-0.5">
+          <p className="font-switzer text-2xl font-light tracking-tight text-aquatic">
             {member.name}
           </p>
-          <p className="font-switzer text-sm font-medium uppercase tracking-wide text-cta">
+          <p className="font-switzer text-xs font-medium uppercase tracking-wide text-cta">
             {member.role}
           </p>
         </div>
         {member.records && member.records.length > 0 && (
-          <p className="font-switzer text-sm font-light text-white/50">
+          <p className="font-switzer text-xs font-light text-white/45">
             {member.records.map((record, i) => (
               <span key={record.label}>
-                {i > 0 && <span className="mx-1.5 text-white/25">·</span>}
-                -{record.value} <span className="text-white/35">{record.label}</span>
+                {i > 0 && <span className="mx-1.5 text-white/20">·</span>}
+                -{record.value} <span className="text-white/30">{record.label}</span>
               </span>
             ))}
           </p>
         )}
-        <p className="font-switzer text-xl font-light leading-relaxed text-white/80">
+        {/* Clamped to 2 lines (was the full bio, uncapped) - now that the
+            photo is the dominant element and taller, letting every card's
+            bio run to a different length made the grid's bottom edge
+            ragged; the popup is still one tap away for the rest. */}
+        <p className="line-clamp-2 font-switzer text-base font-light leading-relaxed text-white/70">
           {member.bio}
         </p>
         {/* Personalized CTA ("Meet Gus") replacing the generic "Read more" -
@@ -128,7 +109,7 @@ function TeamCard({
           </span>
         </button>
         {(member.instagram || member.website) && (
-          <div className="mt-auto flex items-center gap-4 border-t border-white/10 pt-4">
+          <div className="mt-auto flex items-center gap-4 border-t border-white/10 pt-3">
             {/* Instagram as an intentional "Instagram ->" text link instead
                 of a lone icon - matches the treatment used in the modal
                 header, rather than an unlabeled glyph sitting on its own. */}
@@ -179,16 +160,21 @@ export default function MeetOurTeam({
       className="relative flex flex-col items-center gap-14 overflow-hidden px-6 py-20 md:gap-16 md:px-16 scroll-mt-20"
     >
       <Reveal>
-        <div className="relative z-10 flex flex-col items-center gap-10 text-center">
+        {/* Editorial intro - "Meet the team" (was "Meet our team") plus the
+            site's kicker copy restyled as a genuine supporting line rather
+            than a small uppercase caption, so this reads as a real
+            introduction before the portraits take over, not a bare heading
+            with a label underneath. */}
+        <div className="relative z-10 flex max-w-2xl flex-col items-center gap-4 text-center">
           <h2 className="font-switzer text-4xl font-extralight tracking-tight text-white md:text-6xl">
-            Meet our team
+            Meet the team
           </h2>
-          <p className="font-switzer text-base font-normal uppercase tracking-widest text-danish-blue">
+          <p className="font-switzer text-lg font-light leading-relaxed text-danish-blue md:text-xl">
             {kicker}
           </p>
         </div>
       </Reveal>
-      <div className="relative z-10 grid w-full grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="relative z-10 grid w-full grid-cols-1 gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-4">
         {members.map((member, i) => (
           <Reveal key={member.name} delay={i * 80} className="h-full">
             <TeamCard member={member} index={i} onOpen={setOpenIndex} />

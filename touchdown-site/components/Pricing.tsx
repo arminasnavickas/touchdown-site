@@ -3,60 +3,54 @@ import Blob from "./Blob";
 import Reveal from "./Reveal";
 import BookInButton from "./BookInButton";
 
-function PricingCard({ tier }: { tier: PricingTier }) {
+// Re-skinned from four boxed white SaaS-style cards into an editorial
+// programme catalogue - thin rules dividing each block of information
+// (package/duration/price, includes, bonus, quote, CTA) on a transparent
+// navy ground, rather than a white rounded box with shadow/hover-lift
+// theatrics. Same fields, same four inline tiers, same "Includes" content -
+// this is a skin change, not a data change, so it works identically
+// whether the tier came from the code fallback or a live Sanity document.
+function PricingCard({ tier, index }: { tier: PricingTier; index: number }) {
   return (
     <div
-      // Equal height across all four cards (h-full, on a grid that no
-      // longer forces items-start - see the grid below) with the CTA
-      // pinned to the bottom via mt-auto, so every card's button lines up
-      // on the same baseline regardless of how much bonus/feature content
-      // the tier above it has.
-      className={`flex h-full w-full flex-col gap-5 rounded-lg border p-7 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg ${
-        tier.popular
-          ? "border-cta/50 shadow-lg shadow-cta/20 hover:shadow-cta/30 md:-translate-y-2"
-          : "border-transparent shadow-md hover:border-cta/60 hover:shadow-cta/10"
+      className={`relative flex h-full w-full flex-col gap-6 border-t-2 p-7 transition-colors duration-300 ${
+        tier.popular ? "border-cta bg-cta/5" : "border-white/15 hover:border-cta/40"
       }`}
-      style={{
-        backgroundImage:
-          "linear-gradient(180deg, #FFFFFF 24.83%, rgba(208,235,242,0.1) 98.162%), linear-gradient(#FFFFFF, #FFFFFF)",
-      }}
     >
-      {/* Fixed-height badge slot on every card, not just the popular one -
-          keeps every card's name/price starting from the same baseline
-          instead of the popular card's content sitting lower than the rest. */}
-      <div className="flex min-h-[28px] items-center justify-center md:justify-start">
+      {/* Package index, echoing the same numbering language used in How It
+          Works and Team elsewhere on the page - pricing reads as one more
+          part of the same editorial system instead of a bolted-on table. */}
+      <div className="flex min-h-[20px] items-center justify-between">
+        <span className="font-switzer text-sm font-light tabular-nums text-cta/70">
+          {String(index + 1).padStart(2, "0")}
+        </span>
         {tier.popular && (
-          <span className="rounded bg-cta px-3 py-1 font-switzer text-xs font-semibold uppercase tracking-widest text-dark-ocean-blue">
+          <span className="font-switzer text-xs font-semibold uppercase tracking-widest text-cta">
             Most popular
           </span>
         )}
       </div>
 
-      <div className="flex flex-col items-center gap-1 text-center md:items-start md:text-left">
-        <p className="font-switzer text-xl font-semibold uppercase tracking-tight text-dark-ocean-blue">
+      <div className="flex flex-col gap-1">
+        <p className="font-switzer text-xl font-semibold uppercase tracking-tight text-white">
           {tier.name}
         </p>
-        {/* Duration + ladder step on one line ("1 Day · Try it") rather than
-            a separate row each - keeps the header compact and makes the
-            Discovery -> Freedom Flow -> Deep Mastery -> Ultimate progression
-            legible without adding another line to every card. */}
-        <p className="font-switzer text-sm font-medium uppercase tracking-widest text-dark-ocean-blue/50">
+        {/* Duration + ladder step on one line ("1 Day · Try it") - keeps the
+            header compact and makes the Discovery -> Freedom Flow -> Deep
+            Mastery -> Ultimate progression legible at a glance. */}
+        <p className="font-switzer text-sm font-medium uppercase tracking-widest text-white/40">
           {tier.duration} &middot; {tier.step}
         </p>
-        <p className="mt-2 font-switzer text-5xl font-extralight tracking-tight text-horizon">
+        <p className="mt-2 font-switzer text-5xl font-extralight tracking-tight text-white">
           {tier.price}
         </p>
       </div>
 
-      {/* Numeric benefit system - "04  Lectures" reads and compares across
-          cards far faster than a bulleted sentence, especially once you're
-          scanning four cards side by side. INCLUDES sits directly under the
-          price and in the same cyan as the numbers themselves (was the
-          lighter aquatic accent) - this is the primary thing a comparing
-          visitor came here to read, so it gets the same accent weight as
-          the price/CTA rather than reading as a minor label. */}
-      <div className="flex flex-col gap-2.5">
-        <p className="font-switzer text-sm font-semibold uppercase tracking-[0.15em] text-cta">
+      {/* Numeric benefit system - reads and compares across cards far
+          faster than a bulleted sentence, especially scanning four cards
+          side by side. */}
+      <div className="flex flex-col gap-2.5 border-t border-white/10 pt-5">
+        <p className="font-switzer text-xs font-semibold uppercase tracking-[0.2em] text-cta">
           Includes
         </p>
         <ul className="flex flex-col gap-2">
@@ -65,7 +59,7 @@ function PricingCard({ tier }: { tier: PricingTier }) {
               <span className="w-6 shrink-0 font-switzer text-sm font-semibold tabular-nums text-cta">
                 {f.count}
               </span>
-              <span className="font-switzer text-base font-light text-dark-ocean-blue">
+              <span className="font-switzer text-base font-light text-white/80">
                 {f.label}
               </span>
             </li>
@@ -73,31 +67,27 @@ function PricingCard({ tier }: { tier: PricingTier }) {
         </ul>
       </div>
 
-      {/* Bonus gets its own small highlighted row instead of being tacked
-          onto the end of the features list as "Bonus: ..." - it's meant to
-          read as extra value, not one more list item. Every tier renders
-          *something* in this slot (Bonus if it has one, otherwise a "Good
-          for" positioning line) so the box is never just missing - a tier
-          without a bonus used to leave a visible empty gap here once the
-          row stretched to match its tallest sibling. */}
+      {/* Bonus gets its own thin-ruled block instead of a filled highlight
+          box - every tier renders *something* here (Bonus if it has one,
+          otherwise a "Good for" positioning line) so the rhythm of rules
+          down the card never skips a beat. */}
       {(tier.bonus || tier.goodFor) && (
-        <div className="rounded-md bg-aquatic/10 px-4 py-3">
-          <p className="font-switzer text-xs font-semibold uppercase tracking-[0.15em] text-horizon">
+        <div className="border-t border-white/10 pt-5">
+          <p className="font-switzer text-xs font-semibold uppercase tracking-[0.2em] text-cta">
             {tier.bonus ? "Bonus" : "Good for"}
           </p>
-          <p className="font-switzer text-base font-light text-dark-ocean-blue">
+          <p className="mt-1 font-switzer text-base font-light text-white/80">
             {tier.bonus ?? tier.goodFor}
           </p>
         </div>
       )}
 
-      {/* Testimonial cut down to one short line with a plain attribution
-          instead of a large highlighted quote box - it was competing with
-          the actual product information (what's included, what it costs)
-          for visual weight it shouldn't have on a pricing card. */}
-      <p className="font-switzer text-sm font-light italic leading-relaxed text-dark-ocean-blue/60">
+      {/* Testimonial - one short line with a plain attribution, kept well
+          below the actual product information (what's included, what it
+          costs) in visual weight. */}
+      <p className="border-t border-white/10 pt-5 font-switzer text-sm font-light italic leading-relaxed text-white/50">
         &ldquo;{tier.quote}&rdquo;{" "}
-        <span className="not-italic text-dark-ocean-blue/40">&mdash; {tier.quoteAuthor}</span>
+        <span className="not-italic text-white/30">&mdash; {tier.quoteAuthor}</span>
       </p>
 
       {/* "Book in" -> "Book this course" - there are four distinct
@@ -123,16 +113,16 @@ export default function Pricing({
 }) {
   return (
     // One of the page's three strongest information moments (with Hero and
-    // How It Works) - py bumped up so it reads as a bigger beat than the
-    // supporting sections around it, while the old flat gap-[100px] is
-    // trimmed to a still-generous but more deliberate gap-16/20.
+    // How It Works) - py stays bumped up so it reads as a bigger beat than
+    // the supporting sections around it.
     <section
       id="prices"
       className="relative flex flex-col items-center gap-16 overflow-hidden px-6 py-24 md:gap-20 md:px-16 md:py-28 scroll-mt-20"
     >
-      {/* One contained glow behind the recommended plan (3rd of 4 columns)
-          instead of two broad blobs washing the whole row in cyan - the
-          emphasis should read as "this one", not general background haze. */}
+      {/* One contained glow behind the recommended plan (3rd of 4 columns) -
+          the page's one deliberate mid-page glow moment (with Hero and the
+          final CTA in the footer being the only other two on the whole
+          page), so the emphasis reads as "this one plan", not ambient haze. */}
       <Blob className="left-[63%] top-[58%] h-[320px] w-[320px] -translate-x-1/2 -translate-y-1/2" />
       <Reveal>
         <div className="relative z-10 flex flex-col items-center gap-10 text-center">
@@ -147,11 +137,14 @@ export default function Pricing({
       {/* items-start removed (was preventing the cards from stretching to
           match row height) so the grid's default stretch behavior, plus
           h-full on both the Reveal wrapper and the card itself, makes every
-          card in a row exactly as tall as its tallest sibling. */}
-      <div className="relative z-10 grid w-full grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
+          card in a row exactly as tall as its tallest sibling. A thin
+          shared divider column-to-column (divide-x) reinforces the
+          "programme catalogue" feel now that the cards no longer carry
+          their own boxed border/shadow. */}
+      <div className="relative z-10 grid w-full grid-cols-1 divide-y divide-white/10 md:grid-cols-2 md:divide-x md:divide-y-0 lg:grid-cols-4">
         {tiers.map((tier, i) => (
           <Reveal key={tier.name} delay={i * 100} className="h-full">
-            <PricingCard tier={tier} />
+            <PricingCard tier={tier} index={i} />
           </Reveal>
         ))}
       </div>
