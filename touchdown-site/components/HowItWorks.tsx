@@ -88,7 +88,7 @@ function ProgressionStep({
           type="button"
           onClick={onReadMore}
           data-fab-avoid
-          className="group/link mt-auto flex w-fit items-center gap-1.5 pt-1 font-switzer text-sm font-medium uppercase tracking-widest text-cta transition hover:text-white"
+          className="group/link mt-auto flex w-fit shrink-0 items-center gap-1.5 self-end pt-1 font-switzer text-sm font-medium uppercase tracking-widest text-cta transition hover:text-white"
         >
           Read more
           <span aria-hidden className="transition-transform duration-200 group-hover/link:translate-x-1">

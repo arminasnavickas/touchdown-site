@@ -123,7 +123,7 @@ export default function Faq({
             fades out around this section (data-fab-avoid above), so this
             gives the FAQ its own understated next-step instead of leaving
             visitors with no CTA at all once the fixed stack steps aside. */}
-        <div className="flex flex-col items-start gap-2 border-t border-white/15 pt-10">
+        <div className="flex flex-col items-center gap-2 border-t border-white/15 pt-10 text-center">
           <p className="font-switzer text-xs font-semibold uppercase tracking-[0.25em] text-cta">
             Still have questions?
           </p>
