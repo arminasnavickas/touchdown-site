@@ -47,16 +47,18 @@ function ProgressionStep({
           under it on desktop so the four numbers read as beads threaded on
           one line. */}
       <div className="relative flex w-12 shrink-0 flex-col items-center md:block md:w-auto md:h-[70px]">
-        <span className="relative z-10 font-switzer text-4xl font-thin leading-none text-cta md:text-5xl md:text-[68px]">
+        {/* Small background swatch (matches the page's own navy) sits
+            directly behind the numeral only, painted above the rail below -
+            it lets the rail pass straight through each numeral's bounding
+            box without its stroke gaps (the loop of "0", etc.) showing the
+            line poking through the digit. The rail stays fully visible in
+            the space between steps; only the digits themselves mask it. */}
+        <span className="relative z-10 bg-[#003354] pr-2 font-switzer text-4xl font-thin leading-none text-cta md:text-5xl md:text-[68px]">
           {number}
         </span>
         {index < 3 && (
           <span aria-hidden className="mt-2 w-px flex-1 bg-gradient-to-b from-cta/30 to-cta/0 md:hidden" />
         )}
-        <span
-          aria-hidden
-          className="hidden size-2 rounded-full bg-cta md:absolute md:bottom-0 md:left-[6px] md:block"
-        />
       </div>
 
       <div className="flex flex-1 flex-col gap-4 pb-2 md:gap-5 md:pb-0">
@@ -149,7 +151,7 @@ export default function HowItWorks({
             connect once the steps wrapped). */}
         <div
           aria-hidden
-          className="pointer-events-none absolute inset-x-0 top-[27px] hidden h-px bg-gradient-to-r from-cta/0 via-cta/35 to-cta/0 md:block"
+          className="pointer-events-none absolute inset-x-0 top-[34px] hidden h-px bg-gradient-to-r from-cta/0 via-cta/35 to-cta/0 md:block"
         />
         {steps.map((step, i) => (
           <Reveal key={step.title} delay={i * 100} className="relative flex">
