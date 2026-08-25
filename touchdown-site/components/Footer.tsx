@@ -125,19 +125,28 @@ export default function Footer({
             </BookInButton>
           </div>
 
-          <div className="flex flex-col items-start gap-2.5 sm:gap-4">
+          {/* Right-aligned (was items-start, which left the logo/icons
+              sitting at this column's own left edge - only halfway across
+              the container, not at its actual right edge). items-end pins
+              both the logo and the icon row flush against this column's
+              right edge, which - since this is the grid's second and last
+              column - is exactly the container's own right edge, mirroring
+              the CTA's flush-left edge on the other side. Same container,
+              same grid, both sides now genuinely edge-to-edge. */}
+          <div className="flex flex-col items-end gap-2.5 sm:gap-4">
             <Link href="/" className="shrink-0">
               {/* Capped to ~130px on mobile (was rendering much wider at a
                   fixed height with no max-width) so it doesn't dominate a
-                  column that's now only half the screen. Left-aligned like
-                  everything else here, not pushed to the far right edge. */}
+                  column that's now only half the screen. */}
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={logo} alt="Touchdown" className="h-4 w-auto max-w-[130px] sm:h-5 sm:max-w-none" />
             </Link>
             {/* Icons grouped tight to the logo, and sized down on mobile via
                 the [&>svg] override below - SocialIcons' own size-8 default
-                is sized for a desktop-width column, not a 2-up mobile one. */}
-            <div className="flex flex-wrap items-center gap-3 sm:gap-5">
+                is sized for a desktop-width column, not a 2-up mobile one.
+                justify-end keeps the group's right edge anchored even if it
+                ever wraps to a second line. */}
+            <div className="flex flex-wrap items-center justify-end gap-3 sm:gap-5">
               <a href={instagram} target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="transition hover:text-cta [&>svg]:size-5 sm:[&>svg]:size-6"><InstagramIcon /></a>
               <a href={telegram} target="_blank" rel="noopener noreferrer" aria-label="Telegram" className="transition hover:text-cta [&>svg]:size-5 sm:[&>svg]:size-6"><TelegramIcon /></a>
               <a href={facebook} target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="transition hover:text-cta [&>svg]:size-5 sm:[&>svg]:size-6"><FacebookIcon /></a>

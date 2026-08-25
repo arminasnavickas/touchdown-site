@@ -50,23 +50,26 @@ export default function Gallery({ images }: { images: string[] }) {
   const { openLightbox } = useLightbox();
 
   return (
-    // Overlap with the hero above brought way down (was -mt-24/-mt-32, a
-    // near-full pull into the hero's own h-24/h-32 bottom feather) and
-    // paired with real top padding (previously none) - the old version
-    // pulled the eyebrow/description up into the hero image itself with no
-    // breathing room of its own, which is what made the heading read as
-    // cramped/disconnected rather than as its own line of hierarchy. Now
-    // the pull only grazes the very end of the hero's feather (a small,
-    // still-connected transition) and the padding gives the eyebrow a
-    // consistent ~48-64px of clear space below that, so it's always
-    // sitting on plain background, never on the photograph.
-    <section className="relative z-20 -mt-10 px-6 pt-12 md:-mt-14 md:px-16 md:pt-16">
+    // The negative-margin overlap into the hero's feather is pulled way
+    // back (-mt-10/-mt-14 -> -mt-4/-mt-6) and the top padding pushed up
+    // (pt-12/pt-16 -> pt-20/pt-32), so the net clear space below the hero
+    // lands at roughly 51px on mobile and 83px on desktop - inside the
+    // site's "section gap" band (80-120px desktop, 48-72px mobile) instead
+    // of the ~6px this previously netted out to, which read as the gallery
+    // running straight into the hero. A small negative margin still
+    // survives on purpose - just enough to graze the very end of the
+    // hero's feather so the transition still reads as connected, not two
+    // unrelated blocks with a gap between them. Bottom padding added
+    // (previously none) so the boundary into "Who we are" below gets the
+    // same treatment rather than depending entirely on that section's own
+    // top padding.
+    <section className="relative z-20 -mt-4 px-6 pb-10 pt-20 md:-mt-6 md:px-16 md:pb-16 md:pt-32">
       {/* Small editorial intro - eyebrow + one quiet supporting line,
-          unchanged in typography/colour. Gap below tightened to a
-          controlled 24px/32px (was mb-4/mb-6, 16px/24px) so the gallery
-          starts shortly after the description instead of drifting further
-          down the page. */}
-      <div className="relative z-10 mb-6 flex flex-col gap-1 md:mb-8">
+          unchanged in typography/colour. Gap below opened up (mb-6/mb-8 ->
+          mb-10/mb-16, roughly 32px mobile / 51px desktop) so the
+          description reads as introducing the photography instead of the
+          grid starting almost immediately underneath it. */}
+      <div className="relative z-10 mb-10 flex flex-col gap-1 md:mb-16">
         <p className="font-switzer text-xs font-semibold uppercase tracking-[0.25em] text-cta md:text-sm">
           The Touchdown Experience
         </p>

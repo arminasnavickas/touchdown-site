@@ -18,43 +18,37 @@ export default function Faq({
       id="faq"
       className="relative flex flex-col items-center gap-10 overflow-hidden px-6 py-20 md:px-16 scroll-mt-20"
     >
-      {/* Left-aligned header instead of the old centered "FAQ" - the
-          accordion below is already a full-width, left-aligned list, so a
-          centered heading above it read as two unrelated layouts stacked on
-          top of each other. Eyebrow -> heading -> supporting line gives the
-          section an actual point of view ("here's what this is, here's why
-          it matters") instead of a bare word floating in space. Gap to the
-          list below tightened from gap-24 to the section's own gap-10, so
-          the header reads as introducing the accordion rather than sitting
-          in its own separate block.
+      {/* Whole section now lives inside one defined, centred content
+          column (was two unconstrained w-full blocks stretching edge to
+          edge across the section's own px-16 padding, which read as
+          left-heavy on wide viewports). Header and accordion share this
+          same column and the same responsive max-width at every
+          breakpoint, so they're never two different layouts stacked
+          together. */}
+      <div className="relative z-10 flex w-full max-w-3xl flex-col items-center gap-10 md:max-w-4xl">
+        {/* Centred header (was left-aligned) - it now sits inside the same
+            column as the accordion below it rather than the section's full
+            width, so centring it reads as intentional instead of floating
+            off to one side of a much wider row. */}
+        <Reveal>
+          <div className="flex w-full flex-col items-center gap-4 text-center">
+            <p className="font-switzer text-xs font-semibold uppercase tracking-[0.25em] text-cta md:text-sm">
+              Before you dive
+            </p>
+            <h2 className="font-switzer text-4xl font-extralight tracking-tight text-white md:text-6xl">
+              FAQ
+            </h2>
+            <p className="font-switzer text-lg font-light leading-relaxed text-danish-blue md:text-xl">
+              Everything you need to know before you dive.
+            </p>
+          </div>
+        </Reveal>
 
-          w-full instead of max-w-3xl: the section wrapper centers its
-          children (items-center, shared with the rest of the page's
-          sections), so a narrower max-w-3xl box was being centered as a
-          block while the accordion below it - which has no max-width - was
-          always flush left. That's what produced the "centered heading over
-          a left-aligned list" mismatch. Dropping the cap here means both
-          share the exact same left/right edges since they're both
-          unconstrained w-full children of the same section. */}
-      <Reveal>
-        <div className="relative z-10 flex w-full flex-col items-start gap-4 text-left">
-          <p className="font-switzer text-xs font-semibold uppercase tracking-[0.25em] text-cta md:text-sm">
-            Before you dive
-          </p>
-          <h2 className="font-switzer text-4xl font-extralight tracking-tight text-white md:text-6xl">
-            FAQ
-          </h2>
-          <p className="font-switzer text-lg font-light leading-relaxed text-danish-blue md:text-xl">
-            Everything you need to know before you dive.
-          </p>
-        </div>
-      </Reveal>
-
-      {/* data-fab-avoid: same floating Book Now/back-to-top overlap issue
-          fixed elsewhere (How It Works, Team, footer links) - the fixed
-          stack must never sit on top of these rows or the contact CTA
-          below them. */}
-      <div data-fab-avoid className="relative z-10 flex w-full flex-col">
+        {/* data-fab-avoid: same floating Book Now/back-to-top overlap issue
+            fixed elsewhere (How It Works, Team, footer links) - the fixed
+            stack must never sit on top of these rows or the contact CTA
+            below them. */}
+        <div data-fab-avoid className="flex w-full flex-col">
         {items.map((faq, i) => {
           const isOpen = openIndex === i;
           const number = String(i + 1).padStart(2, "0");
@@ -146,6 +140,7 @@ export default function Faq({
               →
             </span>
           </a>
+        </div>
         </div>
       </div>
     </section>

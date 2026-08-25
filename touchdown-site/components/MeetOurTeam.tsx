@@ -116,7 +116,7 @@ function TeamCard({
         <button
           type="button"
           onClick={() => onOpen(index)}
-          className="group/link flex w-fit items-center gap-1.5 pt-1 font-switzer text-sm font-medium uppercase tracking-widest text-cta transition hover:text-white"
+          className="group/link flex w-fit shrink-0 self-end items-center gap-1.5 pt-1 font-switzer text-sm font-medium uppercase tracking-widest text-cta transition hover:text-white"
         >
           Meet {member.name.split(" ")[0]}
           <span aria-hidden className="transition-transform duration-200 group-hover/link:translate-x-1">
