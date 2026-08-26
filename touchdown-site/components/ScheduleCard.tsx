@@ -119,7 +119,7 @@ export default function ScheduleCard({
       {/* Copy-only, on the section's own background behind a thin rule -
           replaces the filled gradient box. */}
       <div className="flex flex-1 flex-col border-t border-white/10 pt-4">
-        <p className="font-switzer text-[15px] font-light leading-relaxed text-[#d3e3fd]">
+        <p className="font-switzer text-[15px] font-light leading-relaxed text-white/70">
           {copy}
         </p>
       </div>
