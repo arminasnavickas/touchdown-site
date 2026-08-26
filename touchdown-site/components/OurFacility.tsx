@@ -67,14 +67,14 @@ export default function OurFacility({
           strip rather than a copy of the hero gallery. */}
       {images.length > 0 && (
         <Reveal delay={140} className="w-full">
-          <div className="relative z-10 grid w-full grid-cols-2 gap-0 overflow-hidden rounded-lg shadow-xl md:grid-cols-4">
+          <div className="relative z-10 grid w-full grid-cols-2 gap-0 overflow-hidden rounded-lg shadow-xl">
             {images.map((src, i) => (
               <button
                 key={i}
                 type="button"
                 onClick={() => openLightbox(images, i)}
                 aria-label={`View facility photo ${i + 1} of ${images.length}`}
-                className="group relative h-[160px] cursor-zoom-in overflow-hidden md:h-[220px]"
+                className="group relative h-[200px] cursor-zoom-in overflow-hidden md:h-[320px]"
               >
                 <FadeImage
                   src={src}
