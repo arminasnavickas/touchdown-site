@@ -35,6 +35,19 @@ export default defineType({
       type: "image",
     }),
     defineField({
+      name: "facilityHeading",
+      title: '"Where you\'ll train" (facility section) heading',
+      type: "string",
+      initialValue: "Where you'll train",
+    }),
+    defineField({
+      name: "facilityCopy",
+      title: '"Where you\'ll train" (facility section) body copy',
+      description: "One paragraph per line — each line renders as its own paragraph.",
+      type: "text",
+      rows: 8,
+    }),
+    defineField({
       name: "howItWorksHeading",
       title: '"How it works" heading',
       type: "string",

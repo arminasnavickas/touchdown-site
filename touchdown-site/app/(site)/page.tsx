@@ -25,6 +25,7 @@ import {
   getHowItWorksSteps,
   getGalleryImages,
   getHeroSlides,
+  getFacilityPhotos,
 } from "@/lib/content";
 
 // Revalidate content from Sanity every 60s (falls back to hardcoded content
@@ -45,6 +46,7 @@ export default async function Home() {
     howItWorksSteps,
     galleryImages,
     heroSlides,
+    facilityPhotos,
   ] = await Promise.all([
     getSiteContent(),
     getFaqItems(),
@@ -58,6 +60,7 @@ export default async function Home() {
     getHowItWorksSteps(),
     getGalleryImages(),
     getHeroSlides(),
+    getFacilityPhotos(),
   ]);
 
   return (
@@ -74,7 +77,11 @@ export default async function Home() {
         subtitle={siteContent.howItWorksSubtitle}
         steps={howItWorksSteps}
       />
-      <OurFacility />
+      <OurFacility
+        heading={siteContent.facilityHeading}
+        copy={siteContent.facilityCopy}
+        images={facilityPhotos}
+      />
       <WhatYouGet items={whatYouGetItems} heading={siteContent.whatYouGetHeading} />
       <TrainingRhythm days={scheduleDays} heading={siteContent.trainingRhythmHeading} />
       <WaterDaySchedule

@@ -867,6 +867,8 @@ export type SiteContent = {
   whoWeAreHeading: string;
   whoWeAreCopy: string;
   whoWeAreImage: string;
+  facilityHeading: string;
+  facilityCopy: string;
   howItWorksHeading: string;
   howItWorksSubtitle: string;
   pricingKicker: string;
@@ -916,6 +918,9 @@ export const fallbackSiteContent: SiteContent = {
   whoWeAreCopy:
     'Touchdown Freediving was founded by Lithuanian record-holder Gus Kreivenas and has grown into a world-renowned centre in Dahab — the true "Mecca of freediving." Here, expert instruction meets a holistic approach, blending science, mindset, and practice to deliver lasting results. Train at Egypt\'s iconic Blue Hole while developing your full potential with personalized guidance and dedicated facilities.',
   whoWeAreImage: "/images/whoweare-team.jpg",
+  facilityHeading: "Where you'll train",
+  facilityCopy:
+    "We train in Egypt's world-renowned Blue Hole, where 90 metres of depth sit just a few steps from shore, sheltered from current and waves. This will give you the chance to experience real depth in calm, forgiving conditions while building trust and skill in open water. Our school keeps a dedicated space right at the site, so your equipment is always close at hand.\nOn land, our facility is built to meet every freediver's needs: a yoga area and stretching zone to develop flexibility and breath control, a gym for strength work, and a classroom for dry practice to refine technique out of the water. Line training rounds out the routine, and recovery is built into the rhythm too, with bike rides, sauna sessions and ice baths supporting your body between training days, so you arrive at every session ready to perform and progress.",
   howItWorksHeading: "How it works",
   howItWorksSubtitle: "Learn the fundamentals. Practice with guidance. Progress with confidence.",
   pricingKicker: "Group Training Experience",
@@ -1169,6 +1174,13 @@ export const fallbackHowItWorksSteps: HowItWorksStep[] = [
       },
     ],
   },
+];
+
+export const fallbackFacilityPhotos: string[] = [
+  "/images/gallery-1.jpg",
+  "/images/gallery-2.jpg",
+  "/images/gallery-3.jpg",
+  "/images/gallery-4.jpg",
 ];
 
 export const fallbackGalleryImages: string[] = [
@@ -1511,6 +1523,21 @@ export async function getGalleryImages(): Promise<string[]> {
       .filter(Boolean);
   } catch {
     return fallbackGalleryImages;
+  }
+}
+
+export async function getFacilityPhotos(): Promise<string[]> {
+  if (!isSanityConfigured || !sanityClient) return fallbackFacilityPhotos;
+  try {
+    const items = await sanityClient.fetch(
+      `*[_type == "facilityPhoto"] | order(order asc){ "image": image }`
+    );
+    if (!items?.length) return fallbackFacilityPhotos;
+    return items
+      .map((item: { image: unknown }) => urlForImage(item.image as never) || "")
+      .filter(Boolean);
+  } catch {
+    return fallbackFacilityPhotos;
   }
 }
 
