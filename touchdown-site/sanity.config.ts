@@ -45,6 +45,13 @@ export default defineConfig({
                           .defaultOrdering([{ field: "order", direction: "asc" }])
                       ),
                     S.listItem()
+                      .title("Facility Photo")
+                      .child(
+                        S.documentTypeList("facilityPhoto")
+                          .title("Facility Photo")
+                          .defaultOrdering([{ field: "order", direction: "asc" }])
+                      ),
+                    S.listItem()
                       .title("How It Works Step")
                       .child(
                         S.documentTypeList("howItWorksStep")
