@@ -27,11 +27,16 @@ export default function Gallery({ images }: { images: string[] }) {
   return (
     // Restored to the original composition: no heading/intro copy at all,
     // and a strong negative top margin pulls the whole grid up into the
-    // Hero's own fixed-height bottom edge (Hero is h-[500px]/md:h-[700px],
+    // Hero's own fixed-height bottom edge (Hero is h-[560px]/md:h-[780px],
     // a plain pixel value, so this overlap stays exact regardless of root
     // font-size) so Gallery reads as a floating collage overlapping the
-    // hero rather than its own separate, spaced-out section.
-    <section className="relative z-20 -mt-16 px-6 md:-mt-24 md:px-16">
+    // hero rather than its own separate, spaced-out section. Mobile overlap
+    // bumped to -mt-[160px] (was -mt-16/64px) - a full match for this
+    // grid's own 160px mobile row height, so row 1 tucks entirely under
+    // hero's bottom edge instead of just its top sliver. Hero's own height
+    // was raised in step (see Hero.tsx) so its CTA/stamp badge stay clear
+    // of this bigger overlap zone. Desktop overlap/row-height untouched.
+    <section className="relative z-20 -mt-[160px] px-6 md:-mt-24 md:px-16">
       {/* One consistent outer container: overflow-hidden + rounded-lg here
           is the ONLY rounding in the whole grid - individual tiles are
           plain rectangles with zero gap between them, so the 8 photos read

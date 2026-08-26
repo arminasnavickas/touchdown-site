@@ -134,7 +134,7 @@ export default function HowItWorks({
           <h2 className="font-switzer text-4xl font-extralight tracking-tight text-white md:text-6xl">
             {heading}
           </h2>
-          <p className="font-switzer text-lg font-light leading-relaxed text-danish-blue md:text-xl">
+          <p className="font-switzer text-[15px] font-light leading-relaxed text-white/70">
             {subtitle}
           </p>
         </div>

@@ -65,13 +65,16 @@ export default function Hero({
   }, []);
 
   return (
-    // Mobile height stays tuned to fit the full content stack without
-    // scrolling (see comment history below). Desktop pushed taller
-    // (700 -> 780) - this is the first, iconic impression of the page, and
-    // the extra height lets the headline scale up a full step below without
-    // ever feeling cramped against the section's own edges - closer to a
-    // campaign key visual than a website header banner.
-    <section className="relative h-[460px] w-full overflow-hidden bg-dark-ocean-blue md:h-[780px]">
+    // Mobile height increased (460 -> 560) so Gallery's negative-margin
+    // overlap (bumped in step, see Gallery.tsx) can tuck its entire first
+    // row under hero's own bottom edge - hero's photo now visually
+    // "finishes" right at the row 1/row 2 boundary instead of handing off
+    // just 64px into row 1. Desktop pushed taller (700 -> 780) - this is the
+    // first, iconic impression of the page, and the extra height lets the
+    // headline scale up a full step below without ever feeling cramped
+    // against the section's own edges - closer to a campaign key visual
+    // than a website header banner.
+    <section className="relative h-[560px] w-full overflow-hidden bg-dark-ocean-blue md:h-[780px]">
       {/* Background underwater image (parallax) */}
       <div
         ref={parallaxRef}
@@ -138,12 +141,13 @@ export default function Hero({
       {/* Copy + CTA - bottom-anchored on desktop (was vertically centered),
           a lower-third title-card composition instead of a mid-frame block,
           so the top two-thirds of the photograph gets to breathe as pure
-          image before the copy grounds the frame. Bottom padding pushed up
-          further (pb-20/no mobile pb -> pb-[95px]/md:pb-[195px]) now that
-          Gallery overlaps the hero's own bottom edge again (-mt-16/-mt-24,
-          ~51px/~115px of overlap) - this keeps the whole block's bottom
-          clear of that overlap zone with real breathing room to spare,
-          without touching the gallery itself. */}
+          image before the copy grounds the frame. Mobile content is
+          top-anchored (justify-start) so it isn't affected by the taller
+          560px mobile height below - pb-[95px]/md:pb-[195px] keeps the
+          whole block clear of Gallery's overlap zone (now a full 160px on
+          mobile, up from ~64px, so Gallery's entire first row tucks under
+          hero's bottom edge - see Gallery.tsx), with real breathing room to
+          spare. */}
       <div className="relative z-10 flex h-full max-w-3xl flex-col justify-start gap-5 px-6 pb-[95px] pt-6 md:justify-end md:gap-8 md:px-16 md:pb-[195px]">
         <Reveal className="flex flex-col gap-2">
           <p className="font-switzer text-base font-medium uppercase tracking-[0.2em] text-white/80 md:text-lg">
@@ -190,10 +194,12 @@ export default function Hero({
           the left instead of floating independently in open water. Reads as
           a deliberately placed insignia closing the composition, the way a
           film's mark sits in a corner of its opening frame, rather than a
-          logo laid on top of a photo. Bottom offset raised (bottom-8/16 ->
-          bottom-[80px]/md:bottom-[180px]) in step with the copy block above,
-          so the stamp clears the Gallery overlap zone the same way. */}
-      <Reveal delay={240} className="absolute bottom-[80px] right-6 block size-[64px] md:bottom-[180px] md:right-20 md:size-[150px]">
+          logo laid on top of a photo. Mobile offset raised again
+          (bottom-[80px] -> bottom-[180px]), matched to hero's own +100px
+          height increase, so the badge sits at the exact same absolute
+          position as before while clearing Gallery's enlarged 160px overlap
+          zone underneath it (with 20px to spare). */}
+      <Reveal delay={240} className="absolute bottom-[180px] right-6 block size-[80px] md:bottom-[180px] md:right-20 md:size-[150px]">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src={logoBadge} alt="Touchdown space badge" className="h-full w-full object-contain drop-shadow-[0_2px_12px_rgba(0,0,0,0.45)]" />
       </Reveal>

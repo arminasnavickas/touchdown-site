@@ -38,7 +38,7 @@ export default function Faq({
             <h2 className="font-switzer text-4xl font-extralight tracking-tight text-white md:text-6xl">
               FAQ
             </h2>
-            <p className="font-switzer text-lg font-light leading-relaxed text-danish-blue md:text-xl">
+            <p className="font-switzer text-[15px] font-light leading-relaxed text-white/70">
               Everything you need to know before you dive.
             </p>
           </div>
@@ -106,7 +106,7 @@ export default function Faq({
                       {faq.answer.map((paragraph, pi) => (
                         <p
                           key={pi}
-                          className="font-switzer text-[15px] font-light leading-relaxed text-danish-blue"
+                          className="font-switzer text-[15px] font-light leading-relaxed text-white/70"
                         >
                           {paragraph}
                         </p>
