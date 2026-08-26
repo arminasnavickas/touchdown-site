@@ -22,11 +22,11 @@ export default function WhoWeAre({
       id="about-us"
       className="relative flex flex-col items-center gap-10 overflow-hidden px-6 py-20 md:flex-row md:items-center md:justify-between md:gap-16 md:px-16 scroll-mt-20"
     >
-      {/* order-2/order-1 put the photo above the text on mobile (where the
+      {/* order-1/order-2 put the text above the photo on mobile (where the
           section stacks in a single column) without touching the desktop
           layout, which keeps the original text-left/photo-right order via
           md:order-none. */}
-      <div className="relative z-10 order-2 flex w-full max-w-xl flex-col gap-10 md:order-none">
+      <div className="relative z-10 order-1 flex w-full max-w-xl flex-col gap-10 md:order-none">
         <div className="flex flex-col items-center gap-3 text-center">
           {/* Small eyebrow - matches the kicker treatment already used
               elsewhere (Gallery, FAQ) so About gets its own masthead moment
@@ -55,7 +55,7 @@ export default function WhoWeAre({
         </BookInButton>
       </div>
 
-      <Reveal delay={150} className="order-1 flex flex-1 md:order-none">
+      <Reveal delay={150} className="order-2 flex flex-1 md:order-none">
         <button
           type="button"
           onClick={() => openLightbox([image], 0)}
