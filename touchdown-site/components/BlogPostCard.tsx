@@ -42,16 +42,16 @@ export default function BlogPostCard({ post }: { post: BlogPost }) {
             {post.category}
           </span>
         )}
-        <h2 className="mt-3 font-switzer text-2xl font-medium tracking-tight text-dark-ocean-blue transition group-hover:text-cta md:text-3xl">
+        <h2 className="mt-1.5 font-switzer text-2xl font-medium tracking-tight text-dark-ocean-blue transition group-hover:text-cta md:text-3xl">
           {post.title}
         </h2>
         {post.excerpt && (
-          <p className="mt-3 line-clamp-2 font-switzer text-base font-light leading-relaxed text-dark-ocean-blue/60">
+          <p className="mt-[12px] line-clamp-2 font-switzer text-base font-light leading-relaxed text-dark-ocean-blue/60">
             {post.excerpt}
           </p>
         )}
 
-        <div className="mt-auto flex flex-wrap items-center justify-between gap-3 border-t border-dark-ocean-blue/10 pt-3">
+        <div className="mt-auto flex flex-wrap items-center justify-between gap-3 border-t border-dark-ocean-blue/10 pt-[16px]">
           <div className="flex flex-wrap items-center gap-2 font-switzer text-xs uppercase tracking-wide text-dark-ocean-blue/40">
             {avatar && (
               // eslint-disable-next-line @next/next/no-img-element
