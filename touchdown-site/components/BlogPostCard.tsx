@@ -46,12 +46,18 @@ export default function BlogPostCard({ post }: { post: BlogPost }) {
           {post.title}
         </h2>
         {post.excerpt && (
-          <p className="mt-[12px] line-clamp-2 font-switzer text-base font-light leading-relaxed text-dark-ocean-blue/60">
+          <p className="mb-[16px] mt-[12px] line-clamp-2 font-switzer text-base font-light leading-relaxed text-dark-ocean-blue/60">
             {post.excerpt}
           </p>
         )}
 
-        <div className="mt-auto flex flex-wrap items-center justify-between gap-3 border-t border-dark-ocean-blue/10 pt-[16px]">
+        {/* mb-[16px] on the excerpt above is a guaranteed floor - mt-auto
+            here can collapse to 0 on its own when the excerpt's 2 lines
+            nearly fill the card's flex height, which was leaving the
+            divider sitting flush against the excerpt text. The two margins
+            don't collapse against each other in this flex column, so the
+            real gap is always >= 16px regardless of excerpt length. */}
+        <div className="mt-auto flex flex-wrap items-center justify-between gap-3 border-t border-dark-ocean-blue/10 pt-[20px]">
           <div className="flex flex-wrap items-center gap-2 font-switzer text-xs uppercase tracking-wide text-dark-ocean-blue/40">
             {avatar && (
               // eslint-disable-next-line @next/next/no-img-element
