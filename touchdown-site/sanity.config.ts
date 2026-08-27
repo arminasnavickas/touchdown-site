@@ -122,6 +122,17 @@ export default defineConfig({
                           .title("Blog Post")
                           .defaultOrdering([{ field: "publishedAt", direction: "desc" }])
                       ),
+                    // Each Blog Post's "Author" field references one of
+                    // these - a name + photo that isn't tied to a Team
+                    // Member, so a post can credit a guest writer or any
+                    // custom byline. The type already existed in the schema
+                    // (sanity/schemaTypes/author.ts) but had no sidebar
+                    // entry, same gap Facility Photo had before it got one.
+                    S.listItem()
+                      .title("Author")
+                      .child(
+                        S.documentTypeList("author").title("Author")
+                      ),
                   ])
               ),
             S.listItem()
