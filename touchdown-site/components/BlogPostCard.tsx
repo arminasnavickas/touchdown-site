@@ -51,8 +51,8 @@ export default function BlogPostCard({ post }: { post: BlogPost }) {
           </p>
         )}
 
-        <div className="mt-auto flex flex-col gap-3 pt-4">
-          <div className="flex flex-wrap items-center gap-2 border-t border-dark-ocean-blue/10 pt-3 font-switzer text-xs uppercase tracking-wide text-dark-ocean-blue/40">
+        <div className="mt-auto flex flex-wrap items-center justify-between gap-3 border-t border-dark-ocean-blue/10 pt-3">
+          <div className="flex flex-wrap items-center gap-2 font-switzer text-xs uppercase tracking-wide text-dark-ocean-blue/40">
             {avatar && (
               // eslint-disable-next-line @next/next/no-img-element
               <img src={avatar} alt="" className="size-4 rounded-full object-cover" />
@@ -67,7 +67,7 @@ export default function BlogPostCard({ post }: { post: BlogPost }) {
               {readingTime} min read
             </span>
           </div>
-          <span className="group/link flex w-fit items-center gap-1.5 font-switzer text-sm font-medium uppercase tracking-widest text-cta transition group-hover:text-cta">
+          <span className="group/link flex w-fit shrink-0 items-center gap-1.5 font-switzer text-sm font-medium uppercase tracking-widest text-cta transition group-hover:text-cta">
             Read article
             <span aria-hidden className="transition-transform duration-200 group-hover:translate-x-1">
               →
