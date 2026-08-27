@@ -42,7 +42,7 @@ export default function BlogPostCard({ post }: { post: BlogPost }) {
             {post.category}
           </span>
         )}
-        <h2 className="mt-1.5 font-switzer text-xl font-light tracking-tight text-dark-ocean-blue transition group-hover:text-cta md:text-2xl">
+        <h2 className="mt-1.5 font-switzer text-2xl font-medium tracking-tight text-dark-ocean-blue transition group-hover:text-cta md:text-3xl">
           {post.title}
         </h2>
         {post.excerpt && (
