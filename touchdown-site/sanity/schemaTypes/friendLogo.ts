@@ -29,6 +29,14 @@ export default defineType({
       type: "url",
     }),
     defineField({ name: "order", title: "Order", type: "number" }),
+    defineField({
+      name: "scale",
+      title: "Size adjustment",
+      description:
+        "All logos display at the same box size by default (1 = normal). Some source logos are drawn with more empty padding than others and end up looking smaller/bigger side by side even at the same box size - lower this (e.g. 0.7) to shrink just this one logo down to match, or raise it (e.g. 1.2) to make it bigger. Leave blank for normal size.",
+      type: "number",
+      validation: (Rule) => Rule.min(0.3).max(1.5),
+    }),
   ],
   orderings: [
     { title: "Order", name: "orderAsc", by: [{ field: "order", direction: "asc" }] },

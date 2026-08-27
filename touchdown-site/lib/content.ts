@@ -1187,14 +1187,14 @@ export const fallbackFacilityPhotos: string[] = [
   "/images/gallery-4.jpg",
 ];
 
-export type FriendLogo = { name: string; image: string; url: string | null };
+export type FriendLogo = { name: string; image: string; url: string | null; scale: number };
 
 export const fallbackFriendLogos: FriendLogo[] = [
-  { name: "Friend 1", image: "/images/friend-logo-1.svg", url: null },
-  { name: "Friend 2", image: "/images/friend-logo-2.svg", url: null },
-  { name: "Friend 3", image: "/images/friend-logo-3.svg", url: null },
-  { name: "Friend 4", image: "/images/friend-logo-4.svg", url: null },
-  { name: "Friend 5", image: "/images/friend-logo-5.svg", url: null },
+  { name: "Friend 1", image: "/images/friend-logo-1.svg", url: null, scale: 1 },
+  { name: "Friend 2", image: "/images/friend-logo-2.svg", url: null, scale: 1 },
+  { name: "Friend 3", image: "/images/friend-logo-3.svg", url: null, scale: 1 },
+  { name: "Friend 4", image: "/images/friend-logo-4.svg", url: null, scale: 1 },
+  { name: "Friend 5", image: "/images/friend-logo-5.svg", url: null, scale: 1 },
 ];
 
 export const fallbackGalleryImages: string[] = [
@@ -1562,14 +1562,17 @@ export async function getFriendLogos(): Promise<FriendLogo[]> {
   if (!isSanityConfigured || !sanityClient) return fallbackFriendLogos;
   try {
     const items = await sanityClient.fetch(
-      `*[_type == "friendLogo"] | order(order asc){ name, "image": logo, url }`
+      `*[_type == "friendLogo"] | order(order asc){ name, "image": logo, url, scale }`
     );
     if (!items?.length) return fallbackFriendLogos;
     return items
-      .map((item: { name: string; image: unknown; url: string | null }) => ({
+      .map((item: { name: string; image: unknown; url: string | null; scale: number | null }) => ({
         name: item.name,
         image: urlForImage(item.image as never) || "",
         url: item.url || null,
+        // Per-logo "Size adjustment" field in Studio - defaults to 1
+        // (normal size) when left blank.
+        scale: item.scale || 1,
       }))
       .filter((item: FriendLogo) => item.image);
   } catch {

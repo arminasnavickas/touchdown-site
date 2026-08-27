@@ -41,6 +41,11 @@ export default function OurFriends({
                 alt={friend.name}
                 wrapperClassName="h-10 w-full md:h-16"
                 className="h-10 w-full object-contain grayscale opacity-60 transition duration-300 group-hover:grayscale-0 group-hover:opacity-100 md:h-16"
+                // Per-logo "Size adjustment" from Sanity - a transform
+                // scale keeps it centered in its grid column and never
+                // pushes into a neighboring logo, unlike changing the
+                // box's width/height would.
+                style={friend.scale !== 1 ? { transform: `scale(${friend.scale})` } : undefined}
               />
             );
             return friend.url ? (
