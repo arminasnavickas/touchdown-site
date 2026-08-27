@@ -39,8 +39,8 @@ export default function OurFriends({
               <FadeImage
                 src={friend.image}
                 alt={friend.name}
-                wrapperClassName="h-8 w-full md:h-14"
-                className="h-8 w-full object-contain grayscale opacity-60 transition duration-300 group-hover:grayscale-0 group-hover:opacity-100 md:h-14"
+                wrapperClassName="h-14 w-full md:h-24"
+                className="h-14 w-full object-contain grayscale opacity-60 transition duration-300 group-hover:grayscale-0 group-hover:opacity-100 md:h-24"
               />
             );
             return friend.url ? (
