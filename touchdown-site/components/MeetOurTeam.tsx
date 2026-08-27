@@ -72,7 +72,7 @@ function TeamCard({
         <div className="flex flex-col gap-1">
           {/* Name is the primary text element right after the photo -
               deliberately the largest, boldest-weight text on the card. */}
-          <p className="font-switzer text-2xl font-light tracking-tight text-aquatic">
+          <p className="font-switzer text-2xl font-medium tracking-tight text-white md:text-3xl">
             {member.name}
           </p>
           <p className="font-switzer text-xs font-medium uppercase tracking-wide text-cta">
