@@ -40,6 +40,14 @@ export default defineType({
       title: "Order",
       type: "number",
     }),
+    defineField({
+      name: "visible",
+      title: "Show this review",
+      type: "boolean",
+      initialValue: true,
+      description:
+        "Turn off to hide this one review from the Reviews section without deleting it - flip it back on any time to bring it back.",
+    }),
   ],
   orderings: [
     {
@@ -49,6 +57,13 @@ export default defineType({
     },
   ],
   preview: {
-    select: { title: "name", subtitle: "role", media: "photo" },
+    select: { title: "name", subtitle: "role", media: "photo", visible: "visible" },
+    prepare({ title, subtitle, media, visible }) {
+      return {
+        title,
+        subtitle: visible === false ? `Hidden - ${subtitle || ""}` : subtitle,
+        media,
+      };
+    },
   },
 });

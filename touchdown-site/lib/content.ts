@@ -874,6 +874,7 @@ export type SiteContent = {
   pricingKicker: string;
   teamKicker: string;
   reviewsSubtitle: string;
+  showReviews: boolean;
   trainingRhythmHeading: string;
   waterDayHeading: string;
   waterDaySubcopy: string;
@@ -926,6 +927,7 @@ export const fallbackSiteContent: SiteContent = {
   pricingKicker: "Group Training Experience",
   teamKicker: "Your Dreams Are Our Goals!",
   reviewsSubtitle: "We love our students so much and they love us too :)",
+  showReviews: true,
   trainingRhythmHeading: "Weekly Training Rhythm",
   waterDayHeading: "Water Day Schedule",
   waterDaySubcopy:
@@ -1374,8 +1376,11 @@ export async function getPricingTiers(): Promise<PricingTier[]> {
 export async function getReviews(): Promise<Review[]> {
   if (!isSanityConfigured || !sanityClient) return fallbackReviews;
   try {
+    // visible != false keeps any review that hasn't set the field yet
+    // (older docs, or the field left blank) showing by default - only a
+    // review explicitly toggled off in Studio is excluded here.
     const items = await sanityClient.fetch(
-      `*[_type == "review"] | order(order asc){ name, role, "image": photo, rating, quote }`
+      `*[_type == "review" && visible != false] | order(order asc){ name, role, "image": photo, rating, quote }`
     );
     if (!items?.length) return fallbackReviews;
     return items.map((item: { name: string; role: string | null; image: unknown; rating: string; quote: string }) => ({

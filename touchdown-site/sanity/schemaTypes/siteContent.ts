@@ -78,6 +78,14 @@ export default defineType({
       initialValue: "We Love our students so much and they love us too :)",
     }),
     defineField({
+      name: "showReviews",
+      title: "Show Reviews section",
+      type: "boolean",
+      initialValue: true,
+      description:
+        "Turn off to hide the whole Reviews section from the homepage (and its Reviews nav link) without deleting any of the review entries - flip it back on any time to bring it back.",
+    }),
+    defineField({
       name: "trainingRhythmHeading",
       title: "Training Rhythm heading",
       type: "string",

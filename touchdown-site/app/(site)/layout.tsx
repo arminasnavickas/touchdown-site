@@ -9,13 +9,24 @@ export default async function SiteLayout({
 }) {
   const siteContent = await getSiteContent();
 
+  // showReviews toggles the whole Reviews section off the homepage (see
+  // Reviews usage in app/(site)/page.tsx) without deleting any review
+  // entries in Sanity - filtering it out of both link lists here too keeps
+  // the header nav and footer from linking to a section that isn't there.
+  const navLinks = siteContent.showReviews
+    ? siteContent.headerNavLinks
+    : siteContent.headerNavLinks.filter((link) => link.id !== "reviews");
+  const footerAboutLinks = siteContent.showReviews
+    ? siteContent.footerAboutLinks
+    : siteContent.footerAboutLinks.filter((link) => link.id !== "reviews");
+
   return (
     <>
       <Navigation
         email={siteContent.footerEmail}
         telegram={siteContent.socialTelegram}
         whatsapp={siteContent.socialWhatsapp}
-        navLinks={siteContent.headerNavLinks}
+        navLinks={navLinks}
       />
       {/* The two page-wide ambient blobs that used to live here are gone -
           combined with every section's own local Blob, cyan glow was
@@ -37,7 +48,7 @@ export default async function SiteLayout({
             facebook={siteContent.socialFacebook}
             whatsapp={siteContent.socialWhatsapp}
             aboutTitle={siteContent.footerAboutTitle}
-            aboutLinks={siteContent.footerAboutLinks}
+            aboutLinks={footerAboutLinks}
             experienceTitle={siteContent.footerExperienceTitle}
             experienceLinks={siteContent.footerExperienceLinks}
             legalLinks={siteContent.footerLegalLinks}

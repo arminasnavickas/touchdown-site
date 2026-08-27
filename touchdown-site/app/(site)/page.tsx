@@ -96,7 +96,13 @@ export default async function Home() {
       />
       <Pricing tiers={pricingTiers} kicker={siteContent.pricingKicker} contactEmail={siteContent.footerEmail} />
       <MeetOurTeam members={teamMembers} kicker={siteContent.teamKicker} />
-      <Reviews reviews={reviews} subtitle={siteContent.reviewsSubtitle} />
+      {/* showReviews: a Sanity toggle (Site Content > Show Reviews section)
+          so the whole section can be hidden/brought back later without a
+          code change - see app/(site)/layout.tsx for the matching nav/
+          footer link filtering. */}
+      {siteContent.showReviews && (
+        <Reviews reviews={reviews} subtitle={siteContent.reviewsSubtitle} />
+      )}
       <Faq items={faqItems} contactEmail={siteContent.footerEmail} />
       <FloatingActions />
     </main>
