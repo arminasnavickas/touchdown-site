@@ -118,10 +118,30 @@ export default function TrainingRhythm({
 
                 <div className="flex items-center">
                   {time ? (
-                    <span className="flex items-center gap-1.5 whitespace-nowrap rounded-full bg-white/10 px-3 py-1.5 font-switzer text-sm font-medium tracking-wide tabular-nums text-white sm:text-base">
-                      <Clock className="size-4 shrink-0" strokeWidth={1.5} />
-                      {time}
-                    </span>
+                    // A day with two separate sessions (e.g. a morning water
+                    // block plus an evening one) is stored as "A & B" in a
+                    // single time string. Rendered as one long nowrap line
+                    // that was overflowing narrow phones (~320px) once two
+                    // full HH:MM-HH:MM ranges had to share one pill - split
+                    // on " & " and stack each session on its own line
+                    // instead of shrinking or truncating the times.
+                    (() => {
+                      const sessions = time.split(" & ");
+                      return (
+                        <span
+                          className={`flex flex-col items-end gap-0.5 whitespace-nowrap bg-white/10 px-3 py-1.5 font-switzer text-sm font-medium tracking-wide tabular-nums text-white sm:text-base ${
+                            sessions.length > 1 ? "rounded-2xl" : "rounded-full"
+                          }`}
+                        >
+                          {sessions.map((session, i) => (
+                            <span key={i} className="flex items-center gap-1.5">
+                              {i === 0 && <Clock className="size-4 shrink-0" strokeWidth={1.5} />}
+                              {session}
+                            </span>
+                          ))}
+                        </span>
+                      );
+                    })()
                   ) : (
                     <span className="font-switzer text-sm text-white/40 sm:text-base">Rest &amp; recovery</span>
                   )}
@@ -132,23 +152,9 @@ export default function TrainingRhythm({
         })}
       </div>
 
-      {/* BOOK YOUR TRAINING is still the primary action, but its position
-          swapped with VIEW FULL SCHEDULE (link now sits first/left on
-          desktop, CTA second/right - was the reverse). The link itself is
-          upgraded from a muted white underline to the brand cyan, with an
-          arrow that nudges forward on hover and an underline that
-          strengthens on hover, so it's clearly clickable without becoming a
-          second button competing with the CTA. */}
-      <div className="relative z-10 flex flex-col items-center gap-5 sm:flex-row sm:gap-8">
-        <a
-          href="#water-schedule"
-          className="group/link flex items-center gap-1.5 font-switzer text-sm font-medium uppercase tracking-widest text-cta underline decoration-cta/40 underline-offset-4 transition hover:text-white hover:decoration-white"
-        >
-          View full schedule
-          <span aria-hidden className="transition-transform duration-200 group-hover/link:translate-x-1">
-            →
-          </span>
-        </a>
+      {/* "View full schedule" link removed - BOOK YOUR TRAINING is now the
+          section's only action. */}
+      <div className="relative z-10 flex items-center">
         <BookInButton className="w-fit rounded-[6px] bg-cta px-8 py-4 text-center font-switzer text-base font-medium uppercase tracking-wide text-white transition-all duration-200 ease-out hover:bg-aquatic hover:text-dark-ocean-blue hover:scale-105 hover:shadow-lg hover:shadow-cta/40 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cta focus-visible:ring-offset-2">
           Book your training
         </BookInButton>

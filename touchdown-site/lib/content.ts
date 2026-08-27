@@ -986,12 +986,12 @@ export type ScheduleDay = {
 };
 
 export const fallbackScheduleDays: ScheduleDay[] = [
-  { day: "Saturday", label: "Water day", time: "07:00 - 18:00" },
-  { day: "Sunday", label: "Water day", time: "07:00 - 18:00" },
-  { day: "Monday", label: "Dry Day", time: "09:00 - 12:00" },
-  { day: "Tuesday", label: "Water day", time: "07:00 - 18:00" },
-  { day: "Wednesday", label: "Water day", time: "07:00 - 18:00" },
-  { day: "Thursday", label: "Dry Day", time: "09:00 - 12:00" },
+  { day: "Saturday", label: "Water day", time: "07:00-14:00 & 18:00-20:00" },
+  { day: "Sunday", label: "Water day", time: "07:00-14:00 & 18:00-20:00" },
+  { day: "Monday", label: "Dry Day", time: "09:00-10:00 & 12:00-14:00" },
+  { day: "Tuesday", label: "Water day", time: "07:00-14:00 & 18:00-20:00" },
+  { day: "Wednesday", label: "Water day", time: "07:00-14:00 & 18:00-20:00" },
+  { day: "Thursday", label: "Dry Day", time: "09:00-10:00 & 12:00-14:00" },
   { day: "Friday", label: "Day off" },
 ];
 
