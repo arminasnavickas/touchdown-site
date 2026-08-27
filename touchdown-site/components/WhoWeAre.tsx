@@ -38,7 +38,7 @@ export default function WhoWeAre({
             {heading}
           </h2>
         </div>
-        <div className="text-center font-switzer text-[15px] font-light leading-relaxed text-white/70 md:text-left">
+        <div className="text-left font-switzer text-[15px] font-light leading-relaxed text-white/70">
           {paragraphs.map((p, i) => (
             <p key={i} className={i < paragraphs.length - 1 ? "mb-4" : ""}>
               {p}

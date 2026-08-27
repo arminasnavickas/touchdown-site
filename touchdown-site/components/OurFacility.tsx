@@ -53,7 +53,7 @@ export default function OurFacility({
         </div>
       </Reveal>
       <Reveal delay={80}>
-        <div className="relative z-10 flex max-w-3xl flex-col gap-4 text-center font-switzer text-[15px] font-light leading-relaxed text-white/70">
+        <div className="relative z-10 flex max-w-3xl flex-col gap-4 text-left font-switzer text-[15px] font-light leading-relaxed text-white/70 md:text-center">
           {paragraphs.map((p, i) => (
             <p key={i}>{p}</p>
           ))}

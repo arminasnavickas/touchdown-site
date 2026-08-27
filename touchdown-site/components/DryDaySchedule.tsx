@@ -23,7 +23,7 @@ export default function DryDaySchedule({
               {heading}
             </h2>
           </div>
-          <p className="font-switzer text-[15px] font-light leading-relaxed text-white/70">
+          <p className="text-left font-switzer text-[15px] font-light leading-relaxed text-white/70 md:text-center">
             {subcopy}
           </p>
         </div>

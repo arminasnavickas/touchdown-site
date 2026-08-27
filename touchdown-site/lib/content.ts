@@ -916,7 +916,7 @@ export const fallbackSiteContent: SiteContent = {
     "Join TOUCHDOWN team and experience real results in an environment built to support you daily on every step of your path.",
   whoWeAreHeading: "Who we are",
   whoWeAreCopy:
-    'Touchdown Freediving was founded by Lithuanian record-holder Gus Kreivenas and has grown into a world-renowned centre in Dahab — the true "Mecca of freediving." Here, expert instruction meets a holistic approach, blending science, mindset, and practice to deliver lasting results. Train at Egypt\'s iconic Blue Hole while developing your full potential with personalized guidance and dedicated facilities.',
+    'Touchdown Freediving was founded by Lithuanian record holder Gus Kreivenas and has grown into a world-renowned centre in Dahab — the true "Mecca of freediving." Here, expert instruction meets a holistic approach, blending science, mindset, and practice to deliver lasting results. Train at Egypt\'s iconic Blue Hole while developing your full potential with personalized guidance and dedicated facilities.',
   whoWeAreImage: "/images/whoweare-team.jpg",
   facilityHeading: "Where you'll train",
   facilityCopy:
