@@ -52,13 +52,6 @@ export default defineConfig({
                           .defaultOrdering([{ field: "order", direction: "asc" }])
                       ),
                     S.listItem()
-                      .title("Friend Logo")
-                      .child(
-                        S.documentTypeList("friendLogo")
-                          .title("Friend Logo")
-                          .defaultOrdering([{ field: "order", direction: "asc" }])
-                      ),
-                    S.listItem()
                       .title("How It Works Step")
                       .child(
                         S.documentTypeList("howItWorksStep")
@@ -112,6 +105,16 @@ export default defineConfig({
                       .child(
                         S.documentTypeList("faqItem")
                           .title("FAQ Item")
+                          .defaultOrdering([{ field: "order", direction: "asc" }])
+                      ),
+                    // Rendered last on the homepage, right after FAQ - kept
+                    // in that same spot here so the Studio list order
+                    // matches the page order.
+                    S.listItem()
+                      .title("Friend Logo")
+                      .child(
+                        S.documentTypeList("friendLogo")
+                          .title("Friend Logo")
                           .defaultOrdering([{ field: "order", direction: "asc" }])
                       ),
                   ])
