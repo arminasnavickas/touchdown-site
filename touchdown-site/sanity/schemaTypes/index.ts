@@ -10,6 +10,7 @@ import whatYouGetItem from "./whatYouGetItem";
 import howItWorksStep from "./howItWorksStep";
 import galleryImage from "./galleryImage";
 import facilityPhoto from "./facilityPhoto";
+import friendLogo from "./friendLogo";
 import heroSlide from "./heroSlide";
 import { privacyPolicy, termsAndConditions } from "./legalPages";
 import footerLink from "./footerLink";
@@ -34,6 +35,7 @@ export const schemaTypes = [
   howItWorksStep,
   galleryImage,
   facilityPhoto,
+  friendLogo,
   heroSlide,
   privacyPolicy,
   termsAndConditions,

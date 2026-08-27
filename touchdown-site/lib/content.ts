@@ -881,6 +881,7 @@ export type SiteContent = {
   dryDayHeading: string;
   dryDaySubcopy: string;
   whatYouGetHeading: string;
+  friendsHeading: string;
   notFoundHeadline: string;
   notFoundSubtext: string;
   notFoundImage: string;
@@ -936,6 +937,7 @@ export const fallbackSiteContent: SiteContent = {
   dryDaySubcopy:
     "Dry days are about recovery and mental training — the other side of freediving mastery. They give you space to reset, while still building the skills and resilience you'll bring back into the water.",
   whatYouGetHeading: "What you get",
+  friendsHeading: "Our friends",
   notFoundHeadline: "Looks like you've gone off the line",
   notFoundSubtext:
     "We couldn't find the page you were looking for. It may have moved, or the link might be out of date.",
@@ -1183,6 +1185,16 @@ export const fallbackFacilityPhotos: string[] = [
   "/images/gallery-2.jpg",
   "/images/gallery-3.jpg",
   "/images/gallery-4.jpg",
+];
+
+export type FriendLogo = { name: string; image: string; url: string | null };
+
+export const fallbackFriendLogos: FriendLogo[] = [
+  { name: "Friend 1", image: "/images/friend-logo-1.svg", url: null },
+  { name: "Friend 2", image: "/images/friend-logo-2.svg", url: null },
+  { name: "Friend 3", image: "/images/friend-logo-3.svg", url: null },
+  { name: "Friend 4", image: "/images/friend-logo-4.svg", url: null },
+  { name: "Friend 5", image: "/images/friend-logo-5.svg", url: null },
 ];
 
 export const fallbackGalleryImages: string[] = [
@@ -1543,6 +1555,25 @@ export async function getFacilityPhotos(): Promise<string[]> {
       .filter(Boolean);
   } catch {
     return fallbackFacilityPhotos;
+  }
+}
+
+export async function getFriendLogos(): Promise<FriendLogo[]> {
+  if (!isSanityConfigured || !sanityClient) return fallbackFriendLogos;
+  try {
+    const items = await sanityClient.fetch(
+      `*[_type == "friendLogo"] | order(order asc){ name, "image": logo, url }`
+    );
+    if (!items?.length) return fallbackFriendLogos;
+    return items
+      .map((item: { name: string; image: unknown; url: string | null }) => ({
+        name: item.name,
+        image: urlForImage(item.image as never) || "",
+        url: item.url || null,
+      }))
+      .filter((item: FriendLogo) => item.image);
+  } catch {
+    return fallbackFriendLogos;
   }
 }
 

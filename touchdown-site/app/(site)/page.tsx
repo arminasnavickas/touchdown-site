@@ -11,6 +11,7 @@ import Pricing from "@/components/Pricing";
 import MeetOurTeam from "@/components/MeetOurTeam";
 import Reviews from "@/components/Reviews";
 import Faq from "@/components/Faq";
+import OurFriends from "@/components/OurFriends";
 import FloatingActions from "@/components/FloatingActions";
 import {
   getSiteContent,
@@ -26,6 +27,7 @@ import {
   getGalleryImages,
   getHeroSlides,
   getFacilityPhotos,
+  getFriendLogos,
 } from "@/lib/content";
 
 // Revalidate content from Sanity every 60s (falls back to hardcoded content
@@ -47,6 +49,7 @@ export default async function Home() {
     galleryImages,
     heroSlides,
     facilityPhotos,
+    friendLogos,
   ] = await Promise.all([
     getSiteContent(),
     getFaqItems(),
@@ -61,6 +64,7 @@ export default async function Home() {
     getGalleryImages(),
     getHeroSlides(),
     getFacilityPhotos(),
+    getFriendLogos(),
   ]);
 
   return (
@@ -104,6 +108,7 @@ export default async function Home() {
         <Reviews reviews={reviews} subtitle={siteContent.reviewsSubtitle} />
       )}
       <Faq items={faqItems} contactEmail={siteContent.footerEmail} />
+      <OurFriends logos={friendLogos} heading={siteContent.friendsHeading} />
       <FloatingActions />
     </main>
   );

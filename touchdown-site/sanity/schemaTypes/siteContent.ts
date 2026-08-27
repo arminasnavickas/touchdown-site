@@ -122,6 +122,12 @@ export default defineType({
       initialValue: "What you get",
     }),
     defineField({
+      name: "friendsHeading",
+      title: '"Our Friends" (logo strip after FAQ) heading',
+      type: "string",
+      initialValue: "Our friends",
+    }),
+    defineField({
       name: "notFoundHeadline",
       title: "404 page headline",
       type: "string",
