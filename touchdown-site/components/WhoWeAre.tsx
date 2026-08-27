@@ -20,14 +20,18 @@ export default function WhoWeAre({
   return (
     <section
       id="about-us"
-      className="relative flex flex-col items-center gap-10 overflow-hidden px-6 py-20 md:flex-row md:items-center md:justify-between md:gap-16 md:px-16 scroll-mt-20"
+      className="relative flex flex-col items-center gap-10 overflow-hidden px-6 py-20 md:px-16 lg:flex-row lg:items-center lg:justify-between lg:gap-16 scroll-mt-20"
     >
       {/* order-1/order-2 put the text above the photo on mobile (where the
-          section stacks in a single column) without touching the desktop
+          section stacks in a single column) without touching the two-column
           layout, which keeps the original text-left/photo-right order via
-          md:order-none. */}
-      <div className="relative z-10 order-1 flex w-full max-w-xl flex-col gap-10 md:order-none">
-        <div className="flex flex-col items-center gap-3 text-center md:items-start md:text-left">
+          lg:order-none. The stacked layout now holds through lg (not just
+          md) - a landscape phone or small tablet is wide enough to trip md,
+          but not wide enough for a fixed max-w-xl text column plus a
+          flex-1 photo to both get reasonable room; that combination was
+          squeezing the photo down to an oddly narrow, over-cropped strip. */}
+      <div className="relative z-10 order-1 flex w-full max-w-xl flex-col gap-10 lg:order-none">
+        <div className="flex flex-col items-center gap-3 text-center lg:items-start lg:text-left">
           {/* Small eyebrow - matches the kicker treatment already used
               elsewhere (Gallery, FAQ) so About gets its own masthead moment
               instead of opening straight on the heading. */}
@@ -45,21 +49,27 @@ export default function WhoWeAre({
             </p>
           ))}
         </div>
-        {/* Hidden on mobile only - the section already ends with the "Book
-            in" CTA in the hero above it, and on a narrow single-column
-            layout this one just repeated it right after the About Us copy.
-            md:inline-flex brings it back at desktop, where the two-column
-            layout means it isn't sitting right below another CTA. */}
-        <BookInButton className="mx-auto hidden w-fit rounded-[6px] bg-cta px-8 py-4 font-switzer text-base font-medium uppercase tracking-wide text-white transition-all duration-200 ease-out hover:bg-aquatic hover:text-dark-ocean-blue hover:scale-105 hover:shadow-lg hover:shadow-cta/40 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cta focus-visible:ring-offset-2 md:mx-0 md:inline-flex">
+        {/* Hidden through the stacked layout (now up to lg, not just md) -
+            the section already ends with the "Book in" CTA in the hero
+            above it, and in single-column mode this one just repeated it
+            right after the About Us copy. lg:inline-flex brings it back at
+            the two-column layout, where that's no longer true. */}
+        <BookInButton className="mx-auto hidden w-fit rounded-[6px] bg-cta px-8 py-4 font-switzer text-base font-medium uppercase tracking-wide text-white transition-all duration-200 ease-out hover:bg-aquatic hover:text-dark-ocean-blue hover:scale-105 hover:shadow-lg hover:shadow-cta/40 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cta focus-visible:ring-offset-2 lg:mx-0 lg:inline-flex">
           Book in
         </BookInButton>
       </div>
 
-      <Reveal delay={150} className="order-2 flex flex-1 md:order-none">
+      <Reveal delay={150} className="order-2 flex flex-1 lg:order-none">
+        {/* data-fab-avoid: the fixed bottom-right "Book now" pill (see
+            FloatingActions) can otherwise land right on top of this photo -
+            most noticeable on short/wide viewports like a landscape phone,
+            where the section's full height doesn't clear the fixed stack's
+            corner the way a taller portrait viewport does. */}
         <button
           type="button"
+          data-fab-avoid
           onClick={() => openLightbox([image], 0)}
-          className="relative z-10 h-[250px] w-full flex-1 cursor-zoom-in md:h-[660px]"
+          className="relative z-10 h-[250px] w-full flex-1 cursor-zoom-in md:h-[320px] lg:h-[660px]"
           aria-label="View full image"
         >
           <FadeImage

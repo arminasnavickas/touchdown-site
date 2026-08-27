@@ -198,7 +198,12 @@ export default function Navigation({
 
           On mobile the header is now always solid white - no translucent/
           blurred state at all - so the base (unprefixed) opacity is forced
-          and only the md: variant still crossfades with scroll.
+          and only the lg: variant still crossfades with scroll. This stays
+          in lockstep with the nav row below: both switch at lg, not md, so
+          a landscape phone or small tablet (wide enough to trip md, not
+          wide enough for the full desktop link row to read comfortably)
+          keeps the same solid-header/hamburger-menu treatment as portrait
+          mobile instead of a half-desktop, half-mobile mashup.
 
           z-45 here matters: these layers were previously unpositioned
           (z-index: auto), which put them BELOW the mobile menu's z-40
@@ -210,13 +215,13 @@ export default function Navigation({
       <div
         aria-hidden="true"
         className={`absolute inset-0 z-[45] bg-white opacity-100 transition-opacity duration-300 ${
-          scrolled || open ? "md:opacity-100" : "md:opacity-0"
+          scrolled || open ? "lg:opacity-100" : "lg:opacity-0"
         }`}
       />
       <div
         aria-hidden="true"
         className={`absolute inset-0 z-[45] bg-white/80 opacity-0 backdrop-blur-md transition-opacity duration-300 ${
-          scrolled || open ? "md:opacity-0" : "md:opacity-100"
+          scrolled || open ? "lg:opacity-0" : "lg:opacity-100"
         }`}
       />
 
@@ -230,13 +235,13 @@ export default function Navigation({
           size-9 hamburger icon) instead of clipping in tighter than that,
           giving the compact logo-left/hamburger-right row a touch more
           breathing room without pushing much more of the hero off-screen. */}
-      <div className="relative z-50 flex items-center gap-8 px-6 py-5 md:gap-12 md:px-16 md:py-4">
+      <div className="relative z-50 flex items-center gap-8 px-6 py-5 lg:gap-12 lg:px-16 lg:py-4">
         <Link href="/" className="shrink-0">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={logo} alt="Touchdown" className="h-[15px] w-auto md:h-5" />
+          <img src={logo} alt="Touchdown" className="h-[15px] w-auto lg:h-5" />
         </Link>
 
-        <nav className="hidden flex-1 items-center justify-end gap-6 md:flex">
+        <nav className="hidden flex-1 items-center justify-end gap-6 lg:flex">
           {navLinks.map((link) => (
             <a
               key={link.id}
@@ -255,7 +260,7 @@ export default function Navigation({
           ))}
         </nav>
 
-        <div className="ml-auto hidden items-center gap-4 text-dark-ocean-blue md:flex">
+        <div className="ml-auto hidden items-center gap-4 text-dark-ocean-blue lg:flex">
           <div className="flex items-center gap-3">
             <a href={`mailto:${email}`} aria-label="Email" className="transition hover:text-horizon">
               <EnvelopeIcon />
@@ -276,7 +281,7 @@ export default function Navigation({
           type="button"
           onClick={() => setOpen(!open)}
           aria-label={open ? "Close menu" : "Open menu"}
-          className="ml-auto text-dark-ocean-blue md:hidden"
+          className="ml-auto text-dark-ocean-blue lg:hidden"
         >
           <MenuIcon open={open} />
         </button>
@@ -292,7 +297,7 @@ export default function Navigation({
       <div
         onClick={() => setOpen(false)}
         aria-hidden="true"
-        className={`fixed inset-0 z-40 bg-dark-ocean-blue/70 md:hidden ${
+        className={`fixed inset-0 z-40 bg-dark-ocean-blue/70 lg:hidden ${
           open ? "opacity-100" : "pointer-events-none opacity-0"
         }`}
       />
@@ -302,7 +307,7 @@ export default function Navigation({
           pushing the rest of the content down as it opens. Scrolls
           internally if it's taller than the viewport. */}
       <div
-        className={`absolute inset-x-0 top-full z-50 overflow-y-auto overscroll-contain rounded-b-2xl border-t border-danish-blue/20 bg-white md:hidden ${
+        className={`absolute inset-x-0 top-full z-50 overflow-y-auto overscroll-contain rounded-b-2xl border-t border-danish-blue/20 bg-white lg:hidden ${
           open ? "max-h-[calc(100vh-5rem)]" : "max-h-0 border-t-0"
         }`}
       >
