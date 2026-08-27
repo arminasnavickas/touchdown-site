@@ -38,11 +38,11 @@ export default function BlogPostCard({ post }: { post: BlogPost }) {
 
       <div className="flex flex-1 flex-col pt-4">
         {post.category && (
-          <span className="font-switzer text-xs font-semibold uppercase tracking-[0.2em] text-cta">
+          <span className="font-switzer text-xs font-semibold uppercase tracking-[0.2em] text-dark-ocean-blue/60">
             {post.category}
           </span>
         )}
-        <h2 className="mt-1.5 font-switzer text-2xl font-medium tracking-tight text-dark-ocean-blue transition group-hover:text-cta md:text-3xl">
+        <h2 className="mt-1.5 font-switzer text-2xl font-medium tracking-tight text-dark-ocean-blue transition group-hover:text-cta">
           {post.title}
         </h2>
         {post.excerpt && (
