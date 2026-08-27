@@ -104,7 +104,7 @@ export default async function BlogPostPage({ params }: Props) {
               {post.category}
             </p>
           )}
-          <h1 className="mb-5 font-switzer text-3xl font-extralight tracking-tight text-dark-ocean-blue md:text-4xl">
+          <h1 className="mb-5 font-switzer text-3xl font-medium tracking-tight text-dark-ocean-blue md:text-4xl">
             {post.title}
           </h1>
           <div className="mb-10 flex flex-wrap items-center gap-2 font-switzer text-xs uppercase tracking-wide text-dark-ocean-blue/45 md:text-sm">
