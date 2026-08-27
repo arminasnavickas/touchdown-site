@@ -161,7 +161,7 @@ export default async function BlogIndexPage({
                   )}
                 </div>
                 <div className="mx-auto mt-8 max-w-3xl md:mt-10">
-                  <h2 className="font-switzer text-3xl font-extralight tracking-tight text-dark-ocean-blue transition group-hover:text-cta sm:text-4xl md:text-6xl">
+                  <h2 className="font-switzer text-3xl font-medium tracking-tight text-dark-ocean-blue transition group-hover:text-cta md:text-4xl">
                     {featured.title}
                   </h2>
                   {featured.excerpt && (
