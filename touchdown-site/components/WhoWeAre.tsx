@@ -27,7 +27,7 @@ export default function WhoWeAre({
           layout, which keeps the original text-left/photo-right order via
           md:order-none. */}
       <div className="relative z-10 order-1 flex w-full max-w-xl flex-col gap-10 md:order-none">
-        <div className="flex flex-col items-center gap-3 text-center">
+        <div className="flex flex-col items-center gap-3 text-center md:items-start md:text-left">
           {/* Small eyebrow - matches the kicker treatment already used
               elsewhere (Gallery, FAQ) so About gets its own masthead moment
               instead of opening straight on the heading. */}
@@ -38,7 +38,7 @@ export default function WhoWeAre({
             {heading}
           </h2>
         </div>
-        <div className="text-center font-switzer text-[15px] font-light leading-relaxed text-white/70">
+        <div className="text-center font-switzer text-[15px] font-light leading-relaxed text-white/70 md:text-left">
           {paragraphs.map((p, i) => (
             <p key={i} className={i < paragraphs.length - 1 ? "mb-4" : ""}>
               {p}
@@ -50,7 +50,7 @@ export default function WhoWeAre({
             layout this one just repeated it right after the About Us copy.
             md:inline-flex brings it back at desktop, where the two-column
             layout means it isn't sitting right below another CTA. */}
-        <BookInButton className="mx-auto hidden w-fit rounded-[6px] bg-cta px-8 py-4 font-switzer text-base font-medium uppercase tracking-wide text-white transition-all duration-200 ease-out hover:bg-aquatic hover:text-dark-ocean-blue hover:scale-105 hover:shadow-lg hover:shadow-cta/40 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cta focus-visible:ring-offset-2 md:inline-flex">
+        <BookInButton className="mx-auto hidden w-fit rounded-[6px] bg-cta px-8 py-4 font-switzer text-base font-medium uppercase tracking-wide text-white transition-all duration-200 ease-out hover:bg-aquatic hover:text-dark-ocean-blue hover:scale-105 hover:shadow-lg hover:shadow-cta/40 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cta focus-visible:ring-offset-2 md:mx-0 md:inline-flex">
           Book in
         </BookInButton>
       </div>
