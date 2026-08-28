@@ -1217,7 +1217,7 @@ export const fallbackHeroSlides: string[] = [
 ];
 
 export const fallbackPrivacyPolicy: LegalPage = {
-  lastUpdated: "",
+  lastUpdated: "August 28, 2026",
   sections: [
     {
       heading: "1. Who we are",
@@ -1243,28 +1243,36 @@ export const fallbackPrivacyPolicy: LegalPage = {
       heading: "4. Third-party services",
       body: [
         "We use Google Forms to collect final booking registration details, which is subject to Google's own privacy policy. We may also communicate with you via Telegram or WhatsApp if you choose to contact us that way, which are subject to those platforms' respective privacy policies.",
+        "Our website itself is hosted by Vercel Inc., which may process technical information (such as your IP address) as part of delivering the website to your device, subject to Vercel's own privacy policy.",
       ],
     },
     {
-      heading: "5. Data retention",
+      heading: "5. Sharing your information",
+      body: [
+        "Other than the third-party services listed above, we do not sell, rent, or trade your personal information. We may share your information where required to comply with applicable law, to respond to a lawful request from a court or public authority, or where necessary to protect our rights, safety, or property, or the rights, safety, or property of others.",
+      ],
+    },
+    {
+      heading: "6. International data transfers and your rights",
+      body: [
+        "Touchdown is based in Dahab, Egypt, so if you are contacting us or booking a course from the European Union, the United Kingdom, or elsewhere, your personal information will be transferred to and stored in Egypt. We process your information in order to arrange and provide the course or service you have booked, or otherwise to respond to your enquiry.",
+        "You may ask us at any time to tell you what personal information we hold about you, to correct any inaccuracies, or to delete your information, subject to any legal obligations we may have to retain it. To make a request, contact us using the details below.",
+      ],
+    },
+    {
+      heading: "7. Data retention",
       body: [
         "We retain booking information for as long as necessary to provide our services and to meet any legal or accounting obligations, after which it is deleted or anonymised.",
       ],
     },
     {
-      heading: "6. Your rights",
-      body: [
-        "You may ask us at any time to tell you what personal information we hold about you, to correct any inaccuracies, or to delete your information, subject to any legal obligations we may have to retain it. To make a request, contact us using the details below.",
-      ],
-    },
-    {
-      heading: "7. Changes to this policy",
+      heading: "8. Changes to this policy",
       body: [
         "We may update this Privacy Policy from time to time to reflect changes in our practices. The version in effect at the time you use our website or book a course will apply.",
       ],
     },
     {
-      heading: "8. Contact",
+      heading: "9. Contact",
       body: [
         "If you have any questions about this Privacy Policy or how we handle your information, please contact us at info@touchdownfreediving.com.",
       ],
