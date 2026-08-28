@@ -1273,7 +1273,7 @@ export const fallbackPrivacyPolicy: LegalPage = {
 };
 
 export const fallbackTermsAndConditions: LegalPage = {
-  lastUpdated: "",
+  lastUpdated: "August 28, 2026",
   sections: [
     {
       heading: "1. About these terms",
@@ -1325,13 +1325,77 @@ export const fallbackTermsAndConditions: LegalPage = {
       ],
     },
     {
-      heading: "8. Changes to these terms",
+      heading: "8. Use of this website",
+      body: [
+        'By accessing or using touchdownfreediving.com (the "Site"), you agree to use it only for lawful purposes. You must not use the Site to violate any applicable law, transmit any virus, worm, or other malicious code, or copy, reproduce, or exploit any content from the Site for commercial purposes without our written permission.',
+        "We reserve the right to refuse service, decline or cancel a booking, or restrict access to the Site or our courses for anyone, at any time, for any reason, including a breach of these Terms.",
+      ],
+    },
+    {
+      heading: "9. Accuracy of information",
+      body: [
+        "We make every effort to keep the information on this Site - including course descriptions, schedules, and pricing - accurate and up to date, but we do not guarantee that it is complete or error-free. Course details and pricing shown on the Site are provided for general information and are subject to change without notice; the price and details confirmed at the time of your booking will apply to that booking.",
+        "We reserve the right to correct any errors or outdated information on the Site at any time, without prior notice.",
+      ],
+    },
+    {
+      heading: "10. Third-party tools and links",
+      body: [
+        "Our Site may link to third-party websites, social media pages, or partner organizations (such as AIDA, Molchanovs, or other freediving organizations) that are not operated by us. We are not responsible for the content, accuracy, or practices of any third-party site, and linking to it does not imply our endorsement.",
+        "Where the Site uses a third-party tool or service (for example, a booking, payment, or analytics tool), your use of that tool is also subject to that provider's own terms, and we are not liable for its availability or performance.",
+      ],
+    },
+    {
+      heading: "11. Personal information",
+      body: [
+        "Any personal information you provide to us through this Site or during the booking process is handled in accordance with our Privacy Policy, available at touchdownfreediving.com/privacy.",
+      ],
+    },
+    {
+      heading: "12. Disclaimer of warranties; limitation of liability",
+      body: [
+        'The Site and its content are provided "as is" and "as available," without warranties of any kind, express or implied, including any warranty that the Site will be uninterrupted, secure, or error-free.',
+        "To the fullest extent permitted by law, Touchdown Freediving School and our instructors, staff, and affiliates will not be liable for any indirect, incidental, special, or consequential damages arising from your use of, or inability to use, the Site, even if advised of the possibility of such damages. Nothing in this section limits our liability for death or personal injury arising from our own negligence during a course - that is addressed separately in Section 5 (Assumption of risk and liability) - or any liability that cannot be excluded under applicable law.",
+      ],
+    },
+    {
+      heading: "13. Indemnification",
+      body: [
+        "You agree to indemnify and hold harmless Touchdown Freediving School and our instructors, staff, and affiliates from any claim or demand, including reasonable legal fees, arising out of your breach of these Terms, your violation of any law, or your violation of the rights of a third party.",
+      ],
+    },
+    {
+      heading: "14. Severability",
+      body: [
+        "If any provision of these Terms is found to be unlawful, void, or unenforceable, that provision will still be enforced to the fullest extent permitted by law, and the rest of these Terms will remain in full effect.",
+      ],
+    },
+    {
+      heading: "15. Termination",
+      body: [
+        "We may suspend or terminate your access to the Site, or decline to provide a course or service to you, at any time and without notice, if we reasonably believe you have breached these Terms. Any obligation that by its nature should survive termination - including payment obligations and the liability provisions above - will continue to apply.",
+      ],
+    },
+    {
+      heading: "16. Entire agreement",
+      body: [
+        "These Terms, together with any liability waiver, medical statement, or booking confirmation you sign or agree to, make up the entire agreement between you and Touchdown Freediving School regarding your booking and use of the Site, and supersede any prior agreements or understandings, whether oral or written.",
+      ],
+    },
+    {
+      heading: "17. Governing law",
+      body: [
+        "These Terms are governed by the laws of [jurisdiction to confirm], without regard to conflict of law principles.",
+      ],
+    },
+    {
+      heading: "18. Changes to these terms",
       body: [
         "We may update these Terms from time to time. The version in effect at the time of your booking will apply to that booking.",
       ],
     },
     {
-      heading: "9. Contact",
+      heading: "19. Contact",
       body: [
         "If you have any questions about these Terms, please contact us at info@touchdownfreediving.com.",
       ],
