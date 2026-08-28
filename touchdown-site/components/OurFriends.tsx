@@ -19,7 +19,10 @@ export default function OurFriends({
   return (
     <section className="relative flex flex-col items-center gap-10 overflow-hidden px-6 py-16 md:px-16 md:py-20">
       <Reveal>
-        <p className="text-center font-switzer text-4xl font-semibold uppercase tracking-[0.25em] text-cta md:text-6xl">
+        {/* Matches the FAQ section's title exactly - font-extralight,
+            tracking-tight, white - rather than the small tracked-out
+            uppercase "eyebrow" label style used elsewhere on the page. */}
+        <p className="text-center font-switzer text-4xl font-extralight tracking-tight text-white md:text-6xl">
           {heading}
         </p>
       </Reveal>
