@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import type { FaqItem } from "@/lib/content";
+import Blob from "./Blob";
 import Reveal from "./Reveal";
 
 export default function Faq({
@@ -16,8 +17,17 @@ export default function Faq({
   return (
     <section
       id="faq"
-      className="relative flex flex-col items-center gap-10 overflow-hidden px-6 py-20 md:px-16 scroll-mt-20"
+      className="relative flex flex-col items-center gap-10 px-6 py-20 md:px-16 scroll-mt-20"
     >
+      {/* Top-left, bled upward into whichever section renders directly
+          above (Reviews when siteContent.showReviews is on, Meet Our Team
+          when it's off - see app/(site)/page.tsx) - same
+          later-section-paints-on-top logic as the other seam blobs on this
+          page. overflow-hidden dropped from this section for the same
+          reason as the others: it was clipping the blur into a hard line
+          right at the boundary. opacity-40 knocks it down from Blob's own
+          baked-in 60% alpha (~24% effective). */}
+      <Blob className="top-[-120px] left-6 h-[380px] w-[380px] opacity-40" />
       {/* Whole section now lives inside one defined, centred content
           column (was two unconstrained w-full blocks stretching edge to
           edge across the section's own px-16 padding, which read as

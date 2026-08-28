@@ -1,5 +1,6 @@
 "use client";
 
+import Blob from "./Blob";
 import Reveal from "./Reveal";
 import FadeImage from "./FadeImage";
 import { useLightbox } from "./LightboxContext";
@@ -40,8 +41,18 @@ export default function OurFacility({
   return (
     <section
       id="facility"
-      className="relative flex flex-col items-center gap-10 overflow-hidden px-6 py-20 md:px-16 scroll-mt-20"
+      className="relative flex flex-col items-center gap-10 px-6 py-20 md:px-16 scroll-mt-20"
     >
+      {/* Anchored to this section's top-left corner, bled upward past its
+          own top edge into How It Works above (this section renders after
+          it in the DOM, so it naturally paints on top in the overlap
+          zone). overflow-hidden dropped here for the same reason as About
+          Us/How It Works - it was clipping the blur into a hard line right
+          at the section boundary instead of letting it fade across the
+          seam. opacity-40 brings it down from Blob's own baked-in 60%
+          alpha (~24% effective), matching What You Get/Faq rather than
+          sitting at full strength like About Us. */}
+      <Blob className="top-[-120px] left-6 h-[380px] w-[380px] opacity-40" />
       <Reveal>
         <div className="relative z-10 flex max-w-3xl flex-col items-center gap-4 text-center">
           <p className="font-switzer text-xs font-semibold uppercase tracking-[0.25em] text-cta md:text-sm">

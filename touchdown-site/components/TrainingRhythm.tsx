@@ -1,5 +1,6 @@
 import BookInButton from "./BookInButton";
 import { Clock } from "lucide-react";
+import Blob from "./Blob";
 import Reveal from "./Reveal";
 import type { ScheduleDay } from "@/lib/content";
 
@@ -37,14 +38,29 @@ export default function TrainingRhythm({
   heading: string;
 }) {
   return (
-    // Glow removed and padding/gap tightened - this section, plus the
-    // Water/Dry day schedules right after it, are meant to read as a
-    // compact, scannable programme rather than another spacious showcase
-    // section, so it no longer matches the site's flat py-20 default.
+    // Padding/gap tightened - this section, plus the Water/Dry day
+    // schedules right after it, are meant to read as a compact, scannable
+    // programme rather than another spacious showcase section, so it no
+    // longer matches the site's flat py-20 default. Glow was removed at one
+    // point, then brought back (see Blob below) - this section is mostly
+    // dense text (the schedule rows), so it's kept dim rather than at full
+    // strength; a strong glow behind it would fight legibility in a way it
+    // doesn't in the more photo-led sections.
     <section
       id="schedule"
-      className="relative flex flex-col items-center gap-8 overflow-hidden px-6 py-16 md:gap-10 md:px-16 md:py-20 scroll-mt-20"
+      className="relative flex flex-col items-center gap-8 px-6 py-16 md:gap-10 md:px-16 md:py-20 scroll-mt-20"
     >
+      {/* Bottom-left now (was bottom-center, before that dead-center) -
+          bled downward past this section's own bottom edge into Water Day
+          Schedule below, same seam-bleed treatment as the other blobs on
+          this page (Blob's -z-10 keeps it behind that section's own
+          content regardless of DOM order - see Blob.tsx). overflow-hidden
+          dropped since it's crossing the section boundary. Water Day
+          Schedule's own blob sits at its top-right, so this stays clear of
+          it rather than the two overlapping at bottom-center. opacity-40
+          stacks on top of Blob's own baked-in 60%-alpha fill (~24%
+          effective). */}
+      <Blob className="bottom-[-120px] left-6 h-[360px] w-[360px] opacity-40" />
       <Reveal>
         <div className="relative z-10 flex flex-col items-center gap-3 text-center">
           {/* "The training system · Part 01" kicker removed - this section

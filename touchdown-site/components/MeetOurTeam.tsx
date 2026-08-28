@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Blob from "./Blob";
 import FadeImage from "./FadeImage";
 import { useLightbox } from "./LightboxContext";
 import type { TeamMember } from "@/lib/content";
@@ -162,13 +163,25 @@ export default function MeetOurTeam({
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   return (
-    // Glow removed - the team's own photography carries this section, and
-    // cyan glow is now reserved for Hero/How It Works/Pricing only. Gap
-    // trimmed from the old flat gap-[100px] to something more intentional.
+    // Glow removed at one point, then brought back (see Blob below) - the
+    // team's own photography still carries most of this section, so this
+    // one stays at the top edge rather than sitting behind the photo grid
+    // itself. Gap trimmed from the old flat gap-[100px] to something more
+    // intentional.
     <section
       id="team"
-      className="relative flex flex-col items-center gap-14 overflow-hidden px-6 py-20 md:gap-16 md:px-16 scroll-mt-20"
+      className="relative flex flex-col items-center gap-14 px-6 py-20 md:gap-16 md:px-16 scroll-mt-20"
     >
+      {/* Top-center, bled upward into Pricing above (same
+          later-section-paints-on-top logic as the other seam blobs on this
+          page; Pricing already has no overflow-hidden of its own - see
+          Pricing.tsx - so nothing on that side clips it either).
+          overflow-hidden dropped from this section for the same reason as
+          the others: it was clipping the blur into a hard line right at
+          the boundary. opacity-30 knocks it down further from Blob's own
+          baked-in 60% alpha (~18% effective) - the dimmest blob on the
+          page, barely-there presence behind the team photos. */}
+      <Blob className="top-[-120px] left-1/2 h-[380px] w-[380px] -translate-x-1/2 opacity-30" />
       <Reveal>
         {/* "The people / Behind the practice" (was "Meet the team") - an
             eyebrow + statement pairing, matching the editorial masthead

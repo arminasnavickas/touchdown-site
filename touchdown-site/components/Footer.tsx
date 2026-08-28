@@ -77,11 +77,6 @@ export default function Footer({
 }) {
   return (
     <footer id="site-footer" className="relative w-full flex flex-col items-center overflow-hidden text-white" style={{ backgroundColor: "#003252" }}>
-      {/* Third and final glow of exactly three on the page (Hero, Pricing,
-          and here) - sits behind the closing "Ready to Dive In?" CTA so the
-          page's last beat gets the same quiet emphasis as its first,
-          rather than ending on flat navy. */}
-      <Blob className="left-[10%] top-[10%] h-[300px] w-[300px] -translate-y-1/3" />
 
       {/* Subtle top seam - a thin gradient line instead of the same flat
           navy the page above already uses, so the footer reads as a
@@ -104,7 +99,15 @@ export default function Footer({
             tagline (5xl -> 6xl) than the pass before it, so the site
             visibly concludes on a statement instead of just running out of
             sections. */}
-        <div className="grid w-full grid-cols-2 items-start gap-x-4 gap-y-6 py-10 sm:gap-x-6 md:items-center md:gap-8 md:py-20">
+        <div className="relative grid w-full grid-cols-2 items-start gap-x-4 gap-y-6 py-10 sm:gap-x-6 md:items-center md:gap-8 md:py-20">
+          {/* Scoped to this CTA row specifically (not the whole footer,
+              which also includes the link columns and legal bar below) -
+              percentage offsets against the full footer's height put the
+              glow well past this row, out of view against the tagline/
+              button it's meant to sit behind. bottom-0 + translate-y keeps
+              it anchored to this row's own bottom edge regardless of how
+              tall the rest of the footer ends up being. */}
+          <Blob className="left-[5%] bottom-0 h-[300px] w-[300px] translate-y-1/3" />
           <div className="flex flex-col items-start gap-4 sm:gap-6">
             <div className="flex flex-col gap-1 sm:gap-3">
               <p className="font-switzer text-3xl font-light tracking-tight sm:text-4xl md:text-6xl">

@@ -1,5 +1,6 @@
 "use client";
 
+import Blob from "./Blob";
 import FadeImage from "./FadeImage";
 import { useLightbox } from "./LightboxContext";
 import Reveal from "./Reveal";
@@ -20,8 +21,21 @@ export default function WhoWeAre({
   return (
     <section
       id="about-us"
-      className="relative flex flex-col items-center gap-10 overflow-hidden px-6 py-20 md:px-16 lg:flex-row lg:items-center lg:justify-between lg:gap-16 scroll-mt-20"
+      className="relative flex flex-col items-center gap-10 px-6 py-20 md:px-16 lg:flex-row lg:items-center lg:justify-between lg:gap-16 scroll-mt-20"
     >
+      {/* Anchored to the section's bottom-right corner, behind the team
+          photo (which sits on the right at the lg two-column layout), and
+          allowed to bleed down past this section's own bottom edge into
+          How It Works below - overflow-hidden dropped from this section
+          (was clipping the blur into a hard line right at the boundary;
+          neither section paints its own background, so with the clip gone
+          the glow just fades across the seam onto the shared body
+          background instead of stopping dead at it). How It Works keeps its
+          own overflow-hidden - that only clips its own children, not a
+          glow bleeding in from the section above. opacity-80 brings it down
+          slightly from Blob's own baked-in 60% alpha (~48% effective). */}
+      <Blob className="bottom-[-120px] right-6 h-[380px] w-[380px] opacity-80" />
+
       {/* order-1/order-2 put the text above the photo on mobile (where the
           section stacks in a single column) without touching the two-column
           layout, which keeps the original text-left/photo-right order via
