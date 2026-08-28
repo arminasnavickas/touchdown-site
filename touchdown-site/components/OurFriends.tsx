@@ -19,7 +19,7 @@ export default function OurFriends({
   return (
     <section className="relative flex flex-col items-center gap-10 overflow-hidden px-6 py-16 md:px-16 md:py-20">
       <Reveal>
-        <p className="text-center font-switzer text-xs font-semibold uppercase tracking-[0.25em] text-cta md:text-sm">
+        <p className="text-center font-switzer text-4xl font-semibold uppercase tracking-[0.25em] text-cta md:text-6xl">
           {heading}
         </p>
       </Reveal>
