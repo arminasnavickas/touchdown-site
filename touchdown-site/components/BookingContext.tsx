@@ -103,7 +103,7 @@ function PlanDropdown({
 }
 
 const REG_FORM_URL =
-  "https://docs.google.com/forms/d/e/1FAIpQLSdilCxLdxfrd3GeNY7q03X27myLy8YogvcBZq0iD_HvzMzk1w/viewform";
+  "https://docs.google.com/forms/d/e/1FAIpQLSeLflS2sBceVDsR2B4_4VRgN_iqx2HtrAVhc9URAxFJJ05RDQ/viewform";
 
 export default function BookingProvider({
   children,
