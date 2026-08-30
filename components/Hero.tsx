@@ -169,7 +169,7 @@ export default function Hero({
           className="absolute inset-0"
           style={{
             backgroundImage:
-              "linear-gradient(100deg, rgba(4,12,20,0.92) 0%, rgba(4,12,20,0.7) 28%, rgba(4,12,20,0.34) 54%, rgba(4,12,20,0.1) 76%, rgba(4,12,20,0) 100%)",
+              "linear-gradient(100deg, rgba(4,12,20,0.96) 0%, rgba(4,12,20,0.82) 28%, rgba(4,12,20,0.48) 54%, rgba(4,12,20,0.18) 76%, rgba(4,12,20,0) 100%)",
           }}
         />
         {/* Second, vertical layer - grounds the bottom-anchored copy block
@@ -180,7 +180,7 @@ export default function Hero({
         <div
           className="absolute inset-x-0 bottom-0 h-[55%] md:h-[60%]"
           style={{
-            backgroundImage: "linear-gradient(0deg, rgba(4,12,20,0.55) 0%, rgba(4,12,20,0) 100%)",
+            backgroundImage: "linear-gradient(0deg, rgba(4,12,20,0.68) 0%, rgba(4,12,20,0) 100%)",
           }}
         />
         {/* Light bottom feather so the image collage below reads as
@@ -190,7 +190,19 @@ export default function Hero({
         <div
           className="absolute inset-x-0 bottom-0 h-24 md:h-32"
           style={{
-            backgroundImage: "linear-gradient(0deg, rgba(4,12,20,0.35) 0%, rgba(4,12,20,0) 100%)",
+            backgroundImage: "linear-gradient(0deg, rgba(4,12,20,0.45) 0%, rgba(4,12,20,0) 100%)",
+          }}
+        />
+        {/* Right-edge gradient - mirrors the left-side directional overlay
+            at a lower intensity so the frame reads as bracketed on both
+            sides instead of trailing off flat on the right. Kept light and
+            tight to the edge so it doesn't wash out the diver or the
+            stamp badge that sit over there. */}
+        <div
+          className="absolute inset-0"
+          style={{
+            backgroundImage:
+              "linear-gradient(260deg, rgba(4,12,20,0.5) 0%, rgba(4,12,20,0.22) 16%, rgba(4,12,20,0) 38%)",
           }}
         />
       </div>
