@@ -35,6 +35,19 @@ export default defineType({
       type: "image",
     }),
     defineField({
+      name: "facilityHeading",
+      title: '"Where you\'ll train" (facility section) heading',
+      type: "string",
+      initialValue: "Where you'll train",
+    }),
+    defineField({
+      name: "facilityCopy",
+      title: '"Where you\'ll train" (facility section) body copy',
+      description: "One paragraph per line — each line renders as its own paragraph.",
+      type: "text",
+      rows: 8,
+    }),
+    defineField({
       name: "howItWorksHeading",
       title: '"How it works" heading',
       type: "string",
@@ -44,7 +57,7 @@ export default defineType({
       name: "howItWorksSubtitle",
       title: '"How it works" subtitle',
       type: "string",
-      initialValue: "Patience is key",
+      initialValue: "Learn the fundamentals. Practice with guidance. Progress with confidence.",
     }),
     defineField({
       name: "pricingKicker",
@@ -63,6 +76,14 @@ export default defineType({
       title: "Reviews section subtitle",
       type: "string",
       initialValue: "We Love our students so much and they love us too :)",
+    }),
+    defineField({
+      name: "showReviews",
+      title: "Show Reviews section",
+      type: "boolean",
+      initialValue: true,
+      description:
+        "Turn off to hide the whole Reviews section from the homepage (and its Reviews nav link) without deleting any of the review entries - flip it back on any time to bring it back.",
     }),
     defineField({
       name: "trainingRhythmHeading",
@@ -101,6 +122,12 @@ export default defineType({
       initialValue: "What you get",
     }),
     defineField({
+      name: "friendsHeading",
+      title: '"Our Friends" (logo strip after FAQ) heading',
+      type: "string",
+      initialValue: "Our friends",
+    }),
+    defineField({
       name: "notFoundHeadline",
       title: "404 page headline",
       type: "string",
@@ -136,9 +163,15 @@ export default defineType({
     }),
     defineField({
       name: "footerTagline",
-      title: "Footer tagline (next to the Book in button)",
+      title: "Footer tagline (the large CTA headline)",
       type: "string",
       initialValue: "Ready to Dive In?",
+    }),
+    defineField({
+      name: "footerCtaSubcopy",
+      title: "Footer CTA subcopy (small line under the tagline)",
+      type: "string",
+      initialValue: "Your next dive starts here.",
     }),
     defineField({
       name: "headerNavLinks",
@@ -176,6 +209,7 @@ export default defineType({
     defineField({
       name: "footerLegalTitle",
       title: "Footer \"Legal\" column title",
+      description: "Not currently displayed - Legal links now render as a compact inline list in the footer's bottom bar instead of a full column, and don't have a visible title there. Kept in case that layout changes again.",
       type: "string",
       initialValue: "Legal",
     }),
@@ -190,7 +224,7 @@ export default defineType({
       name: "footerContactTitle",
       title: "Footer \"Contact\" column title",
       type: "string",
-      initialValue: "Contact",
+      initialValue: "Get in touch",
     }),
     defineField({
       name: "socialInstagram",

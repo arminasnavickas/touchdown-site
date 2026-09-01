@@ -2,7 +2,7 @@ import type { MetadataRoute } from "next";
 import { getBlogPosts } from "@/lib/content";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const base = "https://touchdownfreediving.com";
+  const base = "https://touchdown-space.com";
 
   const staticRoutes: MetadataRoute.Sitemap = [
     {

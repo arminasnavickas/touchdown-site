@@ -12,65 +12,72 @@ function formatDate(iso: string) {
   });
 }
 
+// Editorial grid card - no card chrome (was a bordered, shadowed, rounded
+// white box). The photograph is the strongest element, category/title/
+// excerpt sit directly on the page's own paper background, and "Read more"
+// is now a text link rather than an outlined button, matching the rest of
+// the site's secondary-link language.
 export default function BlogPostCard({ post }: { post: BlogPost }) {
   const readingTime = estimateReadingTime(post.body);
   const avatar = post.author?.photo;
 
   return (
-    <Link
-      href={`/blog/${post.slug}`}
-      className="group flex h-full flex-col overflow-hidden rounded-lg border border-dark-ocean-blue/10 bg-white shadow-sm transition-shadow duration-300 hover:shadow-md"
-    >
-      {post.coverImage ? (
-        <div className="relative aspect-[4/3] w-full overflow-hidden">
+    <Link href={`/blog/${post.slug}`} className="group flex h-full flex-col">
+      <div className="relative aspect-[4/3] w-full overflow-hidden rounded-md">
+        {post.coverImage ? (
           <FadeImage
             src={post.coverImage}
             alt={post.title}
             wrapperClassName="h-full w-full"
-            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+            className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
           />
-          {/* subtle navy tint so images borrowed from elsewhere on the site read as one consistent "blog photography" set */}
-          <div className="pointer-events-none absolute inset-0 bg-dark-ocean-blue/10 mix-blend-multiply" />
-          {post.category && (
-            <span className="absolute right-4 top-4 w-fit rounded-full bg-white px-3 py-1.5 font-switzer text-[10px] font-semibold uppercase tracking-wide text-dark-ocean-blue shadow-sm">
-              {post.category}
-            </span>
-          )}
-        </div>
-      ) : (
-        <div className="relative aspect-[4/3] w-full bg-gradient-to-br from-horizon/15 to-aquatic/15">
-          {post.category && (
-            <span className="absolute right-4 top-4 w-fit rounded-full bg-white px-3 py-1.5 font-switzer text-[10px] font-semibold uppercase tracking-wide text-dark-ocean-blue shadow-sm">
-              {post.category}
-            </span>
-          )}
-        </div>
-      )}
-      <div className="flex flex-1 flex-col p-6">
-        <h2 className="font-switzer text-2xl font-light tracking-tight text-dark-ocean-blue transition group-hover:text-cta">
+        ) : (
+          <div className="h-full w-full bg-gradient-to-br from-horizon/15 to-aquatic/15" />
+        )}
+      </div>
+
+      <div className="flex flex-1 flex-col pt-4">
+        {post.category && (
+          <span className="font-switzer text-xs font-semibold uppercase tracking-[0.2em] text-dark-ocean-blue/60">
+            {post.category}
+          </span>
+        )}
+        <h2 className="mt-1.5 font-switzer text-2xl font-medium tracking-tight text-dark-ocean-blue transition group-hover:text-cta">
           {post.title}
         </h2>
         {post.excerpt && (
-          <p className="mb-4 mt-2 line-clamp-3 font-switzer text-lg font-normal leading-relaxed text-dark-ocean-blue/70">
+          <p className="mb-[16px] mt-[12px] line-clamp-2 font-switzer text-base font-light leading-relaxed text-dark-ocean-blue/60">
             {post.excerpt}
           </p>
         )}
-        <span className="mt-auto inline-block w-fit rounded-[6px] border border-dark-ocean-blue/20 px-8 py-4 font-switzer text-sm font-medium uppercase tracking-wide text-dark-ocean-blue/70 transition group-hover:border-cta group-hover:text-cta">
-          Read more
-        </span>
-        <div className="mt-6 flex flex-wrap items-center gap-2 border-t border-dark-ocean-blue/10 pt-4 font-switzer text-base font-normal text-dark-ocean-blue/60">
-          {avatar && (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={avatar} alt="" className="size-5 rounded-full object-cover" />
-          )}
-          <span className="flex items-center gap-1">
-            <CalendarIcon className="size-3" />
-            {formatDate(post.publishedAt)}
-          </span>
-          <span className="text-dark-ocean-blue/25">·</span>
-          <span className="flex items-center gap-1">
-            <ClockIcon className="size-3" />
-            {readingTime} min read
+
+        {/* mb-[16px] on the excerpt above is a guaranteed floor - mt-auto
+            here can collapse to 0 on its own when the excerpt's 2 lines
+            nearly fill the card's flex height, which was leaving the
+            divider sitting flush against the excerpt text. The two margins
+            don't collapse against each other in this flex column, so the
+            real gap is always >= 16px regardless of excerpt length. */}
+        <div className="mt-auto flex flex-wrap items-center justify-between gap-3 border-t border-dark-ocean-blue/10 pt-[20px]">
+          <div className="flex flex-wrap items-center gap-2 font-switzer text-xs uppercase tracking-wide text-dark-ocean-blue/40">
+            {avatar && (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={avatar} alt="" className="size-4 rounded-full object-cover" />
+            )}
+            <span className="flex items-center gap-1">
+              <CalendarIcon className="size-3" />
+              {formatDate(post.publishedAt)}
+            </span>
+            <span className="text-dark-ocean-blue/25">·</span>
+            <span className="flex items-center gap-1">
+              <ClockIcon className="size-3" />
+              {readingTime} min read
+            </span>
+          </div>
+          <span className="group/link flex w-fit shrink-0 items-center gap-1.5 font-switzer text-sm font-medium uppercase tracking-widest text-cta transition group-hover:text-cta">
+            Read article
+            <span aria-hidden className="transition-transform duration-200 group-hover:translate-x-1">
+              →
+            </span>
           </span>
         </div>
       </div>

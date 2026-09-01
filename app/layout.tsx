@@ -1,23 +1,15 @@
 import type { Metadata } from "next";
 import "./globals.css";
-
-// Preview deployments are password-gated by middleware.ts. Vercel's edge
-// CDN caches statically-rendered pages independent of middleware's
-// Cache-Control headers, which let a single cached (authenticated) 200
-// response get served to unauthenticated visitors too. Forcing every route
-// to render dynamically on preview deployments means there is never a
-// static asset for the CDN to cache in the first place, so every request
-// re-runs the middleware auth check. Production is untouched (stays
-// statically optimized) since VERCEL_ENV is only "preview" on previews.
-export const dynamic =
-  process.env.VERCEL_ENV === "preview" ? "force-dynamic" : "auto";
+import LightboxProvider from "@/components/LightboxContext";
+import BookingProvider from "@/components/BookingContext";
+import { getPricingTiers } from "@/lib/content";
 
 export const viewport = {
   themeColor: "#003354",
 };
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://touchdownfreediving.com"),
+  metadataBase: new URL("https://touchdown-space.com"),
   title: {
     default: "Touchdown Freediving School — Dahab, Egypt",
     template: "%s | Touchdown Freediving School",
@@ -44,7 +36,7 @@ export const metadata: Metadata = {
     title: "Touchdown Freediving School — Dahab, Egypt",
     description:
       "Freediving school founded by Gus Kreivenas in Dahab, Egypt. World-class coaching, depth training, and tailored courses at the legendary Blue Hole.",
-    url: "https://touchdownfreediving.com",
+    url: "https://touchdown-space.com",
     siteName: "Touchdown Freediving School",
     locale: "en_US",
     type: "website",
@@ -57,14 +49,13 @@ export const metadata: Metadata = {
   },
 };
 
-// Bare root layout: only <html>/<body>, global CSS, and metadata.
-// Site chrome (nav/footer) lives in app/(site)/layout.tsx so that
-// /studio (outside that route group) renders with no chrome at all.
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const pricingTiers = await getPricingTiers();
+
   return (
     <html lang="en">
       <head>
@@ -76,7 +67,11 @@ export default function RootLayout({
           crossOrigin="anonymous"
         />
       </head>
-      <body className="font-switzer antialiased">{children}</body>
+      <body className="font-switzer antialiased">
+        <BookingProvider tiers={pricingTiers}>
+          <LightboxProvider>{children}</LightboxProvider>
+        </BookingProvider>
+      </body>
     </html>
   );
 }

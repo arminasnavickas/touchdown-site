@@ -1,7 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import BookInButton from "./BookInButton";
+import { useEffect, useRef, useState } from "react";
 
 function ArrowUpIcon() {
   return (
@@ -14,6 +13,8 @@ function ArrowUpIcon() {
 export default function FloatingActions() {
   const [pastHero, setPastHero] = useState(false);
   const [footerVisible, setFooterVisible] = useState(false);
+  const [overlapping, setOverlapping] = useState(false);
+  const stackRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const onScroll = () => setPastHero(window.scrollY > 900);
@@ -34,17 +35,66 @@ export default function FloatingActions() {
     return () => observer.disconnect();
   }, []);
 
-  const visible = pastHero && !footerVisible;
+  // This stack is `fixed` in the bottom-right corner, which means it sits on
+  // top of - and can visually cover - whatever page content happens to
+  // scroll into that same corner (e.g. a card's own CTA button in a
+  // multi-column grid, like How It Works on mobile). Rather than trying to
+  // guess a safe spot for every section that might end up there, we check
+  // on scroll whether any element opted in via `data-fab-avoid` currently
+  // overlaps this stack's own footprint, and fade the stack out for as long
+  // as that's true - same treatment as the existing footer-proximity check.
+  useEffect(() => {
+    let ticking = false;
+    function checkOverlap() {
+      const stackEl = stackRef.current;
+      if (!stackEl) return;
+      const stackRect = stackEl.getBoundingClientRect();
+      const targets = document.querySelectorAll<HTMLElement>("[data-fab-avoid]");
+      let hit = false;
+      targets.forEach((el) => {
+        const r = el.getBoundingClientRect();
+        if (
+          r.right > stackRect.left &&
+          r.left < stackRect.right &&
+          r.bottom > stackRect.top &&
+          r.top < stackRect.bottom
+        ) {
+          hit = true;
+        }
+      });
+      setOverlapping(hit);
+    }
+    function onScroll() {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        checkOverlap();
+        ticking = false;
+      });
+    }
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll, { passive: true });
+    checkOverlap();
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+    };
+  }, []);
+
+  const visible = pastHero && !footerVisible && !overlapping;
 
   return (
     <div
+      ref={stackRef}
       className={`fixed bottom-6 right-6 z-40 flex flex-col items-end gap-3 transition-all duration-300 ${
         visible ? "translate-y-0 opacity-100" : "pointer-events-none translate-y-4 opacity-0"
       }`}
     >
-      <BookInButton className="rounded-[6px] bg-cta px-8 py-4 font-switzer text-base font-medium uppercase tracking-wide text-white shadow-lg transition-all duration-200 ease-out hover:bg-aquatic hover:text-dark-ocean-blue hover:scale-105 hover:shadow-lg hover:shadow-cta/40 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cta focus-visible:ring-offset-2">
-        Book in
-      </BookInButton>
+      {/* Floating "Book your dive" pill removed - the footer, hero, nav,
+          and every section CTA already offer it; the fixed copy following
+          you down the whole page read as insistent rather than helpful.
+          Back-to-top alone stays, since it's a plain utility rather than a
+          sales prompt. */}
       <button
         type="button"
         onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}

@@ -101,26 +101,43 @@ async function run() {
 
   const siteContentExists = (await client.fetch(`count(*[_id == "siteContent"])`)) as number;
   if (siteContentExists > 0) {
-    console.log("  Site Content already exists — leaving your edits alone.");
-    // headerNavLinks was added to the schema after Site Content may have
-    // already been created, so backfill just that one field if it's empty,
-    // without touching anything else you've already edited there.
-    const existingNavLinks = await client.fetch(
-      `*[_id == "siteContent"][0].headerNavLinks`
-    );
-    if (!existingNavLinks || existingNavLinks.length === 0) {
-      console.log("  Backfilling missing headerNavLinks field only...");
-      await client
-        .patch("siteContent")
-        .set({
-          headerNavLinks: fallbackSiteContent.headerNavLinks.map((link, i) => ({
-            _key: `link-${i}`,
-            _type: "footerLink",
-            ...link,
-          })),
-        })
-        .commit();
-      console.log("  Done — header nav is now editable in the Studio.");
+    console.log("  Site Content already exists — checking for any empty fields to backfill...");
+    const existing = await client.fetch(`*[_id == "siteContent"][0]`);
+
+    // Only fill in fields that are genuinely empty/missing on the live
+    // document (undefined, null, empty string, or empty array). Anything
+    // you've actually typed or edited - even if it's short - is left
+    // completely alone.
+    const isEmpty = (value: unknown) =>
+      value === undefined ||
+      value === null ||
+      value === "" ||
+      (Array.isArray(value) && value.length === 0);
+
+    const patch: Record<string, unknown> = {};
+    for (const [key, fallbackValue] of Object.entries(fallbackSiteContent)) {
+      if (!isEmpty(existing?.[key])) continue; // real value already there, skip
+      if (key === "footerAboutLinks" || key === "footerExperienceLinks" || key === "footerLegalLinks" || key === "headerNavLinks") {
+        patch[key] = (fallbackValue as { id: string; label: string }[]).map((link, i) => ({
+          _key: `link-${i}`,
+          _type: "footerLink",
+          ...link,
+        }));
+      } else if (key !== "whoWeAreImage" && key !== "notFoundImage") {
+        // Image fields can't be backfilled this way (they need an actual
+        // uploaded asset, not seeded from a local file path), so those are
+        // deliberately skipped here - upload those manually in the Studio.
+        patch[key] = fallbackValue;
+      }
+    }
+
+    const fieldsToFill = Object.keys(patch);
+    if (fieldsToFill.length === 0) {
+      console.log("  Everything's already filled in — nothing to backfill.");
+    } else {
+      console.log(`  Backfilling ${fieldsToFill.length} empty field(s): ${fieldsToFill.join(", ")}`);
+      await client.patch("siteContent").set(patch).commit();
+      console.log("  Done.");
     }
   } else {
     console.log("Seeding Site Content (Hero, 404 page, footer, and all section headings)...");

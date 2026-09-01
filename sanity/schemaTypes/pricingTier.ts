@@ -18,6 +18,12 @@ export default defineType({
       description: 'e.g. "3 Days", "1 Month"',
     }),
     defineField({
+      name: "step",
+      title: "Ladder step",
+      description: 'Short verb-phrase framing this tier\'s place in the progression, e.g. "Try it", "Master it".',
+      type: "string",
+    }),
+    defineField({
       name: "price",
       title: "Price",
       type: "string",
@@ -28,7 +34,7 @@ export default defineType({
       name: "features",
       title: "Included features",
       type: "array",
-      of: [{ type: "string" }],
+      of: [{ type: "pricingFeature" }],
     }),
     defineField({
       name: "bonus",
@@ -36,10 +42,23 @@ export default defineType({
       type: "string",
     }),
     defineField({
+      name: "goodFor",
+      title: "\"Good for\" positioning line (optional)",
+      type: "string",
+      description: 'Shown in the same highlighted box as Bonus, for tiers that don\'t have one - e.g. "First-time freedivers". Leave blank if Bonus is filled in above.',
+    }),
+    defineField({
       name: "quote",
-      title: "Testimonial quote",
+      title: "Testimonial quote (short - one line)",
       type: "text",
-      rows: 3,
+      rows: 2,
+    }),
+    defineField({
+      name: "quoteAuthor",
+      title: "Quote attribution",
+      description: 'e.g. "Student" - kept generic since these are trimmed marketing lines, not sourced testimonials.',
+      type: "string",
+      initialValue: "Student",
     }),
     defineField({
       name: "popular",

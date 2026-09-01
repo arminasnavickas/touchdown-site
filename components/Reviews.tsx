@@ -3,17 +3,25 @@
 import { useEffect, useRef, useState } from "react";
 import FadeImage from "./FadeImage";
 import ArticleModal from "./ArticleModal";
-import Blob from "./Blob";
 import Reveal from "./Reveal";
 import type { Review } from "@/lib/content";
+
+// Was a bare "#FBBF24" typed twice below with no traceable source - now
+// named after the same rating-star token added to tailwind.config.ts. SVG
+// fill/stroke attributes can't consume a Tailwind class directly, so the
+// token's value is mirrored here as a plain constant rather than left as
+// two disconnected inline hexes; the config comment explains why an
+// off-palette amber is the deliberate choice for a star rating rather than
+// reusing cta/aquatic.
+const RATING_STAR_COLOR = "#FBBF24";
 
 function StarIcon({ filled }: { filled: boolean }) {
   return (
     <svg
       viewBox="0 0 20 20"
       className="size-4"
-      fill={filled ? "#FBBF24" : "none"}
-      stroke={filled ? "#FBBF24" : "#D1D5DB"}
+      fill={filled ? RATING_STAR_COLOR : "none"}
+      stroke={filled ? RATING_STAR_COLOR : "#D1D5DB"}
       strokeWidth="1"
     >
       <path d="M10 1.5l2.6 5.4 5.9.8-4.3 4.2 1 5.9L10 15l-5.2 2.8 1-5.9L1.5 7.7l5.9-.8L10 1.5Z" />
@@ -63,34 +71,53 @@ function ReviewCard({
   }, [review.quote]);
 
   return (
+    // Reviewer-led, not quote-led: the byline (photo/name/role/rating) now
+    // opens the card with a divider underneath, and the quote follows below
+    // it - reads as "who said it" before "what they said", closer to a
+    // standard testimonial card than the earlier magazine pull-quote
+    // treatment. Card's own styling (flat shadow-sm, rounded-lg, gradient
+    // background, dimensions) is unchanged - only the internal order moved.
+    // Deliberately the one light/white-background card type on the page -
+    // every other card (pricing, schedule, facility, team) stays dark-on-
+    // navy. Kept intentionally: bright "paper" cards read as real, camera-
+    // roll testimonials rather than another dark UI surface, a common and
+    // legible convention for reviews specifically - the rest of the site's
+    // dark system isn't broken so much as this one section is doing a
+    // different, self-contained job (quoting someone else's words, not
+    // presenting the brand's own content).
     <div
-      className="flex h-full w-full flex-col gap-3 rounded-lg border border-transparent p-8 shadow-md transition-all duration-300 hover:-translate-y-0.5 hover:border-cta/60 hover:shadow-lg hover:shadow-cta/10 md:w-[360px] md:shrink-0 md:snap-start"
+      className="flex h-full w-[80%] shrink-0 flex-col gap-3 rounded-lg p-6 shadow-sm transition-shadow duration-300 hover:shadow-md snap-start sm:w-[320px]"
       style={{
         backgroundImage:
           "linear-gradient(180deg, #FFFFFF 24.83%, rgba(208,235,242,0.1) 98.162%), linear-gradient(#FFFFFF, #FFFFFF)",
       }}
     >
-      <div className="flex items-center gap-3">
+      {/* Reviewer row - photo/name/role left, rating right, with a divider
+          below it separating the byline from the quote that follows. */}
+      <div className="flex items-center gap-2.5 border-b border-dark-ocean-blue/10 pb-3">
         <FadeImage
           src={review.image}
           alt={review.name}
-          wrapperClassName="size-[80px] shrink-0 rounded-full"
-          className="h-full w-full object-cover transition-transform duration-300 hover:scale-110"
+          wrapperClassName="size-9 shrink-0 rounded-full"
+          className="h-full w-full object-cover"
         />
-        <div className="flex flex-1 flex-col gap-1">
-          <p className="font-switzer text-2xl font-light tracking-tight text-navy">
+        <div className="flex flex-1 flex-col gap-0.5">
+          <p className="font-switzer text-sm font-medium text-navy">
             {review.name}
           </p>
           {review.role && (
-            <p className="font-switzer text-base text-dark-ocean-blue/80">{review.role}</p>
+            <p className="font-switzer text-xs text-dark-ocean-blue/60">{review.role}</p>
           )}
-          <div className="flex items-center gap-2">
-            <StarRating rating={review.rating} />
-            <p className="font-switzer text-base text-black">{review.rating}</p>
-          </div>
         </div>
+        <StarRating rating={review.rating} />
       </div>
-      <p ref={quoteRef} className="line-clamp-4 font-switzer text-lg font-light text-dark-ocean-blue/90">
+      <span aria-hidden className="font-switzer text-4xl font-light leading-none text-cta/25">
+        &ldquo;
+      </span>
+      <p
+        ref={quoteRef}
+        className="-mt-3 line-clamp-4 font-switzer text-[15px] font-light leading-relaxed text-dark-ocean-blue"
+      >
         {review.quote}
       </p>
       {overflows && (
@@ -127,11 +154,6 @@ export default function Reviews({
   };
 
   const onPointerDown = (e: React.PointerEvent) => {
-    // Drag-to-scroll is a desktop-only affordance for the horizontal
-    // slider. On mobile the list is a normal vertical stack now, so this
-    // must bail out - capturing the pointer here would otherwise fight
-    // with the browser's native vertical touch-scroll on a phone.
-    if (!window.matchMedia("(min-width: 768px)").matches) return;
     const el = scrollerRef.current;
     if (!el) return;
     if ((e.target as HTMLElement).closest("button, a")) return;
@@ -154,12 +176,13 @@ export default function Reviews({
   return (
     <section
       id="reviews"
-      className="relative flex flex-col items-center gap-[70px] overflow-hidden px-6 py-28 md:px-16 scroll-mt-20"
+      className="relative flex flex-col items-center gap-12 overflow-hidden px-6 py-20 md:gap-16 md:px-16 scroll-mt-20"
     >
-      <Blob className="right-0 top-[60%] h-[400px] w-[400px] -translate-y-1/2" />
-
       <Reveal>
-        <div className="relative z-10 flex flex-col items-center gap-10 text-center">
+        <div className="relative z-10 flex flex-col items-center gap-4 text-center">
+          <p className="font-switzer text-xs font-semibold uppercase tracking-[0.25em] text-cta md:text-sm">
+            The proof is in the pudding
+          </p>
           <h2 className="font-switzer text-4xl font-extralight tracking-tight text-danish-blue md:text-6xl">
             Reviews
           </h2>
@@ -176,11 +199,14 @@ export default function Reviews({
           onPointerMove={onPointerMove}
           onPointerUp={endDrag}
           onPointerLeave={endDrag}
-          className={`flex w-full flex-col gap-6 px-1 pb-4 md:flex-row md:overflow-x-auto [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden ${
-            isDragging ? "md:cursor-grabbing md:select-none" : "md:cursor-grab md:snap-x md:snap-mandatory md:scroll-smooth"
+          className={`flex w-full gap-6 overflow-x-auto px-1 pb-4 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden ${
+            isDragging ? "cursor-grabbing select-none" : "cursor-grab snap-x snap-mandatory scroll-smooth"
           }`}
           style={{ scrollPaddingLeft: "1px" }}
         >
+          {/* Big featured testimonial removed - every review, including
+              what used to be reviews[0], now shows as an equal small card
+              in this scroller. */}
           {reviews.map((review, i) => (
             <ReviewCard key={review.name} review={review} index={i} onOpen={setOpenIndex} />
           ))}
@@ -212,6 +238,8 @@ export default function Reviews({
             avatar: reviews[openIndex].image,
             paragraphs: [reviews[openIndex].quote],
           }}
+          currentIndex={openIndex}
+          total={reviews.length}
           onClose={() => setOpenIndex(null)}
           onPrev={() => setOpenIndex((reviews.length + openIndex - 1) % reviews.length)}
           onNext={() => setOpenIndex((openIndex + 1) % reviews.length)}

@@ -10,6 +10,7 @@ type FadeImageProps = {
   eager?: boolean;
   srcSet?: string;
   sizes?: string;
+  style?: React.CSSProperties;
 };
 
 /**
@@ -27,6 +28,7 @@ export default function FadeImage({
   eager = false,
   srcSet,
   sizes,
+  style,
 }: FadeImageProps) {
   const [loaded, setLoaded] = useState(false);
   const [errored, setErrored] = useState(false);
@@ -80,6 +82,7 @@ export default function FadeImage({
         fetchPriority={eager ? "high" : "auto"}
         onLoad={() => setLoaded(true)}
         onError={() => setErrored(true)}
+        style={style}
         className={`transition-opacity duration-500 ${loaded ? "opacity-100" : "opacity-0"} ${className}`}
       />
     </div>

@@ -21,15 +21,18 @@ export function useLightbox() {
 
 function CloseIcon() {
   return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="size-8">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="size-5">
       <path d="M6 6l12 12M18 6 6 18" strokeLinecap="round" />
     </svg>
   );
 }
 
+// Sized down from size-8 to fit a smaller, more minimal 44-48px hit area
+// (was a bare icon with no defined touch target at all) without the icon
+// itself feeling oversized inside it.
 function ChevronIcon({ direction }: { direction: "left" | "right" }) {
   return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="size-8">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="size-5 md:size-6">
       <path
         d={direction === "left" ? "M15 6l-6 6 6 6" : "M9 6l6 6-6 6"}
         strokeLinecap="round"
@@ -52,6 +55,21 @@ export default function LightboxProvider({ children }: { children: React.ReactNo
   // does nothing.
   const touchState = useRef({ startX: 0, startY: 0, tracking: false });
   const justSwiped = useRef(false);
+
+  // Focus the close button the moment the lightbox opens, so keyboard users
+  // land somewhere inside the dialog instead of on whatever happened to be
+  // focused on the page behind it. Keyed off the open/closed transition
+  // specifically (not every state change) - navigating with prev/next also
+  // produces a new state object, and re-stealing focus on every image
+  // change would be disruptive rather than helpful.
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const wasOpenRef = useRef(false);
+  useEffect(() => {
+    if (state && !wasOpenRef.current) {
+      closeButtonRef.current?.focus();
+    }
+    wasOpenRef.current = Boolean(state);
+  }, [state]);
 
   const onTouchStart = (e: React.TouchEvent) => {
     const t = e.touches[0];
@@ -138,20 +156,45 @@ export default function LightboxProvider({ children }: { children: React.ReactNo
 
       {state && (
         <div
-          className="fixed inset-0 z-[100] flex items-center justify-center bg-dark-ocean-blue/50 p-6 backdrop-blur-sm"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Photo gallery"
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/78 p-3 backdrop-blur-md md:p-6"
           onClick={onOverlayClick}
           onTouchStart={onTouchStart}
           onTouchEnd={onTouchEnd}
         >
-          <button
-            type="button"
-            onClick={close}
-            aria-label="Close"
-            className="absolute right-4 top-4 flex size-11 items-center justify-center rounded-full text-white transition hover:text-aquatic"
-          >
-            <CloseIcon />
-          </button>
+          {/* Counter + close share one top-right cluster, same pattern used
+              in the site's other modal (ArticleModal) - plain text with no
+              background of its own, so it reads as a quiet label rather
+              than another piece of UI competing with the photo. */}
+          <div className="absolute right-4 top-4 z-10 flex items-center gap-4 md:right-6 md:top-6">
+            {state.images.length > 1 && (
+              <span className="font-switzer text-xs font-medium tracking-widest text-white/70 tabular-nums">
+                {String(state.index + 1).padStart(2, "0")} / {String(state.images.length).padStart(2, "0")}
+              </span>
+            )}
+            <button
+              ref={closeButtonRef}
+              type="button"
+              onClick={close}
+              aria-label="Close gallery"
+              className="flex size-12 items-center justify-center rounded-full text-white transition hover:text-aquatic"
+            >
+              <CloseIcon />
+            </button>
+          </div>
 
+          {/* Pulled in from the viewport edge to sit close to the image
+              itself (was a flat left-4/left-8 regardless of how wide the
+              image actually was) - scales with the image's own max-width so
+              the arrows stay near it rather than stranded out at the
+              screen's edge on a wide viewport. Vertically centered relative
+              to the dialog (previously unset, so its resting position was
+              whatever the browser's default static placement worked out to
+              for an absolutely-positioned flex child - not reliably
+              centered). A subtle circular hit area (was a bare icon with no
+              defined touch target) at the requested ~44-48px. */}
           {state.images.length > 1 && (
             <button
               type="button"
@@ -159,8 +202,8 @@ export default function LightboxProvider({ children }: { children: React.ReactNo
                 e.stopPropagation();
                 goPrev();
               }}
-              aria-label="Previous image"
-              className="absolute left-4 text-white transition hover:text-aquatic md:left-8"
+              aria-label={`Previous image (${state.index === 0 ? state.images.length : state.index} of ${state.images.length})`}
+              className="absolute left-[3vw] top-1/2 z-10 flex size-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-white backdrop-blur-sm transition hover:bg-white/20 hover:text-aquatic md:size-12"
             >
               <ChevronIcon direction="left" />
             </button>
@@ -169,9 +212,9 @@ export default function LightboxProvider({ children }: { children: React.ReactNo
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={state.images[state.index]}
-            alt=""
+            alt={`Enlarged image ${state.index + 1} of ${state.images.length}`}
             onClick={(e) => e.stopPropagation()}
-            className="max-h-[85vh] max-w-[90vw] rounded-lg object-contain"
+            className="max-h-[90vh] max-w-[94vw] rounded-md object-contain md:max-h-[85vh] md:max-w-[87vw] md:rounded-lg"
           />
 
           {state.images.length > 1 && (
@@ -181,8 +224,8 @@ export default function LightboxProvider({ children }: { children: React.ReactNo
                 e.stopPropagation();
                 goNext();
               }}
-              aria-label="Next image"
-              className="absolute right-4 text-white transition hover:text-aquatic md:right-8"
+              aria-label={`Next image (${state.index === state.images.length - 1 ? 1 : state.index + 2} of ${state.images.length})`}
+              className="absolute right-[3vw] top-1/2 z-10 flex size-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-white backdrop-blur-sm transition hover:bg-white/20 hover:text-aquatic md:size-12"
             >
               <ChevronIcon direction="right" />
             </button>

@@ -1,6 +1,7 @@
 import Hero from "@/components/Hero";
 import Gallery from "@/components/Gallery";
 import WhoWeAre from "@/components/WhoWeAre";
+import OurFacility from "@/components/OurFacility";
 import HowItWorks from "@/components/HowItWorks";
 import WhatYouGet from "@/components/WhatYouGet";
 import TrainingRhythm from "@/components/TrainingRhythm";
@@ -10,6 +11,7 @@ import Pricing from "@/components/Pricing";
 import MeetOurTeam from "@/components/MeetOurTeam";
 import Reviews from "@/components/Reviews";
 import Faq from "@/components/Faq";
+import OurFriends from "@/components/OurFriends";
 import FloatingActions from "@/components/FloatingActions";
 import {
   getSiteContent,
@@ -24,6 +26,8 @@ import {
   getHowItWorksSteps,
   getGalleryImages,
   getHeroSlides,
+  getFacilityPhotos,
+  getFriendLogos,
 } from "@/lib/content";
 
 // Revalidate content from Sanity every 60s (falls back to hardcoded content
@@ -44,6 +48,8 @@ export default async function Home() {
     howItWorksSteps,
     galleryImages,
     heroSlides,
+    facilityPhotos,
+    friendLogos,
   ] = await Promise.all([
     getSiteContent(),
     getFaqItems(),
@@ -57,6 +63,8 @@ export default async function Home() {
     getHowItWorksSteps(),
     getGalleryImages(),
     getHeroSlides(),
+    getFacilityPhotos(),
+    getFriendLogos(),
   ]);
 
   return (
@@ -73,6 +81,11 @@ export default async function Home() {
         subtitle={siteContent.howItWorksSubtitle}
         steps={howItWorksSteps}
       />
+      <OurFacility
+        heading={siteContent.facilityHeading}
+        copy={siteContent.facilityCopy}
+        images={facilityPhotos}
+      />
       <WhatYouGet items={whatYouGetItems} heading={siteContent.whatYouGetHeading} />
       <TrainingRhythm days={scheduleDays} heading={siteContent.trainingRhythmHeading} />
       <WaterDaySchedule
@@ -85,10 +98,17 @@ export default async function Home() {
         heading={siteContent.dryDayHeading}
         subcopy={siteContent.dryDaySubcopy}
       />
-      <Pricing tiers={pricingTiers} kicker={siteContent.pricingKicker} />
+      <Pricing tiers={pricingTiers} kicker={siteContent.pricingKicker} contactEmail={siteContent.footerEmail} />
       <MeetOurTeam members={teamMembers} kicker={siteContent.teamKicker} />
-      <Reviews reviews={reviews} subtitle={siteContent.reviewsSubtitle} />
-      <Faq items={faqItems} />
+      {/* showReviews: a Sanity toggle (Site Content > Show Reviews section)
+          so the whole section can be hidden/brought back later without a
+          code change - see app/(site)/layout.tsx for the matching nav/
+          footer link filtering. */}
+      {siteContent.showReviews && (
+        <Reviews reviews={reviews} subtitle={siteContent.reviewsSubtitle} />
+      )}
+      <Faq items={faqItems} contactEmail={siteContent.footerEmail} />
+      <OurFriends logos={friendLogos} heading={siteContent.friendsHeading} />
       <FloatingActions />
     </main>
   );

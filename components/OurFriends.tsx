@@ -17,7 +17,11 @@ export default function OurFriends({
   if (logos.length === 0) return null;
 
   return (
-    <section className="relative flex flex-col items-center gap-10 overflow-hidden px-6 py-16 md:px-16 md:py-20">
+    // py-14 md:py-16 (was py-16/20) - moved into the site's "compact"
+    // padding tier alongside Water/Dry Day Schedule, Weekly Training
+    // Rhythm, and What You Get, matching this section's own comment above
+    // ("understated supporting beat treatment used by What You Get").
+    <section className="relative flex flex-col items-center gap-10 overflow-hidden px-6 py-14 md:px-16 md:py-16">
       <Reveal className="w-full">
         {/* A fixed grid (one column per logo) always lays out on a single
             row, no matter the viewport width or how many logos there are -

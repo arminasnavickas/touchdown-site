@@ -257,10 +257,7 @@ export default function Hero({
             everywhere else the CTA appears (footer, pricing cards); this
             was the one spot still using the old generic label. */}
         <Reveal delay={160}>
-          <BookInButton className="flex w-fit items-center gap-2 rounded-[6px] bg-cta px-8 py-4 font-switzer text-base font-medium uppercase tracking-wide text-white transition-all duration-200 ease-out hover:bg-aquatic hover:text-dark-ocean-blue hover:scale-105 hover:shadow-lg hover:shadow-cta/40 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cta focus-visible:ring-offset-2">
-            Book your dive
-            <span aria-hidden>→</span>
-          </BookInButton>
+          <BookInButton className="w-fit" />
         </Reveal>
       </div>
 

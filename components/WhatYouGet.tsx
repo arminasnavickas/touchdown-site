@@ -11,22 +11,40 @@ export default function WhatYouGet({
   heading: string;
 }) {
   return (
-    <section className="relative flex flex-col items-center gap-14 overflow-hidden px-6 py-20 md:px-16">
-      <Blob className="left-0 top-1/4 h-[360px] w-[360px] -translate-x-1/3" />
-      <Blob className="bottom-0 right-0 h-[380px] w-[380px] translate-x-1/4" />
+    // A light supporting beat between How It Works and Training Rhythm, not
+    // a section of its own weight - py and the heading-to-list gap trimmed
+    // down from the site's flat py-20/gap-14 so a handful of short
+    // title/copy rows doesn't sit inside as much empty space as the bigger
+    // sections around it.
+    <section className="relative flex flex-col items-center gap-10 px-6 py-14 md:px-16 md:py-16">
+      {/* Top-center now (was dead-center, before that top-right) - bled
+          upward past this section's own top edge into Where You'll Train
+          above (this section renders after it in the DOM, so it naturally
+          paints on top in the overlap zone). overflow-hidden dropped again
+          since it's crossing the section boundary once more. opacity-40
+          knocks it down from Blob's own baked-in 60% alpha (~24%
+          effective). */}
+      <Blob className="top-[-120px] left-1/2 h-[380px] w-[380px] -translate-x-1/2 opacity-40" />
       <Reveal className="relative z-10">
         <h2 className="text-center font-switzer text-4xl font-extralight tracking-tight text-white md:text-6xl">
           {heading}
         </h2>
       </Reveal>
-      <div className="relative z-10 w-full max-w-6xl divide-y divide-white/10">
+      {/* max-w-4xl (was max-w-6xl, a one-off ~1152px container that didn't
+          match any other section) - reuses the same 896px width already
+          established for paired/list content elsewhere (Faq, OurFriends),
+          instead of the site alternating between three unrelated
+          container widths. At 2 columns this keeps each line of body copy
+          in the ~70-char range that's actually comfortable to read, rather
+          than stretching to the full section width. */}
+      <div className="relative z-10 w-full max-w-4xl divide-y divide-white/10">
         {items.map((item, i) => (
           <Reveal key={item.title} delay={i * 80}>
             <div className="grid grid-cols-1 items-center gap-4 py-10 md:grid-cols-2 md:gap-12">
-              <p className="font-switzer text-3xl font-thin leading-none tracking-tight text-cta md:text-6xl">
+              <p className="font-switzer text-2xl font-medium leading-none tracking-tight text-white md:text-3xl">
                 <TypewriterText text={item.title} />
               </p>
-              <p className="font-switzer text-xl font-light leading-relaxed text-white/80">
+              <p className="font-switzer text-[15px] font-light leading-relaxed text-white/70">
                 {item.copy}
               </p>
             </div>

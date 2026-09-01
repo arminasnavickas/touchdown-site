@@ -45,6 +45,13 @@ export default defineConfig({
                           .defaultOrdering([{ field: "order", direction: "asc" }])
                       ),
                     S.listItem()
+                      .title("Facility Photo")
+                      .child(
+                        S.documentTypeList("facilityPhoto")
+                          .title("Facility Photo")
+                          .defaultOrdering([{ field: "order", direction: "asc" }])
+                      ),
+                    S.listItem()
                       .title("How It Works Step")
                       .child(
                         S.documentTypeList("howItWorksStep")
@@ -100,6 +107,16 @@ export default defineConfig({
                           .title("FAQ Item")
                           .defaultOrdering([{ field: "order", direction: "asc" }])
                       ),
+                    // Rendered last on the homepage, right after FAQ - kept
+                    // in that same spot here so the Studio list order
+                    // matches the page order.
+                    S.listItem()
+                      .title("Friend Logo")
+                      .child(
+                        S.documentTypeList("friendLogo")
+                          .title("Friend Logo")
+                          .defaultOrdering([{ field: "order", direction: "asc" }])
+                      ),
                   ])
               ),
             S.listItem()
@@ -114,6 +131,17 @@ export default defineConfig({
                         S.documentTypeList("blogPost")
                           .title("Blog Post")
                           .defaultOrdering([{ field: "publishedAt", direction: "desc" }])
+                      ),
+                    // Each Blog Post's "Author" field references one of
+                    // these - a name + photo that isn't tied to a Team
+                    // Member, so a post can credit a guest writer or any
+                    // custom byline. The type already existed in the schema
+                    // (sanity/schemaTypes/author.ts) but had no sidebar
+                    // entry, same gap Facility Photo had before it got one.
+                    S.listItem()
+                      .title("Author")
+                      .child(
+                        S.documentTypeList("author").title("Author")
                       ),
                   ])
               ),

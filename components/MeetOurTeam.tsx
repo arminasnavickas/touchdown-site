@@ -1,13 +1,37 @@
 "use client";
 
 import { useState } from "react";
+import Blob from "./Blob";
 import FadeImage from "./FadeImage";
 import { useLightbox } from "./LightboxContext";
 import type { TeamMember } from "@/lib/content";
-import { InstagramIcon, GlobeIcon } from "./SocialIcons";
-import Blob from "./Blob";
 import Reveal from "./Reveal";
 import ArticleModal from "./ArticleModal";
+
+// Per-member vertical crop offset for the hero photo (CSS object-position
+// Y%). Most source photos read fine cropped from the very top (0%, the
+// default below); a few have extra blank studio backdrop above the
+// subject's head, so only those get nudged down here instead of shifting
+// the shared default and risking clipping into everyone else's hair.
+// Currently empty - Maksim's photo used to need an 18% nudge here to skip
+// blank studio backdrop above his head, but that was because the source
+// file was a tall 2:3 portrait while every other team photo is a square
+// (~1:1). That mismatch was also why his lightbox popup had a visibly
+// different shape from everyone else's. Fixed at the source instead: the
+// file itself is now cropped to match the rest of the team's square ratio,
+// so this map goes back to needing per-member overrides only if a future
+// photo genuinely needs one.
+const PHOTO_Y_OFFSET_BY_NAME: Record<string, number> = {};
+
+// Per-member focal position for the PROFILE PANEL's hero image (separate
+// from the card crop above - the modal frame is a completely different
+// aspect ratio/height, so a member who needs no override on the card can
+// still need one here, and vice versa). Defaults to "center top" for every
+// member, which keeps the full head in frame at the new taller hero height;
+// override individual entries only if a specific photo's subject sits low
+// enough in the source frame that top-anchoring cuts their shoulders off
+// awkwardly instead.
+const MODAL_IMAGE_POSITION_BY_NAME: Record<string, string> = {};
 
 function TeamCard({
   member,
@@ -20,69 +44,118 @@ function TeamCard({
 }) {
   const { openLightbox } = useLightbox();
   return (
-    <div className="group flex h-full w-full flex-col overflow-hidden rounded-lg bg-dark-ocean-blue shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-cta/10">
+    // Un-boxed - the old dark-ocean-blue rounded card with its own shadow
+    // and hover-lift made a grid of eight read as a dense wall of tiles.
+    // The portrait now sits straight on the section's own navy background
+    // (no card chrome at all beyond the photo's own rounded corners), taller
+    // and genuinely portrait-shaped (was a short 6/3.6 landscape crop) so
+    // the person, not the card, is what the eye lands on.
+    // data-fab-avoid moved up to cover the whole card (was only on the text
+    // block below) - the floating Book/back-to-top stack was still landing
+    // on the photo itself, since only the text portion opted out of the
+    // overlap check.
+    <div data-fab-avoid className="group flex h-full w-full flex-col gap-3">
       <button
         type="button"
         onClick={() => openLightbox([member.image], 0)}
-        className="relative -mb-px aspect-[6/4.9] w-full cursor-zoom-in overflow-hidden"
+        className="relative aspect-[4/5] w-full cursor-zoom-in overflow-hidden rounded-md"
         aria-label="View full image"
       >
         <FadeImage
           src={member.image}
           alt={member.name}
           wrapperClassName="h-full w-full"
-          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+          className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+          style={{ objectPosition: `50% ${PHOTO_Y_OFFSET_BY_NAME[member.name] ?? 0}%` }}
         />
       </button>
 
-      <div className="flex flex-1 flex-col gap-4 p-5">
+      <div className="flex flex-1 flex-col gap-3">
         <div className="flex flex-col gap-1">
-          <p className="font-switzer text-3xl font-light tracking-tight text-aquatic">
+          {/* Name is the primary text element right after the photo -
+              deliberately the largest, boldest-weight text on the card. */}
+          <p className="font-switzer text-2xl font-medium tracking-tight text-white md:text-3xl">
             {member.name}
           </p>
-          {member.records && (
-            <p className="font-switzer text-sm font-medium uppercase tracking-wide text-cta">
-              {member.records}
-            </p>
-          )}
+          <p className="font-switzer text-xs font-medium uppercase tracking-wide text-cta">
+            {member.role}
+          </p>
         </div>
-        <p className="font-switzer text-xl font-light leading-relaxed text-white/80">
+        {/* Depth records removed from the card (still passed into the
+            ArticleModal below via `stats`, so they remain fully visible in
+            each member's popup) - the grid now leads with name/role/bio
+            only, kept clean and scannable; performance data lives one tap
+            away in the detailed profile instead of competing with it here. */}
+        {/* Clamped to 2 lines (was the full bio, uncapped) - now that the
+            photo is the dominant element and taller, letting every card's
+            bio run to a different length made the grid's bottom edge
+            ragged; the popup is still one tap away for the rest. Width
+            capped to 90% so the paragraph doesn't stretch edge-to-edge
+            across the card. */}
+        <p className="line-clamp-2 w-[90%] font-switzer text-[15px] font-light leading-relaxed text-white/70">
           {member.bio}
         </p>
-        <button
-          type="button"
-          onClick={() => onOpen(index)}
-          className="group/link relative inline-block w-fit font-switzer text-base font-medium text-cta transition hover:text-white"
-        >
-          Read more
-          <span className="absolute -bottom-1 left-0 h-[2px] w-0 bg-white transition-all duration-300 group-hover/link:w-full" />
-        </button>
-        {(member.instagram || member.website) && (
-          <div className="mt-auto flex gap-4 border-t border-white/10 pt-4 text-white/60">
+        {/* Bottom action row - Instagram (secondary, left, muted) and Meet
+            (primary, right, cyan) now share one baseline instead of Meet
+            sitting in its own row above the divider. The left wrapper
+            always renders (even with no instagram/website) so
+            justify-between always has two flex children and Meet stays
+            pinned to the row's right edge; mt-auto keeps this whole row at
+            the same vertical position across every card regardless of how
+            long each member's bio runs. pt-4 (was pt-3) gives the divider
+            slightly more breathing room before the action row below it. */}
+        <div className="mt-auto flex items-center justify-between gap-4 border-t border-white/10 pt-4">
+          <div className="flex items-center gap-4">
+            {/* Instagram as an intentional "Instagram ->" text link instead
+                of a lone icon - matches the treatment used in the modal
+                header, rather than an unlabeled glyph sitting on its own. */}
             {member.instagram && (
               <a
                 href={member.instagram}
                 target="_blank"
                 rel="noopener noreferrer"
-                aria-label={`${member.name} on Instagram`}
-                className="transition hover:text-cta"
+                className="flex items-center gap-1 font-switzer text-sm font-medium uppercase tracking-widest text-white/60 transition hover:text-cta"
               >
-                <InstagramIcon />
+                Instagram
+                <span aria-hidden>→</span>
               </a>
             )}
+            {/* Given the exact same "Website ->" text treatment as
+                Instagram above (was an icon-only GlobeIcon at 32px with no
+                visible label - both an inconsistent size next to this
+                14px text row and an unlabeled link a reader had to guess
+                at). Matching text treatment reads as one consistent pair
+                of external links instead of two different UI patterns for
+                the same kind of action. */}
             {member.website && (
               <a
                 href={member.website}
                 target="_blank"
                 rel="noopener noreferrer"
-                aria-label={`${member.name}'s website`}
-                className="transition hover:text-cta"
+                className="flex items-center gap-1 font-switzer text-sm font-medium uppercase tracking-widest text-white/60 transition hover:text-cta"
               >
-                <GlobeIcon />
+                Website
+                <span aria-hidden>→</span>
               </a>
             )}
           </div>
-        )}
+          {/* Personalized CTA ("Meet Gus") replacing the generic "Read more" -
+              styled like How It Works' demoted read-more link (small
+              uppercase text + arrow) rather than the old underline-on-hover
+              treatment, to match the rest of the site's secondary-link
+              style. Now the row's primary action, right-aligned opposite
+              Instagram. */}
+          <button
+            type="button"
+            onClick={() => onOpen(index)}
+            className="group/link flex shrink-0 items-center gap-1.5 font-switzer text-sm font-medium uppercase tracking-widest text-cta transition hover:text-white"
+          >
+            Meet {member.name.split(" ")[0]}
+            <span aria-hidden className="transition-transform duration-200 group-hover/link:translate-x-1">
+              →
+            </span>
+          </button>
+        </div>
       </div>
     </div>
   );
@@ -98,23 +171,44 @@ export default function MeetOurTeam({
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   return (
+    // Glow removed at one point, then brought back (see Blob below) - the
+    // team's own photography still carries most of this section, so this
+    // one stays at the top edge rather than sitting behind the photo grid
+    // itself. Gap trimmed from the old flat gap-[100px] to something more
+    // intentional.
     <section
       id="team"
-      className="relative flex flex-col items-center gap-[100px] overflow-hidden px-6 py-28 md:px-16 scroll-mt-20"
+      className="relative flex flex-col items-center gap-14 px-6 py-20 md:gap-16 md:px-16 scroll-mt-20"
     >
-      <Blob className="left-0 top-[8%] h-[320px] w-[320px]" />
-      <Blob className="bottom-[6%] right-0 h-[340px] w-[340px]" />
+      {/* Top-center, bled upward into Pricing above (same
+          later-section-paints-on-top logic as the other seam blobs on this
+          page; Pricing already has no overflow-hidden of its own - see
+          Pricing.tsx - so nothing on that side clips it either).
+          overflow-hidden dropped from this section for the same reason as
+          the others: it was clipping the blur into a hard line right at
+          the boundary. opacity-40 (was 30 - the site's standard glow
+          strength, see WaterDaySchedule.tsx for the full 3-tier scale) so
+          this reads the same as every other supporting-section glow
+          instead of one step dimmer for no particular reason. */}
+      <Blob className="top-[-120px] left-1/2 h-[380px] w-[380px] -translate-x-1/2 opacity-40" />
       <Reveal>
-        <div className="relative z-10 flex flex-col items-center gap-10 text-center">
+        {/* "The people / Behind the practice" (was "Meet the team") - an
+            eyebrow + statement pairing, matching the editorial masthead
+            used elsewhere on the page, framing this section as being about
+            credibility and experience before a single portrait is seen. */}
+        <div className="relative z-10 flex max-w-2xl flex-col items-center gap-4 text-center">
+          <p className="font-switzer text-xs font-semibold uppercase tracking-[0.25em] text-cta md:text-sm">
+            The people
+          </p>
           <h2 className="font-switzer text-4xl font-extralight tracking-tight text-white md:text-6xl">
-            Meet our team
+            Behind the practice
           </h2>
-          <p className="font-switzer text-base font-normal uppercase tracking-widest text-danish-blue">
+          <p className="font-switzer text-[15px] font-light leading-relaxed text-white/70">
             {kicker}
           </p>
         </div>
       </Reveal>
-      <div className="relative z-10 grid w-full grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="relative z-10 grid w-full grid-cols-1 gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-4">
         {members.map((member, i) => (
           <Reveal key={member.name} delay={i * 80} className="h-full">
             <TeamCard member={member} index={i} onOpen={setOpenIndex} />
@@ -126,16 +220,33 @@ export default function MeetOurTeam({
         <ArticleModal
           content={{
             title: members[openIndex].name,
-            kicker: members[openIndex].records ?? undefined,
-            avatar: members[openIndex].image,
+            // Full portrait via `image` (the rectangular hero-photo
+            // treatment already built for How It Works), not `avatar` - the
+            // small circular crop reads as a footnote, not the header photo
+            // a profile panel should open with. "tall" + top-anchored so
+            // the full head stays in frame instead of getting cropped off
+            // the way the old fixed-height hero did.
+            image: members[openIndex].image,
+            imageSize: "tall",
+            imagePosition: MODAL_IMAGE_POSITION_BY_NAME[members[openIndex].name] ?? "center top",
+            subtitle: members[openIndex].role,
             instagram: members[openIndex].instagram ?? undefined,
-            paragraphs: [
-              ...members[openIndex].fullBio,
-              ...(members[openIndex].qualifications.length
-                ? [`Background & qualifications: ${members[openIndex].qualifications.join(". ")}.`]
-                : []),
-            ],
+            // Bare values here (no leading "-") to match the popup's own
+            // stat-grid convention - the card is what prepends the minus
+            // sign for its compact inline records line.
+            stats: members[openIndex].records?.map((record) => ({
+              value: record.value,
+              label: record.label,
+            })),
+            sections: members[openIndex].bioSections,
+            // Still required by ArticleModalContent's type, but only used
+            // as a fallback when `sections` is empty - every team member
+            // has bioSections, so this never actually renders.
+            paragraphs: members[openIndex].fullBio,
+            qualifications: members[openIndex].qualifications,
           }}
+          currentIndex={openIndex}
+          total={members.length}
           onClose={() => setOpenIndex(null)}
           onPrev={() => setOpenIndex((members.length + openIndex - 1) % members.length)}
           onNext={() => setOpenIndex((openIndex + 1) % members.length)}

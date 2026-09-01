@@ -9,16 +9,24 @@ import scheduleCard from "./scheduleCard";
 import whatYouGetItem from "./whatYouGetItem";
 import howItWorksStep from "./howItWorksStep";
 import galleryImage from "./galleryImage";
+import facilityPhoto from "./facilityPhoto";
+import friendLogo from "./friendLogo";
 import heroSlide from "./heroSlide";
 import { privacyPolicy, termsAndConditions } from "./legalPages";
 import footerLink from "./footerLink";
 import author from "./author";
+import pricingFeature from "./pricingFeature";
+import teamRecord from "./teamRecord";
+import teamBioSection from "./teamBioSection";
 
 export const schemaTypes = [
   siteContent,
   faqItem,
   teamMember,
+  teamRecord,
+  teamBioSection,
   pricingTier,
+  pricingFeature,
   review,
   blogPost,
   scheduleDay,
@@ -26,6 +34,8 @@ export const schemaTypes = [
   whatYouGetItem,
   howItWorksStep,
   galleryImage,
+  facilityPhoto,
+  friendLogo,
   heroSlide,
   privacyPolicy,
   termsAndConditions,
