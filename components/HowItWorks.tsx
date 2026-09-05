@@ -23,6 +23,12 @@ import type { HowItWorksStep } from "@/lib/content";
 // values shrunk down.
 const IMAGE_HEIGHT_BY_INDEX = ["h-[140px] md:h-[160px]", "h-[160px] md:h-[185px]", "h-[180px] md:h-[210px]", "h-[200px] md:h-[240px]"];
 const TITLE_SIZE_BY_INDEX = ["text-xl md:text-[26px]", "text-xl md:text-[28px]", "text-2xl md:text-[31px]", "text-2xl md:text-[34px]"];
+// Desktop-only crop nudges so the default center-crop doesn't cut off
+// people's heads in these particular photos. md: prefix keeps mobile on
+// the original center crop untouched. Lower Y% reveals more of the top
+// of the source photo (fixes heads cut off at the top); higher Y%
+// reveals more of the bottom.
+const OBJECT_POSITION_BY_INDEX = ["md:object-[center_20%]", "md:object-[center_25%]", "md:object-[center_75%]", ""];
 
 function ProgressionStep({
   index,
@@ -76,7 +82,7 @@ function ProgressionStep({
             src={image}
             alt={title}
             wrapperClassName="h-full w-full"
-            className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+            className={`h-full w-full object-cover ${OBJECT_POSITION_BY_INDEX[index]} transition-transform duration-500 ease-out group-hover:scale-105`}
           />
         </button>
 
