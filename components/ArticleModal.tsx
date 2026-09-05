@@ -41,6 +41,11 @@ export type ArticleModalContent = {
   imageSize?: "compact" | "tall";
   imageFit?: "cover" | "contain";
   imagePosition?: string;
+  // Desktop-only Tailwind object-position override (e.g. "md:object-[center_20%]"),
+  // for callers that need a per-image crop nudge only above the mobile
+  // breakpoint. Takes precedence over imagePosition/the imageSize default
+  // when set. Mobile keeps the imagePosition/default crop untouched.
+  imagePositionClassName?: string;
   avatar?: string;
   instagram?: string;
   paragraphs: string[];
@@ -224,10 +229,12 @@ export default function ArticleModal({
               alt={content.title}
               eager
               wrapperClassName="h-full w-full"
-              className="h-full w-full"
+              className={`h-full w-full ${content.imagePositionClassName ?? ""}`}
               style={{
                 objectFit: content.imageFit ?? "cover",
-                objectPosition: content.imagePosition ?? (content.imageSize === "tall" ? "center top" : "center"),
+                objectPosition: content.imagePositionClassName
+                  ? undefined
+                  : content.imagePosition ?? (content.imageSize === "tall" ? "center top" : "center"),
               }}
             />
           </div>
