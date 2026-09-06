@@ -158,18 +158,23 @@ export default function ArticleModal({
           around it - a real "near-full-screen modal" rather than a desktop
           dialog with its edges just barely inside a small viewport. */}
       <div
-        className="modal-scroll relative max-h-[94vh] w-full max-w-[800px] overflow-y-auto rounded-lg bg-white md:max-h-[85vh]"
+        className="relative flex max-h-[94vh] w-full max-w-[800px] flex-col overflow-hidden rounded-lg bg-white md:max-h-[85vh]"
         onClick={(e) => e.stopPropagation()}
         onTouchStart={onTouchStart}
         onTouchEnd={onTouchEnd}
       >
         {/* Real header bar (not a floating overlay) - sits in normal flow
-            above the hero image and stays pinned via `sticky` as the modal
-            scrolls, the same way a page header would. Close + prev/next
-            live together here now, off the photograph entirely, instead of
-            translucent circles floating on top of it where they could sit
-            right over a person's face. */}
-        <div className="sticky top-0 z-10 flex items-center justify-end gap-2 rounded-t-lg bg-white px-5 py-3">
+            above the hero image. Previously "sticky" inside a scrolling
+            card, but that made the card's own scrollbar run the full
+            height right alongside the hero photo - on a tall portrait crop
+            the scrollbar gutter (whatever width the browser reserves for
+            it) sat as a visible seam/rectangle right next to the image.
+            Header + image now live outside the scrollable area entirely
+            (see the modal-scroll wrapper below the image), so there's
+            never a scrollbar directly beside the photo; only the text
+            content below scrolls, with the header staying in place above
+            it the same way a page header would. */}
+        <div className="flex shrink-0 items-center justify-end gap-2 rounded-t-lg bg-white px-5 py-3">
           {typeof currentIndex === "number" && typeof total === "number" && total > 1 && (
             <div className="flex items-center gap-1 rounded-full bg-dark-ocean-blue/5 py-1 pl-1 pr-2.5 text-dark-ocean-blue">
               <button
@@ -220,8 +225,8 @@ export default function ArticleModal({
           <div
             className={
               content.imageSize === "tall"
-                ? "h-[clamp(350px,48vh,430px)] w-full overflow-hidden md:h-[clamp(550px,55vh,650px)]"
-                : "h-[200px] w-full overflow-hidden md:h-[300px]"
+                ? "h-[clamp(350px,48vh,430px)] w-full shrink-0 overflow-hidden md:h-[clamp(550px,55vh,650px)]"
+                : "h-[200px] w-full shrink-0 overflow-hidden md:h-[300px]"
             }
           >
             <FadeImage
@@ -240,14 +245,19 @@ export default function ArticleModal({
           </div>
         )}
 
-        {/* Generous outer padding + an inner max-w-[560px] reading column -
-            the modal itself stays ~800px so there's real whitespace either
-            side, but no line of body text runs wider than roughly 65-75
-            characters. */}
-        {/* Comfortable margins rather than the desktop's generous 8/8 -
-            enough to keep the text off the modal's own edges without
-            eating into the reading column on a 375-414px screen. */}
-        <div className="px-5 py-6 md:px-12 md:py-10">
+        {/* Only this body region scrolls now (modal-scroll's slim custom
+            scrollbar lives here, not on the outer card) - keeps the
+            scrollbar gutter away from the hero image above entirely,
+            instead of running down its right edge. */}
+        <div className="modal-scroll flex-1 overflow-y-auto">
+          {/* Generous outer padding + an inner max-w-[560px] reading column -
+              the modal itself stays ~800px so there's real whitespace either
+              side, but no line of body text runs wider than roughly 65-75
+              characters. */}
+          {/* Comfortable margins rather than the desktop's generous 8/8 -
+              enough to keep the text off the modal's own edges without
+              eating into the reading column on a 375-414px screen. */}
+          <div className="px-5 py-6 md:px-12 md:py-10">
           <div className="max-w-[560px]">
             {content.avatar && (
               <FadeImage
@@ -395,6 +405,7 @@ export default function ArticleModal({
                 </span>
               </a>
             )}
+          </div>
           </div>
         </div>
       </div>
