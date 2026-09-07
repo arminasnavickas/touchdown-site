@@ -222,11 +222,22 @@ export default function ArticleModal({
           // source photo is never cropped. Landscape/action shots keep the
           // original compact height and centered crop unless a caller opts
           // into "tall" or overrides the position/fit directly.
+          //
+          // shrink (not shrink-0) + a min-h floor, deliberately: the clamp()
+          // minimum (550px desktop) was being hit on almost any real browser
+          // window - 55vh only exceeds it once the viewport is over ~1000px
+          // tall, which most laptop windows never reach once title bar/tabs/
+          // address bar are subtracted. That pinned header+image at ~601px,
+          // so on any viewport under ~707px tall (common - e.g. a 1366x768
+          // laptop) they alone exceeded the modal's 85vh cap and squeezed
+          // the modal-scroll text region below to 0px, even with flex-auto.
+          // Letting the image shrink (down to its min-h floor) means short
+          // viewports take the space from the photo first, not the text.
           <div
             className={
               content.imageSize === "tall"
-                ? "h-[clamp(350px,48vh,430px)] w-full shrink-0 overflow-hidden md:h-[clamp(550px,55vh,650px)]"
-                : "h-[200px] w-full shrink-0 overflow-hidden md:h-[300px]"
+                ? "h-[clamp(350px,48vh,430px)] w-full min-h-[220px] shrink overflow-hidden md:h-[clamp(400px,55vh,650px)] md:min-h-[260px]"
+                : "h-[200px] w-full min-h-[140px] shrink overflow-hidden md:h-[300px] md:min-h-[160px]"
             }
           >
             <FadeImage
@@ -254,11 +265,15 @@ export default function ArticleModal({
             was resolving to header+image height only and squeezing this
             entire region - and its text - to 0px. flex-auto uses the
             content's own height as the starting point instead, so the card
-            sizes correctly; min-h-0 then overrides the default flex-item
+            sizes correctly.
+            min-h-[140px] (not min-h-0) then overrides the default flex-item
             min-height (which is also content-based) so this region can
-            still shrink below that once max-h-[85vh] is actually hit,
-            which is what lets overflow-y-auto ever kick in. */}
-        <div className="modal-scroll min-h-0 flex-auto overflow-y-auto">
+            still shrink below that once max-h-[85vh] is actually hit, which
+            is what lets overflow-y-auto ever kick in - but it keeps a 140px
+            floor instead of letting it reach 0, so text always stays
+            visible even if the image above hasn't finished yielding space
+            (see the shrink/min-h comment on the image container above). */}
+        <div className="modal-scroll min-h-[140px] flex-auto overflow-y-auto">
           {/* Generous outer padding + an inner max-w-[560px] reading column -
               the modal itself stays ~800px so there's real whitespace either
               side, but no line of body text runs wider than roughly 65-75
