@@ -265,14 +265,10 @@ export default function ArticleModal({
             was resolving to header+image height only and squeezing this
             entire region - and its text - to 0px. flex-auto uses the
             content's own height as the starting point instead, so the card
-            sizes correctly.
-            min-h-[140px] (not min-h-0) then overrides the default flex-item
+            sizes correctly; min-h-0 then overrides the default flex-item
             min-height (which is also content-based) so this region can
-            still shrink below that once max-h-[85vh] is actually hit, which
-            is what lets overflow-y-auto ever kick in - but it keeps a 140px
-            floor instead of letting it reach 0, so text always stays
-            visible even if the image above hasn't finished yielding space
-            (see the shrink/min-h comment on the image container above). */}
+            still shrink below that once max-h-[85vh] is actually hit,
+            which is what lets overflow-y-auto ever kick in. */}
         <div className="modal-scroll min-h-[140px] flex-auto overflow-y-auto">
           {/* Generous outer padding + an inner max-w-[560px] reading column -
               the modal itself stays ~800px so there's real whitespace either
