@@ -233,15 +233,11 @@ export default function ArticleModal({
           // the modal-scroll text region below to 0px, even with flex-auto.
           // Letting the image shrink (down to its min-h floor) means short
           // viewports take the space from the photo first, not the text.
-          // The floor is set to match the h-[...] clamp's own minimum
-          // (350/400px) rather than something smaller - the image can
-          // shrink away from its vh-driven preferred size, but never below
-          // the size it was actually designed to render at, so it never
-          // crops down to an unrecognizable sliver. On the rare viewport
-          // where even both floors together don't fit under max-h, the
-          // remaining shrink is entirely modal-scroll's (down to its own
-          // 140px floor) or, past that, the modal quietly overflows max-h
-          // by a few px rather than mangling the photo further.
+          // The floor matches the h-[...] clamp's own minimum (350/400px)
+          // rather than something smaller - the image shrinks away from
+          // its vh-driven preferred size, but never below the size it was
+          // actually designed to render at, so it can't crop down to an
+          // unrecognizable sliver of the top of someone's head.
           <div
             className={
               content.imageSize === "tall"
@@ -274,14 +270,10 @@ export default function ArticleModal({
             was resolving to header+image height only and squeezing this
             entire region - and its text - to 0px. flex-auto uses the
             content's own height as the starting point instead, so the card
-            sizes correctly.
-            min-h-[140px] (not min-h-0) then overrides the default flex-item
+            sizes correctly; min-h-0 then overrides the default flex-item
             min-height (which is also content-based) so this region can
-            still shrink below that once max-h-[85vh] is actually hit, which
-            is what lets overflow-y-auto ever kick in - but it keeps a 140px
-            floor instead of letting it reach 0, so text always stays
-            visible even if the image above hasn't finished yielding space
-            (see the shrink/min-h comment on the image container above). */}
+            still shrink below that once max-h-[85vh] is actually hit,
+            which is what lets overflow-y-auto ever kick in. */}
         <div className="modal-scroll min-h-[140px] flex-auto overflow-y-auto">
           {/* Generous outer padding + an inner max-w-[560px] reading column -
               the modal itself stays ~800px so there's real whitespace either
