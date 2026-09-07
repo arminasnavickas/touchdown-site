@@ -158,22 +158,22 @@ export default function ArticleModal({
           around it - a real "near-full-screen modal" rather than a desktop
           dialog with its edges just barely inside a small viewport. */}
       <div
-        className="relative flex max-h-[94vh] w-full max-w-[800px] flex-col overflow-hidden rounded-lg bg-white md:max-h-[85vh]"
+        className="relative flex max-h-[94vh] w-full max-w-[724px] flex-col overflow-hidden rounded-lg bg-white md:max-h-[85vh]"
         onClick={(e) => e.stopPropagation()}
         onTouchStart={onTouchStart}
         onTouchEnd={onTouchEnd}
       >
         {/* Real header bar (not a floating overlay) - sits in normal flow
-            above the hero image. Previously "sticky" inside a scrolling
-            card, but that made the card's own scrollbar run the full
-            height right alongside the hero photo - on a tall portrait crop
-            the scrollbar gutter (whatever width the browser reserves for
-            it) sat as a visible seam/rectangle right next to the image.
-            Header + image now live outside the scrollable area entirely
-            (see the modal-scroll wrapper below the image), so there's
-            never a scrollbar directly beside the photo; only the text
-            content below scrolls, with the header staying in place above
-            it the same way a page header would. */}
+            above the scrollable region below. Stays fixed in place while
+            the hero image and text both scroll underneath it as one unit
+            (see the modal-scroll wrapper below) - the earlier layout split
+            the image out as its own fixed, non-scrolling block specifically
+            to keep the scrollbar off its right edge, but that meant the
+            image had to fight the text for a fixed height budget (see the
+            git history on this file for that whole saga). Scrolling image
+            + text together sidesteps all of it: the image always renders
+            at its full intended size, and anything that doesn't fit just
+            scrolls, scrollbar included. */}
         <div className="flex shrink-0 items-center justify-end gap-2 rounded-t-lg bg-white px-5 py-3">
           {typeof currentIndex === "number" && typeof total === "number" && total > 1 && (
             <div className="flex items-center gap-1 rounded-full bg-dark-ocean-blue/5 py-1 pl-1 pr-2.5 text-dark-ocean-blue">
@@ -214,67 +214,49 @@ export default function ArticleModal({
           </button>
         </div>
 
-        {content.image && (
-          // Portraits ("tall") get a much taller frame - fluid between the
-          // mobile and desktop targets via clamp() so it scales with actual
-          // viewport height rather than jumping at a single breakpoint -
-          // anchored top by default so a head planted near the top of the
-          // source photo is never cropped. Landscape/action shots keep the
-          // original compact height and centered crop unless a caller opts
-          // into "tall" or overrides the position/fit directly.
-          //
-          // shrink (not shrink-0) + a min-h floor, deliberately: the clamp()
-          // minimum (550px desktop) was being hit on almost any real browser
-          // window - 55vh only exceeds it once the viewport is over ~1000px
-          // tall, which most laptop windows never reach once title bar/tabs/
-          // address bar are subtracted. That pinned header+image at ~601px,
-          // so on any viewport under ~707px tall (common - e.g. a 1366x768
-          // laptop) they alone exceeded the modal's 85vh cap and squeezed
-          // the modal-scroll text region below to 0px, even with flex-auto.
-          // Letting the image shrink (down to its min-h floor) means short
-          // viewports take the space from the photo first, not the text.
-          // The floor matches the h-[...] clamp's own minimum (350/400px)
-          // rather than something smaller - the image shrinks away from
-          // its vh-driven preferred size, but never below the size it was
-          // actually designed to render at, so it can't crop down to an
-          // unrecognizable sliver of the top of someone's head.
-          <div
-            className={
-              content.imageSize === "tall"
-                ? "h-[clamp(350px,48vh,430px)] w-full min-h-[350px] shrink overflow-hidden md:h-[clamp(400px,55vh,650px)] md:min-h-[400px]"
-                : "h-[200px] w-full min-h-[200px] shrink overflow-hidden md:h-[300px] md:min-h-[300px]"
-            }
-          >
-            <FadeImage
-              src={content.image}
-              alt={content.title}
-              eager
-              wrapperClassName="h-full w-full"
-              className={`h-full w-full ${content.imagePositionClassName ?? ""}`}
-              style={{
-                objectFit: content.imageFit ?? "cover",
-                objectPosition: content.imagePositionClassName
-                  ? undefined
-                  : content.imagePosition ?? (content.imageSize === "tall" ? "center top" : "center"),
-              }}
-            />
-          </div>
-        )}
-
-        {/* Only this body region scrolls now (modal-scroll's slim custom
-            scrollbar lives here, not on the outer card) - keeps the
-            scrollbar gutter away from the hero image above entirely,
-            instead of running down its right edge. flex-auto (not flex-1)
-            deliberately: flex-1's flex-basis:0% contributes nothing to this
-            auto-height flex column's size calculation, so the outer card
-            was resolving to header+image height only and squeezing this
-            entire region - and its text - to 0px. flex-auto uses the
-            content's own height as the starting point instead, so the card
-            sizes correctly; min-h-0 then overrides the default flex-item
-            min-height (which is also content-based) so this region can
-            still shrink below that once max-h-[85vh] is actually hit,
-            which is what lets overflow-y-auto ever kick in. */}
-        <div className="modal-scroll min-h-[140px] flex-auto overflow-y-auto">
+        {/* flex-auto (not flex-1) deliberately: flex-1's flex-basis:0%
+            contributes nothing to this auto-height flex column's size
+            calculation, so the outer card would resolve to header height
+            only and squeeze this entire region (image + text) to 0px.
+            flex-auto uses the content's own height as the starting point
+            instead, so the card sizes correctly; min-h-0 then overrides
+            the default flex-item min-height (also content-based) so this
+            region can still shrink below that once max-h-[85vh] is
+            actually hit, which is what lets overflow-y-auto ever kick in. */}
+        <div className="modal-scroll min-h-0 flex-auto overflow-y-auto">
+          {content.image && (
+            // Portraits ("tall") get a much taller frame - fluid between the
+            // mobile and desktop targets via clamp() so it scales with actual
+            // viewport height rather than jumping at a single breakpoint -
+            // anchored top by default so a head planted near the top of the
+            // source photo is never cropped. Landscape/action shots keep the
+            // original compact height and centered crop unless a caller opts
+            // into "tall" or overrides the position/fit directly. shrink-0
+            // (not shrink) since this now lives inside the scrolling region
+            // rather than competing with the text for a fixed height budget -
+            // it always renders at its full designed size.
+            <div
+              className={
+                content.imageSize === "tall"
+                  ? "h-[clamp(350px,48vh,430px)] w-full shrink-0 overflow-hidden md:h-[clamp(550px,55vh,650px)]"
+                  : "h-[200px] w-full shrink-0 overflow-hidden md:h-[300px]"
+              }
+            >
+              <FadeImage
+                src={content.image}
+                alt={content.title}
+                eager
+                wrapperClassName="h-full w-full"
+                className={`h-full w-full ${content.imagePositionClassName ?? ""}`}
+                style={{
+                  objectFit: content.imageFit ?? "cover",
+                  objectPosition: content.imagePositionClassName
+                    ? undefined
+                    : content.imagePosition ?? (content.imageSize === "tall" ? "center top" : "center"),
+                }}
+              />
+            </div>
+          )}
           {/* Generous outer padding + an inner max-w-[560px] reading column -
               the modal itself stays ~800px so there's real whitespace either
               side, but no line of body text runs wider than roughly 65-75
