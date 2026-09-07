@@ -258,14 +258,20 @@ export default function ArticleModal({
             </div>
           )}
           {/* Generous outer padding + an inner max-w-[560px] reading column -
-              the modal itself stays ~800px so there's real whitespace either
+              the modal itself stays ~724px so there's real whitespace either
               side, but no line of body text runs wider than roughly 65-75
-              characters. */}
+              characters. mx-auto on the inner column, deliberately: without
+              it a block-level div just sits flush against the container's
+              left edge, dumping 100% of the leftover width (container
+              width minus 560px) onto the right - visibly uneven left/right
+              padding. Centering the column splits that leftover width
+              evenly instead, so the gap from the outer padding reads the
+              same on both sides. */}
           {/* Comfortable margins rather than the desktop's generous 8/8 -
               enough to keep the text off the modal's own edges without
               eating into the reading column on a 375-414px screen. */}
           <div className="px-5 py-6 md:px-12 md:py-10">
-          <div className="max-w-[560px]">
+          <div className="mx-auto max-w-[560px]">
             {content.avatar && (
               <FadeImage
                 src={content.avatar}
