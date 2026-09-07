@@ -248,8 +248,17 @@ export default function ArticleModal({
         {/* Only this body region scrolls now (modal-scroll's slim custom
             scrollbar lives here, not on the outer card) - keeps the
             scrollbar gutter away from the hero image above entirely,
-            instead of running down its right edge. */}
-        <div className="modal-scroll flex-1 overflow-y-auto">
+            instead of running down its right edge. flex-auto (not flex-1)
+            deliberately: flex-1's flex-basis:0% contributes nothing to this
+            auto-height flex column's size calculation, so the outer card
+            was resolving to header+image height only and squeezing this
+            entire region - and its text - to 0px. flex-auto uses the
+            content's own height as the starting point instead, so the card
+            sizes correctly; min-h-0 then overrides the default flex-item
+            min-height (which is also content-based) so this region can
+            still shrink below that once max-h-[85vh] is actually hit,
+            which is what lets overflow-y-auto ever kick in. */}
+        <div className="modal-scroll min-h-0 flex-auto overflow-y-auto">
           {/* Generous outer padding + an inner max-w-[560px] reading column -
               the modal itself stays ~800px so there's real whitespace either
               side, but no line of body text runs wider than roughly 65-75
