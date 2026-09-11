@@ -129,25 +129,18 @@ export default function TrainingRhythm({
                   {time ? (
                     // A day with two separate sessions (e.g. a morning water
                     // block plus an evening one) is stored as "A & B" in a
-                    // single time string. Rendered as one long nowrap line
-                    // that was overflowing narrow phones (~320px) once two
-                    // full HH:MM-HH:MM ranges had to share one pill - split
-                    // on " & " and stack each session on its own line
-                    // instead of shrinking or truncating the times.
+                    // single time string. Both sessions render on one
+                    // nowrap line, joined by " | " - previously this split
+                    // on " & " and stacked each session on its own line to
+                    // dodge overflow on narrow phones (~320px), but that
+                    // read as two separate badges instead of one time
+                    // range; single line was chosen deliberately instead.
                     (() => {
                       const sessions = time.split(" & ");
                       return (
-                        <span
-                          className={`flex flex-col items-end gap-0.5 whitespace-nowrap bg-white/10 px-3 py-1.5 font-switzer text-sm font-medium tracking-wide tabular-nums text-white sm:text-base ${
-                            sessions.length > 1 ? "rounded-2xl" : "rounded-full"
-                          }`}
-                        >
-                          {sessions.map((session, i) => (
-                            <span key={i} className="flex items-center gap-1.5">
-                              {i === 0 && <Clock className="size-4 shrink-0" strokeWidth={1.5} />}
-                              {session}
-                            </span>
-                          ))}
+                        <span className="flex items-center gap-1.5 whitespace-nowrap rounded-full bg-white/10 px-3 py-1.5 font-switzer text-sm font-medium tracking-wide tabular-nums text-white sm:text-base">
+                          <Clock className="size-4 shrink-0" strokeWidth={1.5} />
+                          {sessions.join(" | ")}
                         </span>
                       );
                     })()

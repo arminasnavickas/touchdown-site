@@ -236,7 +236,15 @@ export default function Navigation({
           giving the compact logo-left/hamburger-right row a touch more
           breathing room without pushing much more of the hero off-screen. */}
       <div className="relative z-50 flex items-center gap-8 px-6 py-5 lg:gap-12 lg:px-16 lg:py-4">
-        <Link href="/" className="shrink-0">
+        {/* Centered on mobile - absolutely positioned in the middle of the
+            header row instead of sitting left-aligned next to the
+            hamburger, which read as off-balance now that the hamburger
+            alone (no matching left-side icon) sits at the opposite edge.
+            Desktop keeps its normal left-of-the-nav flow position. */}
+        <Link
+          href="/"
+          className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 shrink-0 lg:static lg:left-auto lg:top-auto lg:translate-x-0 lg:translate-y-0"
+        >
           {/* h-[15px] -> h-6 on mobile - at the old size the wordmark read
               as an afterthought next to the size-9 (36px) hamburger icon
               beside it, undersized for the one brand element present on
