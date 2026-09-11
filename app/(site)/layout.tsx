@@ -13,12 +13,20 @@ export default async function SiteLayout({
   // Reviews usage in app/(site)/page.tsx) without deleting any review
   // entries in Sanity - filtering it out of both link lists here too keeps
   // the header nav and footer from linking to a section that isn't there.
-  const navLinks = siteContent.showReviews
-    ? siteContent.headerNavLinks
-    : siteContent.headerNavLinks.filter((link) => link.id !== "reviews");
+  // blogEnabled works the same way for the Blog nav/footer link and the
+  // /blog routes (redirected in app/(site)/blog/page.tsx and
+  // app/(site)/blog/[slug]/page.tsx, and excluded from app/sitemap.ts).
+  const navLinks = siteContent.headerNavLinks.filter((link) => {
+    if (link.id === "reviews" && !siteContent.showReviews) return false;
+    if (link.id === "blog" && !siteContent.blogEnabled) return false;
+    return true;
+  });
   const footerAboutLinks = siteContent.showReviews
     ? siteContent.footerAboutLinks
     : siteContent.footerAboutLinks.filter((link) => link.id !== "reviews");
+  const footerExperienceLinks = siteContent.blogEnabled
+    ? siteContent.footerExperienceLinks
+    : siteContent.footerExperienceLinks.filter((link) => link.id !== "blog");
 
   return (
     <>
@@ -50,7 +58,7 @@ export default async function SiteLayout({
             aboutTitle={siteContent.footerAboutTitle}
             aboutLinks={footerAboutLinks}
             experienceTitle={siteContent.footerExperienceTitle}
-            experienceLinks={siteContent.footerExperienceLinks}
+            experienceLinks={footerExperienceLinks}
             legalLinks={siteContent.footerLegalLinks}
             contactTitle={siteContent.footerContactTitle}
           />

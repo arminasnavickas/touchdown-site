@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { getBlogPosts } from "@/lib/content";
+import { getBlogPosts, getSiteContent } from "@/lib/content";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const base = "https://touchdown-space.com";
@@ -10,12 +10,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified: new Date(),
       changeFrequency: "weekly",
       priority: 1,
-    },
-    {
-      url: `${base}/blog`,
-      lastModified: new Date(),
-      changeFrequency: "weekly",
-      priority: 0.8,
     },
     {
       url: `${base}/terms`,
@@ -31,6 +25,22 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
   ];
 
+  // Blog routes redirect to home while blogEnabled is off (see
+  // app/(site)/blog/page.tsx and blog/[slug]/page.tsx) - leaving them out
+  // of the sitemap here too keeps search engines from indexing/crawling a
+  // page that just bounces back to "/".
+  const siteContent = await getSiteContent();
+  if (!siteContent.blogEnabled) return staticRoutes;
+
+  const blogIndexRoute: MetadataRoute.Sitemap = [
+    {
+      url: `${base}/blog`,
+      lastModified: new Date(),
+      changeFrequency: "weekly",
+      priority: 0.8,
+    },
+  ];
+
   const posts = await getBlogPosts();
   const postRoutes: MetadataRoute.Sitemap = posts.map((post) => ({
     url: `${base}/blog/${post.slug}`,
@@ -39,5 +49,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.6,
   }));
 
-  return [...staticRoutes, ...postRoutes];
+  return [...staticRoutes, ...blogIndexRoute, ...postRoutes];
 }

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import FadeImage from "@/components/FadeImage";
 import BlogBody from "@/components/BlogBody";
 import BlogPostCard from "@/components/BlogPostCard";
@@ -10,7 +10,7 @@ import ShareButton from "@/components/ShareButton";
 import ReadingProgressBar from "@/components/ReadingProgressBar";
 import BackToTop from "@/components/BackToTop";
 import { ClockIcon, CalendarIcon } from "@/components/BlogIcons";
-import { getBlogPost, getBlogPosts, getTeamMembers } from "@/lib/content";
+import { getBlogPost, getBlogPosts, getSiteContent, getTeamMembers } from "@/lib/content";
 import { estimateReadingTime, extractHeadings } from "@/lib/blog";
 
 export const revalidate = 60;
@@ -54,6 +54,12 @@ function formatDate(iso: string) {
 }
 
 export default async function BlogPostPage({ params }: Props) {
+  // Gated behind Sanity's blogEnabled toggle (siteContent) - see the same
+  // check in blog/page.tsx and the nav/footer link filtering in
+  // app/(site)/layout.tsx.
+  const siteContent = await getSiteContent();
+  if (!siteContent.blogEnabled) redirect("/");
+
   const [post, allPosts, team] = await Promise.all([
     getBlogPost(params.slug),
     getBlogPosts(),

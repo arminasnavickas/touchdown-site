@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import FadeImage from "@/components/FadeImage";
 import BlogPostCard from "@/components/BlogPostCard";
 import BlogSearch from "@/components/BlogSearch";
 import Reveal from "@/components/Reveal";
 import BackToTop from "@/components/BackToTop";
 import { ClockIcon, CalendarIcon } from "@/components/BlogIcons";
-import { getBlogPosts } from "@/lib/content";
+import { getBlogPosts, getSiteContent } from "@/lib/content";
 import { estimateReadingTime } from "@/lib/blog";
 
 export const revalidate = 60;
@@ -30,6 +31,13 @@ export default async function BlogIndexPage({
 }: {
   searchParams: { category?: string; author?: string };
 }) {
+  // Gated behind Sanity's blogEnabled toggle (siteContent) while the site
+  // is still running placeholder posts - see the same check in
+  // blog/[slug]/page.tsx and the nav/footer link filtering in
+  // app/(site)/layout.tsx.
+  const siteContent = await getSiteContent();
+  if (!siteContent.blogEnabled) redirect("/");
+
   const allPosts = await getBlogPosts();
   const categories = Array.from(
     new Set(allPosts.map((p) => p.category).filter((c): c is string => Boolean(c)))

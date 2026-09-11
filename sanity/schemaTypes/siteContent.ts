@@ -86,6 +86,14 @@ export default defineType({
         "Turn off to hide the whole Reviews section from the homepage (and its Reviews nav link) without deleting any of the review entries - flip it back on any time to bring it back.",
     }),
     defineField({
+      name: "blogEnabled",
+      title: "Blog enabled",
+      type: "boolean",
+      initialValue: false,
+      description:
+        "Turn on once real blog posts are ready to go live. While off, the Blog nav link and footer link are hidden, /blog and individual posts redirect to the homepage, and blog pages are left out of the sitemap. The sample posts stay in place either way - they're just not reachable until this is on.",
+    }),
+    defineField({
       name: "trainingRhythmHeading",
       title: "Training Rhythm heading",
       type: "string",

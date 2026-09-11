@@ -875,6 +875,7 @@ export type SiteContent = {
   teamKicker: string;
   reviewsSubtitle: string;
   showReviews: boolean;
+  blogEnabled: boolean;
   trainingRhythmHeading: string;
   waterDayHeading: string;
   waterDaySubcopy: string;
@@ -929,6 +930,11 @@ export const fallbackSiteContent: SiteContent = {
   teamKicker: "Every coach on this team trains and teaches full-time, genuinely invested in your progress underwater.",
   reviewsSubtitle: "What our students say about training with us.",
   showReviews: true,
+  // Defaults off: until this is flipped on in Sanity Studio, the Blog nav
+  // link, footer link, and /blog routes stay hidden - see blogEnabled in
+  // the siteContent schema. The 5 sample posts below remain in the
+  // codebase as a formatting reference either way.
+  blogEnabled: false,
   trainingRhythmHeading: "Weekly Training Rhythm",
   waterDayHeading: "Water Day Schedule",
   waterDaySubcopy:
