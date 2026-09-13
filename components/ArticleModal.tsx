@@ -131,17 +131,58 @@ export default function ArticleModal({
     };
   }, []);
 
+  // Which way the last prev/next navigation went - drives the directional
+  // slide-in animation below (modal-slide-next/prev, globals.css) on the
+  // content region. Every place that can trigger navigation (keyboard,
+  // floating arrows, edge-peek nubs, header chevrons, touch swipe) goes
+  // through goPrev/goNext below instead of calling onPrev/onNext directly,
+  // so this stays in sync with whichever direction actually fired.
+  const [direction, setDirection] = useState<"next" | "prev">("next");
+  const goPrev = () => {
+    setDirection("prev");
+    onPrev?.();
+  };
+  const goNext = () => {
+    setDirection("next");
+    onNext?.();
+  };
+
   // Close on Escape, navigate with arrow keys - standard expected behavior
   // for any modal/dialog with prev/next.
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
-      if (e.key === "ArrowLeft") onPrev?.();
-      if (e.key === "ArrowRight") onNext?.();
+      if (e.key === "ArrowLeft") goPrev();
+      if (e.key === "ArrowRight") goNext();
     };
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [onClose, onPrev, onNext]);
+
+  // Measures the actual white card's rendered height (it has no fixed
+  // height - just a max-h cap - so a short review and a long one produce
+  // different card heights) so the mobile edge-peek nubs can size
+  // themselves proportionally instead of a flat h-72 that either
+  // overshoots a short card or falls short of a tall one. ResizeObserver
+  // (not a one-off measurement) keeps this in sync across navigation,
+  // window resize, and the card's own max-h clamp kicking in.
+  const cardRef = useRef<HTMLDivElement>(null);
+  const [cardHeight, setCardHeight] = useState<number | null>(null);
+  useEffect(() => {
+    const el = cardRef.current;
+    if (!el) return;
+    const observer = new ResizeObserver(([entry]) => {
+      setCardHeight(entry.contentRect.height);
+    });
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [currentIndex]);
+  // Inset from the card's top/bottom edge, evenly on both sides - the nub
+  // reads as a shorter fragment tucked inside the card's height rather than
+  // exactly matching it edge to edge.
+  const NUB_VERTICAL_INSET = 32;
+  const nubHeight = cardHeight ? Math.max(cardHeight - NUB_VERTICAL_INSET * 2, 40) : null;
 
   // Render via a portal into document.body: this component is opened from
   // inside HowItWorks's <section>, which has overflow-hidden for its Blob
@@ -170,8 +211,8 @@ export default function ArticleModal({
     const deltaY = t.clientY - touchState.current.startY;
     touchState.current.tracking = false;
     if (Math.abs(deltaX) < 40 || Math.abs(deltaX) < Math.abs(deltaY) * 1.2) return;
-    if (deltaX < 0) onNext?.();
-    else onPrev?.();
+    if (deltaX < 0) goNext();
+    else goPrev();
   };
 
   if (!mounted) return null;
@@ -189,9 +230,76 @@ export default function ArticleModal({
       // left-6/right-6 offset below is what carves the margin out of this
       // budget; the remainder becomes the gap since the card's start is
       // fixed by this padding value.
-      className="fixed inset-0 z-[100] flex flex-col items-center justify-center gap-6 bg-black/90 px-12 py-2.5 md:p-6"
+      className="fixed inset-0 z-[100] flex flex-col items-center justify-center gap-8 bg-black/90 px-12 py-2.5 md:p-6"
       onClick={onClose}
     >
+      {/* Counter + close, now a row sitting on the black overlay above the
+          card rather than a bar built into the card's own white top edge -
+          the card is just the reading surface now, and these are page-level
+          controls floating over it like the arrow buttons already did.
+          Same max-w as the card so the close button still lands top-right
+          of the reading surface, just outside it instead of inside it.
+          relative so the counter pill below can be centered independently
+          of the close button, instead of both being grouped at the right
+          edge under justify-end. */}
+      <div
+        className="relative flex w-full max-w-[724px] shrink-0 items-center justify-end"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {typeof currentIndex === "number" && typeof total === "number" && total > 1 && (
+          // Centered on the row via absolute + left-1/2/-translate-x-1/2,
+          // independent of the close button's own position - was grouped
+          // next to the close button at the right under a shared flex row.
+          // Solid white fill (was bg-white/10) - the translucent pill let
+          // whatever sat behind the overlay show through it, same issue as
+          // the edge-peek nub had before that one was reverted. Text/icons
+          // No pill background any more (was bg-white/10, then bg-white,
+          // then bg-white/80, then bg-white/50) - now floats directly on
+          // the black overlay with no fill at all, so the chevrons/total
+          // switch to white (was dark-ocean-blue, illegible on black) to
+          // stay visible; the current-index number keeps its cta blue.
+          <div className="absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 items-center gap-1 py-1 pl-1 pr-2.5 text-white">
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                goPrev();
+              }}
+              aria-label="Previous"
+              className="flex size-7 items-center justify-center rounded-full transition hover:text-cta"
+            >
+              <ArrowIcon direction="left" className="size-4" />
+            </button>
+            <span className="font-switzer text-xs font-medium tabular-nums">
+              {/* Current index in the brand blue, total in a muted grey -
+                  reads as "you're here" vs. "out of how many" at a glance,
+                  instead of one flat-colored string. */}
+              <span className="text-cta">{String(currentIndex + 1).padStart(2, "0")}</span>
+              <span className="text-white/40"> / {String(total).padStart(2, "0")}</span>
+            </span>
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                goNext();
+              }}
+              aria-label="Next"
+              className="flex size-7 items-center justify-center rounded-full transition hover:text-cta"
+            >
+              <ArrowIcon direction="right" className="size-4" />
+            </button>
+          </div>
+        )}
+        <button
+          type="button"
+          onClick={onClose}
+          aria-label="Close"
+          className="flex size-10 items-center justify-center rounded-full bg-white/50 text-dark-ocean-blue transition hover:bg-aquatic hover:text-dark-ocean-blue"
+        >
+          <CloseIcon />
+        </button>
+      </div>
+
       {/* Narrowed from max-w-2xl (672px) to a slightly wider but more
           deliberate ~800px - the earlier width felt like "another page"
           rather than a focused reading surface. modal-scroll (globals.css)
@@ -207,65 +315,21 @@ export default function ArticleModal({
         // (mobile) / md:p-6 (desktop) padding above is the entire gutter
         // between the card and the screen edge, matching the Reviews
         // section's side padding.
-        // max-h dropped slightly on mobile (94vh -> 88vh) to leave room for
-        // the caption below without the card+caption group overflowing the
-        // viewport.
-        className="relative flex max-h-[88vh] w-full max-w-[724px] flex-col overflow-hidden rounded-lg bg-white md:max-h-[85vh]"
+        // max-h dropped to make room for both the counter/close row above
+        // and the caption below, so the whole group still fits the viewport.
+        // key={currentIndex} + modal-slide-next/prev (globals.css) - forces
+        // a fresh DOM node for the whole white card on every prev/next, so
+        // the slide-in animation now moves the card itself (was scoped to
+        // just the inner scrollable content region before).
+        key={currentIndex}
+        ref={cardRef}
+        className={`relative flex max-h-[80vh] w-full max-w-[724px] flex-col overflow-hidden rounded-lg bg-white md:max-h-[80vh] ${
+          direction === "next" ? "modal-slide-next" : "modal-slide-prev"
+        }`}
         onClick={(e) => e.stopPropagation()}
         onTouchStart={onTouchStart}
         onTouchEnd={onTouchEnd}
       >
-        {/* Real header bar (not a floating overlay) - sits in normal flow
-            above the scrollable region below. Stays fixed in place while
-            the hero image and text both scroll underneath it as one unit
-            (see the modal-scroll wrapper below) - the earlier layout split
-            the image out as its own fixed, non-scrolling block specifically
-            to keep the scrollbar off its right edge, but that meant the
-            image had to fight the text for a fixed height budget (see the
-            git history on this file for that whole saga). Scrolling image
-            + text together sidesteps all of it: the image always renders
-            at its full intended size, and anything that doesn't fit just
-            scrolls, scrollbar included. */}
-        <div className="flex shrink-0 items-center justify-end gap-2 rounded-t-lg bg-white px-5 py-3">
-          {typeof currentIndex === "number" && typeof total === "number" && total > 1 && (
-            <div className="flex items-center gap-1 rounded-full bg-dark-ocean-blue/5 py-1 pl-1 pr-2.5 text-dark-ocean-blue">
-              <button
-                type="button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onPrev?.();
-                }}
-                aria-label="Previous"
-                className="flex size-7 items-center justify-center rounded-full transition hover:text-cta"
-              >
-                <ArrowIcon direction="left" className="size-4" />
-              </button>
-              <span className="font-switzer text-xs font-medium tabular-nums text-dark-ocean-blue/60">
-                {String(currentIndex + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}
-              </span>
-              <button
-                type="button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onNext?.();
-                }}
-                aria-label="Next"
-                className="flex size-7 items-center justify-center rounded-full transition hover:text-cta"
-              >
-                <ArrowIcon direction="right" className="size-4" />
-              </button>
-            </div>
-          )}
-          <button
-            type="button"
-            onClick={onClose}
-            aria-label="Close"
-            className="flex size-10 items-center justify-center rounded-full bg-dark-ocean-blue/5 text-dark-ocean-blue transition hover:bg-dark-ocean-blue/10 hover:text-cta"
-          >
-            <CloseIcon />
-          </button>
-        </div>
-
         {/* flex-auto (not flex-1) deliberately: flex-1's flex-basis:0%
             contributes nothing to this auto-height flex column's size
             calculation, so the outer card would resolve to header height
@@ -528,7 +592,7 @@ export default function ArticleModal({
             type="button"
             onClick={(e) => {
               e.stopPropagation();
-              onPrev?.();
+              goPrev();
             }}
             aria-label="Previous"
             className="absolute left-4 top-1/2 hidden -translate-y-1/2 items-center justify-center rounded-full bg-white text-dark-ocean-blue shadow-lg transition hover:bg-aquatic md:flex md:size-12"
@@ -539,7 +603,7 @@ export default function ArticleModal({
             type="button"
             onClick={(e) => {
               e.stopPropagation();
-              onNext?.();
+              goNext();
             }}
             aria-label="Next"
             className="absolute right-4 top-1/2 hidden -translate-y-1/2 items-center justify-center rounded-full bg-white text-dark-ocean-blue shadow-lg transition hover:bg-aquatic md:flex md:size-12"
@@ -566,24 +630,37 @@ export default function ArticleModal({
               left-6/right-6 (24px) matches the Reviews section's own side
               margin, so reading left to right it's margin, then this 14px
               nub, then whatever's left of the overlay's px-12 before the
-              card - margin, peek, gap, card. */}
+              card - margin, peek, gap, card.
+              Height is no longer a flat h-72 - the card has no fixed
+              height (just a max-h cap), so a short review and a long one
+              render very different card heights. nubHeight (measured off
+              the card via ResizeObserver above) keeps the nub proportional
+              to whichever card is actually showing, inset evenly top and
+              bottom (NUB_VERTICAL_INSET) rather than running edge to edge
+              with it. Falls back to h-72 until the first measurement lands. */}
           <button
             type="button"
             onClick={(e) => {
               e.stopPropagation();
-              onPrev?.();
+              goPrev();
             }}
             aria-label="Previous"
-            className="absolute left-6 top-1/2 h-72 w-3.5 -translate-y-1/2 rounded-l-lg bg-gradient-to-r from-transparent to-white/70 shadow-sm transition active:to-aquatic/40 md:hidden"
+            style={nubHeight ? { height: `${nubHeight}px` } : undefined}
+            className={`absolute left-6 top-1/2 w-3.5 -translate-y-1/2 rounded-l-lg bg-gradient-to-r from-transparent to-white/70 shadow-sm transition active:to-aquatic/40 md:hidden ${
+              nubHeight ? "" : "h-72"
+            }`}
           />
           <button
             type="button"
             onClick={(e) => {
               e.stopPropagation();
-              onNext?.();
+              goNext();
             }}
             aria-label="Next"
-            className="absolute right-6 top-1/2 h-72 w-3.5 -translate-y-1/2 rounded-r-lg bg-gradient-to-l from-transparent to-white/70 shadow-sm transition active:to-aquatic/40 md:hidden"
+            style={nubHeight ? { height: `${nubHeight}px` } : undefined}
+            className={`absolute right-6 top-1/2 w-3.5 -translate-y-1/2 rounded-r-lg bg-gradient-to-l from-transparent to-white/70 shadow-sm transition active:to-aquatic/40 md:hidden ${
+              nubHeight ? "" : "h-72"
+            }`}
           />
         </>
       )}

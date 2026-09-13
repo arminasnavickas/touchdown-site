@@ -28,7 +28,7 @@ const TITLE_SIZE_BY_INDEX = ["text-xl md:text-[26px]", "text-xl md:text-[28px]",
 // the original center crop untouched. Lower Y% reveals more of the top
 // of the source photo (fixes heads cut off at the top); higher Y%
 // reveals more of the bottom.
-const OBJECT_POSITION_BY_INDEX = ["md:object-[center_20%]", "md:object-[center_25%]", "md:object-[center_75%]", ""];
+const OBJECT_POSITION_BY_INDEX = ["md:object-[center_35%]", "md:object-[center_25%]", "md:object-[center_75%]", ""];
 
 function ProgressionStep({
   index,
@@ -175,6 +175,7 @@ export default function HowItWorks({
             // connected rather than the modal being a generic popup.
             kicker: `${String(openStep + 1).padStart(2, "0")} · How it works`,
             image: steps[openStep].image,
+            imagePositionClassName: OBJECT_POSITION_BY_INDEX[openStep],
             // Only the short intro paragraph - the old second paragraph's
             // information now lives in learnPoints below, restructured into
             // something scannable instead of one more wall of text.

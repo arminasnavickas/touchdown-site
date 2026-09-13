@@ -95,12 +95,21 @@ export default function FloatingActions() {
           you down the whole page read as insistent rather than helpful.
           Back-to-top alone stays, since it's a plain utility rather than a
           sales prompt. */}
+      {/* Was an icon-only circle - the arrow alone doesn't read as "back to
+          top" without a label, especially floating unlabeled over arbitrary
+          page content. Text sits to the left of the icon (matching the
+          Footer's own "Back to top" link, which pairs the same wording with
+          a trailing arrow), now as a pill instead of a plain circle so the
+          label has room. */}
       <button
         type="button"
         onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
         aria-label="Back to top"
-        className="flex size-11 items-center justify-center rounded-full bg-dark-ocean-blue text-white shadow-lg transition hover:bg-navy"
+        className="flex items-center gap-2 rounded-full bg-dark-ocean-blue py-3 pl-4 pr-3 text-white shadow-lg transition hover:bg-navy"
       >
+        <span className="whitespace-nowrap font-switzer text-xs font-medium uppercase tracking-widest">
+          Back to top
+        </span>
         <ArrowUpIcon />
       </button>
     </div>

@@ -1,0 +1,165 @@
+[1mdiff --git a/components/ArticleModal.tsx b/components/ArticleModal.tsx[m
+[1mindex b8263a9..0af6818 100644[m
+[1m--- a/components/ArticleModal.tsx[m
+[1m+++ b/components/ArticleModal.tsx[m
+[36m@@ -24,6 +24,37 @@[m [mfunction ArrowIcon({ direction, className = "size-6" }: { direction: "left" | "r[m
+   );[m
+ }[m
+ [m
+[32m+[m[32m// Mirrors the review card's star rating exactly (Reviews.tsx) so the modal[m
+[32m+[m[32m// header shows the same filled/empty stars for the same rating value -[m
+[32m+[m[32m// duplicated here rather than imported to keep this file self-contained and[m
+[32m+[m[32m// the review card component untouched.[m
+[32m+[m[32mconst RATING_STAR_COLOR = "#FBBF24";[m
+[32m+[m
+[32m+[m[32mfunction StarIcon({ filled }: { filled: boolean }) {[m
+[32m+[m[32m  return ([m
+[32m+[m[32m    <svg[m
+[32m+[m[32m      viewBox="0 0 20 20"[m
+[32m+[m[32m      className="size-4"[m
+[32m+[m[32m      fill={filled ? RATING_STAR_COLOR : "none"}[m
+[32m+[m[32m      stroke={filled ? RATING_STAR_COLOR : "#D1D5DB"}[m
+[32m+[m[32m      strokeWidth="1"[m
+[32m+[m[32m    >[m
+[32m+[m[32m      <path d="M10 1.5l2.6 5.4 5.9.8-4.3 4.2 1 5.9L10 15l-5.2 2.8 1-5.9L1.5 7.7l5.9-.8L10 1.5Z" />[m
+[32m+[m[32m    </svg>[m
+[32m+[m[32m  );[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32mfunction StarRating({ rating }: { rating: string }) {[m
+[32m+[m[32m  const filledCount = Math.round(parseFloat(rating) || 5);[m
+[32m+[m[32m  return ([m
+[32m+[m[32m    <div className="flex shrink-0 gap-0.5">[m
+[32m+[m[32m      {Array.from({ length: 5 }).map((_, i) => ([m
+[32m+[m[32m        <StarIcon key={i} filled={i < filledCount} />[m
+[32m+[m[32m      ))}[m
+[32m+[m[32m    </div>[m
+[32m+[m[32m  );[m
+[32m+[m[32m}[m
+[32m+[m
+ export type ArticleModalContent = {[m
+   title: string;[m
+   kicker?: string;[m
+[36m@@ -48,6 +79,9 @@[m [mexport type ArticleModalContent = {[m
+   imagePositionClassName?: string;[m
+   avatar?: string;[m
+   instagram?: string;[m
+[32m+[m[32m  // Star rating (e.g. "5", "4.5"), rendered alongside the avatar/name header[m
+[32m+[m[32m  // when present - Reviews only for now, same rating value the card shows.[m
+[32m+[m[32m  rating?: string;[m
+   paragraphs: string[];[m
+   // Optional sectioned body copy (title + paragraphs per section), rendered[m
+   // instead of the flat `paragraphs` list when present - Team bios only for[m
+[36m@@ -272,40 +306,61 @@[m [mexport default function ArticleModal({[m
+               eating into the reading column on a 375-414px screen. */}[m
+           <div className="px-5 py-6 md:px-12 md:py-10">[m
+           <div className="mx-auto max-w-[560px]">[m
+[31m-            {content.avatar && ([m
+[31m-              <FadeImage[m
+[31m-                src={content.avatar}[m
+[31m-                alt={content.title}[m
+[31m-                eager[m
+[31m-                wrapperClassName="mb-4 size-16 shrink-0 rounded-full md:size-20"[m
+[31m-                className="h-full w-full object-cover"[m
+[31m-              />[m
+[31m-            )}[m
+[31m-            {content.kicker && ([m
+[31m-              <p className="mb-2 font-switzer text-sm font-medium uppercase tracking-widest text-horizon">[m
+[31m-                {content.kicker}[m
+[31m-              </p>[m
+[32m+[m[32m            {content.avatar ? ([m
+[32m+[m[32m              // Byline-style header (Reviews): avatar left, kicker/name[m
+[32m+[m[32m              // stacked to its right, rating on the far right of the same[m
+[32m+[m[32m              // row - matches how the review card itself lays out its[m
+[32m+[m[32m              // header, instead of the stacked avatar-above-name layout the[m
+[32m+[m[32m              // other callers below still use.[m
+[32m+[m[32m              <div className="mb-4 flex items-center gap-4 border-b border-dark-ocean-blue/10 pb-4">[m
+[32m+[m[32m                <FadeImage[m
+[32m+[m[32m                  src={content.avatar}[m
+[32m+[m[32m                  alt={content.title}[m
+[32m+[m[32m                  eager[m
+[32m+[m[32m                  wrapperClassName="size-16 shrink-0 rounded-full md:size-20"[m
+[32m+[m[32m                  className="h-full w-full object-cover"[m
+[32m+[m[32m                />[m
+[32m+[m[32m                <div className="flex flex-1 flex-col gap-0.5">[m
+[32m+[m[32m                  {content.kicker && ([m
+[32m+[m[32m                    <p className="font-switzer text-sm font-medium uppercase tracking-widest text-horizon">[m
+[32m+[m[32m                      {content.kicker}[m
+[32m+[m[32m                    </p>[m
+[32m+[m[32m                  )}[m
+[32m+[m[32m                  <h3 className="font-switzer text-3xl font-light tracking-tight text-dark-ocean-blue md:text-5xl">[m
+[32m+[m[32m                    {content.title}[m
+[32m+[m[32m                  </h3>[m
+[32m+[m[32m                </div>[m
+[32m+[m[32m                {content.rating && <StarRating rating={content.rating} />}[m
+[32m+[m[32m              </div>[m
+[32m+[m[32m            ) : ([m
+[32m+[m[32m              <>[m
+[32m+[m[32m                {content.kicker && ([m
+[32m+[m[32m                  <p className="mb-2 font-switzer text-sm font-medium uppercase tracking-widest text-horizon">[m
+[32m+[m[32m                    {content.kicker}[m
+[32m+[m[32m                  </p>[m
+[32m+[m[32m                )}[m
+[32m+[m[32m                {/* Name and Instagram share one row (name left, link right)[m
+[32m+[m[32m                    instead of a small icon tucked right after the title -[m
+[32m+[m[32m                    reads as "here's this person, here's where to find them"[m
+[32m+[m[32m                    rather than a decoration next to the heading. */}[m
+[32m+[m[32m                <div className="flex items-center justify-between gap-3">[m
+[32m+[m[32m                  <h3 className="font-switzer text-3xl font-light tracking-tight text-dark-ocean-blue md:text-5xl">[m
+[32m+[m[32m                    {content.title}[m
+[32m+[m[32m                  </h3>[m
+[32m+[m[32m                  {content.instagram && ([m
+[32m+[m[32m                    <a[m
+[32m+[m[32m                      href={content.instagram}[m
+[32m+[m[32m                      target="_blank"[m
+[32m+[m[32m                      rel="noopener noreferrer"[m
+[32m+[m[32m                      className="flex shrink-0 items-center gap-1 font-switzer text-sm font-medium uppercase tracking-widest text-cta transition hover:text-dark-ocean-blue"[m
+[32m+[m[32m                    >[m
+[32m+[m[32m                      Instagram[m
+[32m+[m[32m                      <span aria-hidden>→</span>[m
+[32m+[m[32m                    </a>[m
+[32m+[m[32m                  )}[m
+[32m+[m[32m                </div>[m
+[32m+[m[32m              </>[m
+             )}[m
+[31m-            {/* Name and Instagram share one row (name left, link right)[m
+[31m-                instead of a small icon tucked right after the title - reads[m
+[31m-                as "here's this person, here's where to find them" rather[m
+[31m-                than a decoration next to the heading. */}[m
+[31m-            <div className="flex items-center justify-between gap-3">[m
+[31m-              <h3 className="font-switzer text-3xl font-light tracking-tight text-dark-ocean-blue md:text-5xl">[m
+[31m-                {content.title}[m
+[31m-              </h3>[m
+[31m-              {content.instagram && ([m
+[31m-                <a[m
+[31m-                  href={content.instagram}[m
+[31m-                  target="_blank"[m
+[31m-                  rel="noopener noreferrer"[m
+[31m-                  className="flex shrink-0 items-center gap-1 font-switzer text-sm font-medium uppercase tracking-widest text-cta transition hover:text-dark-ocean-blue"[m
+[31m-                >[m
+[31m-                  Instagram[m
+[31m-                  <span aria-hidden>→</span>[m
+[31m-                </a>[m
+[31m-              )}[m
+[31m-            </div>[m
+             {content.subtitle && ([m
+               <p className="mt-1 font-switzer text-sm font-medium uppercase tracking-widest text-dark-ocean-blue/50">[m
+                 {content.subtitle}[m
+[36m@@ -330,7 +385,16 @@[m [mexport default function ArticleModal({[m
+               </div>[m
+             )}[m
+ [m
+[31m-            <div className="mt-6">[m
+[32m+[m[32m            {/* Quote mark (Reviews only) - same glyph/treatment as the[m
+[32m+[m[32m                card, sitting right above the quote text with the paragraph[m
+[32m+[m[32m                block pulled up close beneath it via the negative margin[m
+[32m+[m[32m                below, instead of the plain mt-6 gap other callers get. */}[m
+[32m+[m[32m            {content.avatar && ([m
+[32m+[m[32m              <span aria-hidden className="mt-4 block font-switzer text-4xl font-light leading-none text-cta/25">[m
+[32m+[m[32m                &ldquo;[m
+[32m+[m[32m              </span>[m
+[32m+[m[32m            )}[m
+[32m+[m[32m            <div className={content.avatar ? "-mt-2" : "mt-6"}>[m
+               {content.sections && content.sections.length > 0 ? ([m
+                 <div className="flex flex-col gap-6">[m
+                   {content.sections.map((section) => ([m

@@ -154,6 +154,14 @@ export default function Reviews({
   };
 
   const onPointerDown = (e: React.PointerEvent) => {
+    // Mouse only - click-and-drag scrolling is a desktop affordance (no
+    // native way to grab-scroll with a mouse). Touch/pen pointers skip this
+    // entirely and fall through to the browser's own native touch scrolling
+    // on the overflow-x-auto element below, which - unlike this custom
+    // pointer-capture drag - correctly lets a touch that turns out to be
+    // more vertical than horizontal keep scrolling the page instead of
+    // getting locked into this carousel.
+    if (e.pointerType !== "mouse") return;
     const el = scrollerRef.current;
     if (!el) return;
     if ((e.target as HTMLElement).closest("button, a")) return;

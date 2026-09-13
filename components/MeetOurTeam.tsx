@@ -96,15 +96,15 @@ function TeamCard({
           {member.bio}
         </p>
         {/* Bottom action row - Instagram (secondary, left, muted) and Meet
-            (primary, right, cyan) now share one baseline instead of Meet
-            sitting in its own row above the divider. The left wrapper
+            (primary, right, cyan) now share one baseline. The left wrapper
             always renders (even with no instagram/website) so
             justify-between always has two flex children and Meet stays
-            pinned to the row's right edge; mt-auto keeps this whole row at
-            the same vertical position across every card regardless of how
-            long each member's bio runs. pt-4 (was pt-3) gives the divider
-            slightly more breathing room before the action row below it. */}
-        <div className="mt-auto flex items-center justify-between gap-4 border-t border-white/10 pt-4">
+            pinned to the row's right edge. mt-6 gives guaranteed breathing
+            room above the row (was mt-auto, which had no room to push
+            against once the bio was clamped to 2 lines). The divider sits
+            below this row (border-b + pb-4) as the card's bottom edge,
+            instead of above it. */}
+        <div className="mt-6 flex items-center justify-between gap-4 border-b border-white/10 pb-4">
           <div className="flex items-center gap-4">
             {/* Instagram as an intentional "Instagram ->" text link instead
                 of a lone icon - matches the treatment used in the modal

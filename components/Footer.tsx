@@ -2,6 +2,7 @@ import Link from "next/link";
 import { InstagramIcon, TelegramIcon, FacebookIcon, WhatsappIcon } from "./SocialIcons";
 import BookInButton from "./BookInButton";
 import Blob from "./Blob";
+import NewsletterSignup from "./NewsletterSignup";
 import type { FooterLink } from "@/lib/content";
 
 const logo = "/images/logo-white.svg";
@@ -189,6 +190,24 @@ export default function Footer({
               {location}
             </p>
           </div>
+        </div>
+
+        {/* Its own row rather than tucked under Contact - a signup form
+            competing with an email/phone/location list for the same column
+            width was cramped, and this way it gets the same label/subcopy
+            treatment as the CTA block above instead of reading as an
+            afterthought. Picks up the top hairline for free from this
+            container's divide-y. */}
+        <div className="flex w-full flex-col items-start gap-4 py-6 md:flex-row md:items-center md:justify-between md:gap-8 md:py-8">
+          <div className="flex flex-col gap-1">
+            <p className="font-switzer text-sm font-semibold uppercase tracking-[0.15em] text-aquatic">
+              Newsletter
+            </p>
+            <p className="font-switzer text-base font-light text-white/50">
+              Diving tips and updates, straight to your inbox.
+            </p>
+          </div>
+          <NewsletterSignup />
         </div>
       </div>
 

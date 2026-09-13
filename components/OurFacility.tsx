@@ -111,11 +111,10 @@ export default function OurFacility({
         // that height evenly regardless of how many there are. Sized with
         // 5 tiles in mind (aspect-video would make 5 stacked tiles taller
         // than the photo; flex-1 fill avoids that by construction). Mobile
-        // is completely unchanged: still the original stacked layout,
-        // photo on top, thumbnail row below with its own horizontal
-        // overlap - there's no width to spare there for a side-by-side
-        // split, so the switch to md:flex-row is the only thing gating
-        // this.
+        // keeps the original stacked layout (photo on top, thumbnail row
+        // below) but no longer overlaps either - was fanned with -ml-6,
+        // now the same plain gap-2 spacing as the desktop column, just
+        // laid out as a row instead of a column.
         //
         // mt-6 md:mt-10 added on top of the section's own gap-10 - the
         // paragraph above is dense multi-line body copy, and gap-10 alone
@@ -146,18 +145,18 @@ export default function OurFacility({
             <ViewIndicator />
           </button>
           {images.length > 1 && (
-            // Mobile: unchanged horizontal fanned row, each tile sharing
-            // the row's width equally (flex-1) and pulled left over its
-            // neighbour (-ml-6). Desktop: a fixed-width column (w-56, no
-            // overlap - gap-2 instead) where every tile is flex-1 and
-            // aspect-auto (was aspect-video), so the tiles divide the
-            // column's full height - stretched by the parent's
-            // md:items-stretch to match the photo - evenly between them
-            // instead of each keeping its own 16:9 crop. z-index still
-            // climbs with index so the selected tile stays on top of its
-            // ring/hover state, even though tiles no longer overlap each
-            // other physically.
-            <div className="relative z-20 flex w-full md:w-56 md:flex-none md:flex-col md:gap-2">
+            // Mobile: horizontal row, each tile sharing the row's width
+            // equally (flex-1), plain gap-2 between them (was fanned,
+            // pulled left over its neighbour via -ml-6). Desktop: a
+            // fixed-width column (w-56) with that same gap-2, where every
+            // tile is flex-1 and aspect-auto (was aspect-video), so the
+            // tiles divide the column's full height - stretched by the
+            // parent's md:items-stretch to match the photo - evenly
+            // between them instead of each keeping its own 16:9 crop.
+            // z-index still climbs with index so the selected tile stays
+            // on top of its own ring/hover state, even though tiles don't
+            // overlap each other physically at either width anymore.
+            <div className="relative z-20 flex w-full gap-2 md:w-56 md:flex-none md:flex-col">
               {images.map((src, i) => (
                 <button
                   key={`${i}-${src}`}
@@ -167,8 +166,8 @@ export default function OurFacility({
                   aria-pressed={i === selected}
                   style={{ zIndex: i === selected ? images.length + 1 : i }}
                   className={`group/thumb relative aspect-video flex-1 overflow-hidden rounded-lg border-2 border-dark-ocean-blue shadow-lg shadow-black/40 transition duration-200 hover:z-[999] md:aspect-auto md:w-full ${
-                    i > 0 ? "-ml-6 md:ml-0" : ""
-                  } ${i === selected ? "ring-2 ring-cta" : ""}`}
+                    i === selected ? "ring-2 ring-cta" : ""
+                  }`}
                 >
                   <FadeImage
                     src={src}
