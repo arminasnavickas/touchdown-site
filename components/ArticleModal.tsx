@@ -24,6 +24,37 @@ function ArrowIcon({ direction, className = "size-6" }: { direction: "left" | "r
   );
 }
 
+// Mirrors the review card's star rating exactly (Reviews.tsx) so the modal
+// header shows the same filled/empty stars for the same rating value -
+// duplicated here rather than imported to keep this file self-contained and
+// the review card component untouched.
+const RATING_STAR_COLOR = "#FBBF24";
+
+function StarIcon({ filled }: { filled: boolean }) {
+  return (
+    <svg
+      viewBox="0 0 20 20"
+      className="size-4"
+      fill={filled ? RATING_STAR_COLOR : "none"}
+      stroke={filled ? RATING_STAR_COLOR : "#D1D5DB"}
+      strokeWidth="1"
+    >
+      <path d="M10 1.5l2.6 5.4 5.9.8-4.3 4.2 1 5.9L10 15l-5.2 2.8 1-5.9L1.5 7.7l5.9-.8L10 1.5Z" />
+    </svg>
+  );
+}
+
+function StarRating({ rating }: { rating: string }) {
+  const filledCount = Math.round(parseFloat(rating) || 5);
+  return (
+    <div className="flex shrink-0 gap-0.5">
+      {Array.from({ length: 5 }).map((_, i) => (
+        <StarIcon key={i} filled={i < filledCount} />
+      ))}
+    </div>
+  );
+}
+
 export type ArticleModalContent = {
   title: string;
   kicker?: string;
@@ -48,6 +79,9 @@ export type ArticleModalContent = {
   imagePositionClassName?: string;
   avatar?: string;
   instagram?: string;
+  // Star rating (e.g. "5", "4.5"), rendered alongside the avatar/name header
+  // when present - Reviews only for now, same rating value the card shows.
+  rating?: string;
   paragraphs: string[];
   // Optional sectioned body copy (title + paragraphs per section), rendered
   // instead of the flat `paragraphs` list when present - Team bios only for
@@ -144,7 +178,18 @@ export default function ArticleModal({
 
   return createPortal(
     <div
-      className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 p-2.5 md:p-6"
+      // flex-col (was a plain row): the mobile-only "Swipe to navigate"
+      // caption below needs to stack under the card rather than sit beside
+      // it. Still centers the whole card+caption group both ways via
+      // items-center/justify-center exactly as it did with just the card.
+      // px-12 (48px) on mobile is the full gutter budget: a 24px margin
+      // (matching the Reviews section's own px-6 side padding) before the
+      // edge-peek nub, then the 14px nub itself, then a ~10px gap before
+      // the card - margin, peek, gap, card, left to right. The nub's own
+      // left-6/right-6 offset below is what carves the margin out of this
+      // budget; the remainder becomes the gap since the card's start is
+      // fixed by this padding value.
+      className="fixed inset-0 z-[100] flex flex-col items-center justify-center gap-6 bg-black/90 px-12 py-2.5 md:p-6"
       onClick={onClose}
     >
       {/* Narrowed from max-w-2xl (672px) to a slightly wider but more
@@ -158,7 +203,14 @@ export default function ArticleModal({
           around it - a real "near-full-screen modal" rather than a desktop
           dialog with its edges just barely inside a small viewport. */}
       <div
-        className="relative flex max-h-[94vh] w-full max-w-[724px] flex-col overflow-hidden rounded-lg bg-white md:max-h-[85vh]"
+        // No side margin of its own any more - the overlay's own px-6
+        // (mobile) / md:p-6 (desktop) padding above is the entire gutter
+        // between the card and the screen edge, matching the Reviews
+        // section's side padding.
+        // max-h dropped slightly on mobile (94vh -> 88vh) to leave room for
+        // the caption below without the card+caption group overflowing the
+        // viewport.
+        className="relative flex max-h-[88vh] w-full max-w-[724px] flex-col overflow-hidden rounded-lg bg-white md:max-h-[85vh]"
         onClick={(e) => e.stopPropagation()}
         onTouchStart={onTouchStart}
         onTouchEnd={onTouchEnd}
@@ -267,45 +319,67 @@ export default function ArticleModal({
               padding. Centering the column splits that leftover width
               evenly instead, so the gap from the outer padding reads the
               same on both sides. */}
-          {/* Comfortable margins rather than the desktop's generous 8/8 -
-              enough to keep the text off the modal's own edges without
-              eating into the reading column on a 375-414px screen. */}
-          <div className="px-5 py-6 md:px-12 md:py-10">
+          {/* Mobile padding matches the review card's own p-6 (24px all
+              round) instead of the previous asymmetric px-5/py-6, so the
+              modal's content feels consistent with the card that opened it.
+              Desktop keeps its own more generous 12/10. */}
+          <div className="p-6 md:px-12 md:py-10">
           <div className="mx-auto max-w-[560px]">
-            {content.avatar && (
-              <FadeImage
-                src={content.avatar}
-                alt={content.title}
-                eager
-                wrapperClassName="mb-4 size-16 shrink-0 rounded-full md:size-20"
-                className="h-full w-full object-cover"
-              />
+            {content.avatar ? (
+              // Byline-style header (Reviews): avatar left, kicker/name
+              // stacked to its right, rating on the far right of the same
+              // row - matches how the review card itself lays out its
+              // header, instead of the stacked avatar-above-name layout the
+              // other callers below still use.
+              <div className="mb-4 flex items-center gap-4 border-b border-dark-ocean-blue/10 pb-4">
+                <FadeImage
+                  src={content.avatar}
+                  alt={content.title}
+                  eager
+                  wrapperClassName="size-16 shrink-0 rounded-full md:size-20"
+                  className="h-full w-full object-cover"
+                />
+                <div className="flex flex-1 flex-col gap-0.5">
+                  {content.kicker && (
+                    <p className="font-switzer text-sm font-medium uppercase tracking-widest text-horizon">
+                      {content.kicker}
+                    </p>
+                  )}
+                  <h3 className="font-switzer text-3xl font-light tracking-tight text-dark-ocean-blue md:text-5xl">
+                    {content.title}
+                  </h3>
+                </div>
+                {content.rating && <StarRating rating={content.rating} />}
+              </div>
+            ) : (
+              <>
+                {content.kicker && (
+                  <p className="mb-2 font-switzer text-sm font-medium uppercase tracking-widest text-horizon">
+                    {content.kicker}
+                  </p>
+                )}
+                {/* Name and Instagram share one row (name left, link right)
+                    instead of a small icon tucked right after the title -
+                    reads as "here's this person, here's where to find them"
+                    rather than a decoration next to the heading. */}
+                <div className="flex items-center justify-between gap-3">
+                  <h3 className="font-switzer text-3xl font-light tracking-tight text-dark-ocean-blue md:text-5xl">
+                    {content.title}
+                  </h3>
+                  {content.instagram && (
+                    <a
+                      href={content.instagram}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex shrink-0 items-center gap-1 font-switzer text-sm font-medium uppercase tracking-widest text-cta transition hover:text-dark-ocean-blue"
+                    >
+                      Instagram
+                      <span aria-hidden>→</span>
+                    </a>
+                  )}
+                </div>
+              </>
             )}
-            {content.kicker && (
-              <p className="mb-2 font-switzer text-sm font-medium uppercase tracking-widest text-horizon">
-                {content.kicker}
-              </p>
-            )}
-            {/* Name and Instagram share one row (name left, link right)
-                instead of a small icon tucked right after the title - reads
-                as "here's this person, here's where to find them" rather
-                than a decoration next to the heading. */}
-            <div className="flex items-center justify-between gap-3">
-              <h3 className="font-switzer text-3xl font-light tracking-tight text-dark-ocean-blue md:text-5xl">
-                {content.title}
-              </h3>
-              {content.instagram && (
-                <a
-                  href={content.instagram}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex shrink-0 items-center gap-1 font-switzer text-sm font-medium uppercase tracking-widest text-cta transition hover:text-dark-ocean-blue"
-                >
-                  Instagram
-                  <span aria-hidden>→</span>
-                </a>
-              )}
-            </div>
             {content.subtitle && (
               <p className="mt-1 font-switzer text-sm font-medium uppercase tracking-widest text-dark-ocean-blue/50">
                 {content.subtitle}
@@ -330,7 +404,16 @@ export default function ArticleModal({
               </div>
             )}
 
-            <div className="mt-6">
+            {/* Quote mark (Reviews only) - same glyph/treatment as the
+                card, sitting right above the quote text with the paragraph
+                block pulled up close beneath it via the negative margin
+                below, instead of the plain mt-6 gap other callers get. */}
+            {content.avatar && (
+              <span aria-hidden className="mt-4 block font-switzer text-4xl font-light leading-none text-cta/25">
+                &ldquo;
+              </span>
+            )}
+            <div className={content.avatar ? "-mt-2" : "mt-6"}>
               {content.sections && content.sections.length > 0 ? (
                 <div className="flex flex-col gap-6">
                   {content.sections.map((section) => (
@@ -422,6 +505,88 @@ export default function ArticleModal({
           </div>
         </div>
       </div>
+
+      {/* Swipe hint, below the card rather than inside its header - mobile
+          only (md:hidden), part of the flex-col group above so it stacks
+          under the card instead of sitting beside it. Desktop doesn't need
+          it: it already has the floating arrow buttons either side of the
+          card. */}
+      {typeof currentIndex === "number" && typeof total === "number" && total > 1 && (
+        <p className="font-switzer text-[11px] font-medium uppercase tracking-widest text-white/50 md:hidden">
+          Swipe to navigate
+        </p>
+      )}
+
+      {/* Large floating prev/next arrows on the overlay itself - same style
+          as the review carousel's own arrow buttons (Reviews.tsx) - in
+          addition to the compact "04 / 18" chevrons in the header bar above.
+          Desktop only (md:flex): mobile gets its own edge-peek nubs below
+          instead, sized for touch and for a near-full-screen modal. */}
+      {typeof currentIndex === "number" && typeof total === "number" && total > 1 && (
+        <>
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              onPrev?.();
+            }}
+            aria-label="Previous"
+            className="absolute left-4 top-1/2 hidden -translate-y-1/2 items-center justify-center rounded-full bg-white text-dark-ocean-blue shadow-lg transition hover:bg-aquatic md:flex md:size-12"
+          >
+            <ArrowIcon direction="left" />
+          </button>
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              onNext?.();
+            }}
+            aria-label="Next"
+            className="absolute right-4 top-1/2 hidden -translate-y-1/2 items-center justify-center rounded-full bg-white text-dark-ocean-blue shadow-lg transition hover:bg-aquatic md:flex md:size-12"
+          >
+            <ArrowIcon direction="right" />
+          </button>
+
+          {/* Mobile edge-peek: a short sliver, rounded on the same corner
+              radius as the card itself (rounded-lg, not rounded-full) so it
+              reads as a fragment of another card's edge rather than a
+              slider/scrollbar handle - the earlier tall thin pill's problem
+              was its proportions, not the idea itself. Taller (h-72) so it
+              reads as a soft glimpse of something behind the card rather
+              than a solid tab. Only the outer corner is rounded
+              (rounded-l-lg / rounded-r-lg) - the inner side stays square, as
+              if the rest of the shape is tucked behind the main card rather
+              than a free-floating pill. Plain (no icon): the edge is the
+              signal.
+              Same opacity-gradient fade as the Reviews carousel's edge fade
+              (Reviews.tsx) instead of a flat bg-white/40: solid near the
+              main card (the inner edge) and fading to transparent toward
+              the screen edge (the outer edge), so the two "there's more
+              here" cues on the site read as the same visual language.
+              left-6/right-6 (24px) matches the Reviews section's own side
+              margin, so reading left to right it's margin, then this 14px
+              nub, then whatever's left of the overlay's px-12 before the
+              card - margin, peek, gap, card. */}
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              onPrev?.();
+            }}
+            aria-label="Previous"
+            className="absolute left-6 top-1/2 h-72 w-3.5 -translate-y-1/2 rounded-l-lg bg-gradient-to-r from-transparent to-white/70 shadow-sm transition active:to-aquatic/40 md:hidden"
+          />
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              onNext?.();
+            }}
+            aria-label="Next"
+            className="absolute right-6 top-1/2 h-72 w-3.5 -translate-y-1/2 rounded-r-lg bg-gradient-to-l from-transparent to-white/70 shadow-sm transition active:to-aquatic/40 md:hidden"
+          />
+        </>
+      )}
     </div>,
     document.body
   );

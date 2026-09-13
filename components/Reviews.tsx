@@ -86,7 +86,7 @@ function ReviewCard({
     // different, self-contained job (quoting someone else's words, not
     // presenting the brand's own content).
     <div
-      className="flex h-full w-[80%] shrink-0 flex-col gap-3 rounded-lg p-6 shadow-sm transition-shadow duration-300 hover:shadow-md snap-start sm:w-[320px]"
+      className="flex h-full w-full flex-col gap-3 rounded-lg p-6 shadow-sm transition-shadow duration-300 hover:shadow-md"
       style={{
         backgroundImage:
           "linear-gradient(180deg, #FFFFFF 24.83%, rgba(208,235,242,0.1) 98.162%), linear-gradient(#FFFFFF, #FFFFFF)",
@@ -202,13 +202,36 @@ export default function Reviews({
           className={`flex w-full gap-6 overflow-x-auto px-1 pb-4 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden ${
             isDragging ? "cursor-grabbing select-none" : "cursor-grab snap-x snap-mandatory scroll-smooth"
           }`}
-          style={{ scrollPaddingLeft: "1px" }}
+          // Opacity-gradient edge fade instead of a hard clip - the
+          // scroller's own overflow-x-auto was cutting the next card off
+          // sharply at the section's right edge. A mask-image fades the
+          // painted result of this element to transparent over its outer
+          // 40px on the right only - the left edge stays fully opaque since
+          // the first card there is meant to read as fully "arrived", not
+          // fading in. The mask is fixed to this box's own edge regardless
+          // of scroll position, so it fades whichever card is currently
+          // sitting at the right.
+          style={{
+            scrollPaddingLeft: "1px",
+            maskImage: "linear-gradient(to right, black, black calc(100% - 40px), transparent)",
+            WebkitMaskImage: "linear-gradient(to right, black, black calc(100% - 40px), transparent)",
+          }}
         >
           {/* Big featured testimonial removed - every review, including
               what used to be reviews[0], now shows as an equal small card
-              in this scroller. */}
+              in this scroller. Each card now scroll-reveals in with a
+              staggered delay via Reveal, same pattern as the pricing cards
+              (Pricing.tsx) - Reveal carries the sizing/shrink/snap classes
+              that used to live on the card's own div, and the card fills it
+              with h-full w-full instead. */}
           {reviews.map((review, i) => (
-            <ReviewCard key={review.name} review={review} index={i} onOpen={setOpenIndex} />
+            <Reveal
+              key={review.name}
+              delay={i * 100}
+              className="h-full w-[80%] shrink-0 snap-start sm:w-[320px]"
+            >
+              <ReviewCard review={review} index={i} onOpen={setOpenIndex} />
+            </Reveal>
           ))}
         </div>
 
@@ -236,6 +259,7 @@ export default function Reviews({
             title: reviews[openIndex].name,
             kicker: reviews[openIndex].role ?? undefined,
             avatar: reviews[openIndex].image,
+            rating: reviews[openIndex].rating,
             paragraphs: [reviews[openIndex].quote],
           }}
           currentIndex={openIndex}
