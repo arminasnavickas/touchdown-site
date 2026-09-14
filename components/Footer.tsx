@@ -131,24 +131,24 @@ export default function Footer({
               column - is exactly the container's own right edge, mirroring
               the CTA's flush-left edge on the other side. Same container,
               same grid, both sides now genuinely edge-to-edge. */}
-          <div className="flex flex-col items-end gap-2.5 sm:gap-4">
+          <div className="flex flex-col items-end gap-3 sm:gap-5">
             <Link href="/" className="shrink-0">
-              {/* Capped to ~130px on mobile (was rendering much wider at a
+              {/* Capped to ~170px on mobile (was rendering much wider at a
                   fixed height with no max-width) so it doesn't dominate a
                   column that's now only half the screen. */}
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={logo} alt="Touchdown" className="h-4 w-auto max-w-[130px] sm:h-5 sm:max-w-none" />
+              <img src={logo} alt="Touchdown" className="h-5 w-auto max-w-[170px] sm:h-7 sm:max-w-none" />
             </Link>
             {/* Icons grouped tight to the logo, and sized down on mobile via
                 the [&>svg] override below - SocialIcons' own size-8 default
                 is sized for a desktop-width column, not a 2-up mobile one.
                 justify-end keeps the group's right edge anchored even if it
                 ever wraps to a second line. */}
-            <div className="flex flex-wrap items-center justify-end gap-3 sm:gap-5">
-              <a href={instagram} target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="transition hover:text-cta [&>svg]:size-5 sm:[&>svg]:size-6"><InstagramIcon /></a>
-              <a href={telegram} target="_blank" rel="noopener noreferrer" aria-label="Telegram" className="transition hover:text-cta [&>svg]:size-5 sm:[&>svg]:size-6"><TelegramIcon /></a>
-              <a href={facebook} target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="transition hover:text-cta [&>svg]:size-5 sm:[&>svg]:size-6"><FacebookIcon /></a>
-              <a href={whatsapp} target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" className="transition hover:text-cta [&>svg]:size-5 sm:[&>svg]:size-6"><WhatsappIcon /></a>
+            <div className="flex flex-wrap items-center justify-end gap-4 sm:gap-6">
+              <a href={instagram} target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="transition hover:text-cta [&>svg]:size-6 sm:[&>svg]:size-7"><InstagramIcon /></a>
+              <a href={telegram} target="_blank" rel="noopener noreferrer" aria-label="Telegram" className="transition hover:text-cta [&>svg]:size-6 sm:[&>svg]:size-7"><TelegramIcon /></a>
+              <a href={facebook} target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="transition hover:text-cta [&>svg]:size-6 sm:[&>svg]:size-7"><FacebookIcon /></a>
+              <a href={whatsapp} target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" className="transition hover:text-cta [&>svg]:size-6 sm:[&>svg]:size-7"><WhatsappIcon /></a>
             </div>
           </div>
         </div>
@@ -192,23 +192,26 @@ export default function Footer({
           </div>
         </div>
 
-        {/* Its own row rather than tucked under Contact - a signup form
-            competing with an email/phone/location list for the same column
-            width was cramped, and this way it gets the same label/subcopy
-            treatment as the CTA block above instead of reading as an
-            afterthought. Picks up the top hairline for free from this
-            container's divide-y. */}
-        <div className="flex w-full flex-col items-start gap-4 py-6 md:flex-row md:items-center md:justify-between md:gap-8 md:py-8">
-          <div className="flex flex-col gap-1">
-            <p className="font-switzer text-sm font-semibold uppercase tracking-[0.15em] text-aquatic">
-              Newsletter
-            </p>
-            <p className="font-switzer text-base font-light text-white/50">
-              Diving tips and updates, straight to your inbox.
-            </p>
-          </div>
-          <NewsletterSignup />
+      </div>
+
+      {/* Its own visual panel rather than another plain divide-y row - a
+          bordered card with a bigger icon, heading and form so it reads as
+          a real invitation to subscribe instead of a footnote next to the
+          contact details. Sized up from the old inline-label version:
+          text-xl/2xl heading (was a text-sm uppercase label), a 48px/56px
+          icon circle, and a taller form (see NewsletterSignup's own sizing).
+          Sits outside the divide-y container above so its own border does
+          not fight with the automatic divider that container adds. */}
+      <div className="relative z-10 mx-6 mb-6 flex w-[calc(100%-3rem)] flex-col gap-6 rounded-lg border border-white/10 bg-white/[0.03] p-6 md:mx-16 md:mb-10 md:w-[calc(100%-8rem)] md:flex-row md:items-center md:justify-between md:gap-10 md:p-10">
+        <div className="flex flex-col gap-1.5">
+          <p className="font-switzer text-2xl font-bold text-white md:text-3xl">
+            Stay in the loop
+          </p>
+          <p className="font-switzer text-base font-light text-white/50 md:text-lg">
+            Diving tips, course updates and Dahab stories, straight to your inbox.
+          </p>
         </div>
+        <NewsletterSignup className="w-full md:w-auto md:min-w-[460px]" />
       </div>
 
       {/* Legal lives here now as a compact inline list next to the
