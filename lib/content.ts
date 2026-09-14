@@ -1509,7 +1509,11 @@ export async function getBlogPosts(): Promise<BlogPost[]> {
     const items = await sanityClient.fetch(
       `*[_type == "blogPost"] | order(publishedAt desc){ title, "slug": slug.current, category, excerpt, "coverImage": coverImage, "author": author->{name, "photo": photo}, publishedAt, body }`
     );
-    if (!items?.length) return fallbackBlogPosts;
+    // A genuinely empty result (all posts removed in Sanity) is real
+    // content, not a failed/unconfigured fetch — only fall back to the
+    // hardcoded placeholder posts when Sanity itself returned nothing
+    // (null/undefined), not when it correctly returned zero posts.
+    if (!items) return fallbackBlogPosts;
     return items.map((item: { title: string; slug: string; category: string | null; excerpt: string | null; coverImage: unknown; author: { name: string; photo: unknown } | null; publishedAt: string; body: unknown }) => ({
       ...item,
       excerpt: item.excerpt ?? "",
