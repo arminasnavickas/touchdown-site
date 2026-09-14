@@ -159,7 +159,14 @@ export default function LightboxProvider({ children }: { children: React.ReactNo
           role="dialog"
           aria-modal="true"
           aria-label="Photo gallery"
-          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/78 p-3 backdrop-blur-md md:p-6"
+          // bg-black/78 (matching the arbitrary but "close enough" value
+          // used elsewhere) never actually generated - 78 isn't one of
+          // Tailwind's built-in opacity steps, so the class silently
+          // produced no CSS and the backdrop rendered with zero darkening
+          // (just the blur). bg-[rgba(...)] is an arbitrary-value utility,
+          // so it always compiles to exactly this regardless of the
+          // opacity scale.
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-[rgba(0,0,0,0.78)] p-3 backdrop-blur-md md:p-6"
           onClick={onOverlayClick}
           onTouchStart={onTouchStart}
           onTouchEnd={onTouchEnd}
