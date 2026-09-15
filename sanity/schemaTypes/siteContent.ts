@@ -33,6 +33,7 @@ export default defineType({
       name: "whoWeAreImage",
       title: '"Who we are" image',
       type: "image",
+      options: { hotspot: true },
     }),
     defineField({
       name: "facilityHeading",
@@ -150,7 +151,22 @@ export default defineType({
     defineField({
       name: "notFoundImage",
       title: "404 page background image",
+      description:
+        "Click \"Edit\" on the uploaded image to crop it and drag the focal point (hotspot) circle - the live page keeps that focal point in view at every screen size instead of always centering the image.",
       type: "image",
+      options: {
+        hotspot: true,
+      },
+    }),
+    defineField({
+      name: "notFoundTextColor",
+      title: "404 page text color",
+      description:
+        "Color of the \"404\" label, headline and subtext over the background image. Defaults to Dark Ocean Blue (#023048) if left empty.",
+      type: "color",
+      options: {
+        disableAlpha: true,
+      },
     }),
     defineField({
       name: "footerEmail",

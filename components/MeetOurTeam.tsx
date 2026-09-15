@@ -21,6 +21,11 @@ import ArticleModal from "./ArticleModal";
 // file itself is now cropped to match the rest of the team's square ratio,
 // so this map goes back to needing per-member overrides only if a future
 // photo genuinely needs one.
+//
+// Team photos can now also carry a crop/focal point set in Sanity Studio
+// (member.imagePosition, from the photo field's hotspot) - that's used as
+// the default whenever a member has no entry here, so this map is only for
+// the rare case where the code-level override still needs to win.
 const PHOTO_Y_OFFSET_BY_NAME: Record<string, number> = {};
 
 // Per-member focal position for the PROFILE PANEL's hero image (separate
@@ -30,7 +35,8 @@ const PHOTO_Y_OFFSET_BY_NAME: Record<string, number> = {};
 // member, which keeps the full head in frame at the new taller hero height;
 // override individual entries only if a specific photo's subject sits low
 // enough in the source frame that top-anchoring cuts their shoulders off
-// awkwardly instead.
+// awkwardly instead. Same Sanity hotspot fallback as the card map above -
+// member.imagePosition is used whenever a member has no entry here.
 const MODAL_IMAGE_POSITION_BY_NAME: Record<string, string> = {};
 
 function TeamCard({
@@ -66,7 +72,12 @@ function TeamCard({
           alt={member.name}
           wrapperClassName="h-full w-full"
           className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
-          style={{ objectPosition: `50% ${PHOTO_Y_OFFSET_BY_NAME[member.name] ?? 0}%` }}
+          style={{
+            objectPosition:
+              PHOTO_Y_OFFSET_BY_NAME[member.name] !== undefined
+                ? `50% ${PHOTO_Y_OFFSET_BY_NAME[member.name]}%`
+                : (member.imagePosition ?? "50% 0%"),
+          }}
         />
       </button>
 
@@ -228,7 +239,10 @@ export default function MeetOurTeam({
             // the way the old fixed-height hero did.
             image: members[openIndex].image,
             imageSize: "tall",
-            imagePosition: MODAL_IMAGE_POSITION_BY_NAME[members[openIndex].name] ?? "center top",
+            imagePosition:
+              MODAL_IMAGE_POSITION_BY_NAME[members[openIndex].name] ??
+              members[openIndex].imagePosition ??
+              "center top",
             subtitle: members[openIndex].role,
             instagram: members[openIndex].instagram ?? undefined,
             // Bare values here (no leading "-") to match the popup's own

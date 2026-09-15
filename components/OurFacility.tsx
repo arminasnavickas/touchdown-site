@@ -5,6 +5,7 @@ import Blob from "./Blob";
 import Reveal from "./Reveal";
 import FadeImage from "./FadeImage";
 import { useLightbox } from "./LightboxContext";
+import type { SitePhoto } from "@/lib/content";
 
 // New section sitting between About Us and How It Works - the Blue Hole
 // location and on-land amenities copy Francesca sent over. Matches the same
@@ -34,9 +35,10 @@ export default function OurFacility({
 }: {
   heading: string;
   copy: string;
-  images: string[];
+  images: SitePhoto[];
 }) {
   const { openLightbox } = useLightbox();
+  const urls = images.map((image) => image.url);
   const paragraphs = copy.split("\n").filter(Boolean);
   // Which photo is showing large up top - starts on the first image, moves
   // when a thumbnail below is clicked. Kept as plain index state rather
@@ -130,16 +132,17 @@ export default function OurFacility({
               thumbnail column (fixed at md:w-56) doesn't need. */}
           <button
             type="button"
-            onClick={() => openLightbox(images, selected)}
+            onClick={() => openLightbox(urls, selected)}
             aria-label={`View facility photo ${selected + 1} of ${images.length}, full size`}
             className="group relative aspect-video w-full cursor-zoom-in overflow-hidden rounded-lg md:flex-1"
           >
             <FadeImage
-              key={images[selected]}
-              src={images[selected]}
+              key={images[selected].url}
+              src={images[selected].url}
               alt={`Touchdown Freediving's training facility in Dahab, photo ${selected + 1} of ${images.length}`}
               wrapperClassName="h-full w-full"
               className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.03]"
+              style={{ objectPosition: images[selected].position }}
             />
             <div className="absolute inset-0 bg-dark-ocean-blue/0 transition-colors duration-300 group-hover:bg-dark-ocean-blue/25" />
             <ViewIndicator />
@@ -157,9 +160,9 @@ export default function OurFacility({
             // on top of its own ring/hover state, even though tiles don't
             // overlap each other physically at either width anymore.
             <div className="relative z-20 flex w-full gap-2 md:w-56 md:flex-none md:flex-col">
-              {images.map((src, i) => (
+              {images.map((photo, i) => (
                 <button
-                  key={`${i}-${src}`}
+                  key={`${i}-${photo.url}`}
                   type="button"
                   onClick={() => setSelected(i)}
                   aria-label={`Show facility photo ${i + 1} of ${images.length}`}
@@ -170,10 +173,11 @@ export default function OurFacility({
                   }`}
                 >
                   <FadeImage
-                    src={src}
+                    src={photo.url}
                     alt={`Touchdown Freediving facility, thumbnail ${i + 1} of ${images.length}`}
                     wrapperClassName="h-full w-full"
                     className="h-full w-full object-cover"
+                    style={{ objectPosition: photo.position }}
                   />
                 </button>
               ))}

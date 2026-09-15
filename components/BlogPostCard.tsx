@@ -30,6 +30,7 @@ export default function BlogPostCard({ post }: { post: BlogPost }) {
             alt={post.title}
             wrapperClassName="h-full w-full"
             className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+            style={{ objectPosition: post.coverImagePosition ?? "50% 50%" }}
           />
         ) : (
           <div className="h-full w-full bg-gradient-to-br from-horizon/15 to-aquatic/15" />
@@ -61,7 +62,12 @@ export default function BlogPostCard({ post }: { post: BlogPost }) {
           <div className="flex flex-wrap items-center gap-2 font-switzer text-xs uppercase tracking-wide text-dark-ocean-blue/40">
             {avatar && (
               // eslint-disable-next-line @next/next/no-img-element
-              <img src={avatar} alt="" className="size-4 rounded-full object-cover" />
+              <img
+                src={avatar}
+                alt=""
+                className="size-4 rounded-full object-cover"
+                style={{ objectPosition: post.author?.photoPosition ?? "50% 50%" }}
+              />
             )}
             <span className="flex items-center gap-1">
               <CalendarIcon className="size-3" />

@@ -10,10 +10,12 @@ export default function WhoWeAre({
   heading,
   copy,
   image,
+  imagePosition,
 }: {
   heading: string;
   copy: string;
   image: string;
+  imagePosition: string;
 }) {
   const { openLightbox } = useLightbox();
   const paragraphs = copy.split(/(?<=[.?"])\s+(?=[A-Z])/);
@@ -89,6 +91,7 @@ export default function WhoWeAre({
             alt="The Touchdown team together in Dahab"
             wrapperClassName="h-full w-full rounded-lg"
             className="h-full w-full object-cover transition-transform duration-300 hover:scale-110"
+            style={{ objectPosition: imagePosition }}
           />
         </button>
       </Reveal>

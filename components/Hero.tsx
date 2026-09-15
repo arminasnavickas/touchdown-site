@@ -16,10 +16,17 @@ export default function Hero({
   headline,
   subcopy,
   slides,
+  videoUrl,
 }: {
   headline: string;
   subcopy: string;
   slides: string[];
+  // When set (siteContent.heroVideoUrl), replaces the whole slide carousel
+  // below with a single looping background video - see the render branch
+  // further down. slides/the carousel hooks are otherwise untouched, so
+  // removing the video in Studio falls straight back to the photo carousel
+  // with no other change needed.
+  videoUrl?: string | null;
 }) {
   const parallaxRef = useRef<HTMLDivElement>(null);
   const headlineLines = headline.split("\n");
@@ -129,36 +136,57 @@ export default function Hero({
         className="absolute inset-0"
         style={{ willChange: "transform" }}
       >
-        {/* Every mounted slide stays in the DOM, stacked, and only opacity
-            decides which one is visible - a plain crossfade rather than a
-            slide/swipe transition, so it reads as one continuous photo
-            breathing rather than a slideshow control. */}
-        {slides.map((src, i) => {
-          if (!mountedIndices.has(i)) return null;
-          const isActive = i === activeIndex;
-          return (
-            <div
-              key={src + i}
-              aria-hidden={!isActive}
-              className="absolute inset-0 transition-opacity ease-in-out"
-              style={{ opacity: isActive ? 1 : 0, transitionDuration: `${CROSSFADE_MS}ms` }}
-            >
-              <FadeImage
-                src={src}
-                srcSet={
-                  isLocalHeroImage(src)
-                    ? "/images/hero-mobile.jpg 800w, /images/hero.jpg 1600w"
-                    : undefined
-                }
-                sizes={isLocalHeroImage(src) ? "100vw" : undefined}
-                alt="Freediver underwater in Dahab"
-                eager={i === 0}
-                wrapperClassName="absolute inset-0 h-[calc(100%+150px)]"
-                className="h-full w-full object-cover object-[center_65%] md:scale-[1.35] md:object-[calc(50%_-_100px)_calc(65%_+_60px)]"
-              />
-            </div>
-          );
-        })}
+        {videoUrl ? (
+          // Single looping background video - replaces the whole carousel
+          // below it. muted+playsInline is required for autoplay to be
+          // allowed at all on mobile browsers; loop keeps it going with no
+          // controls, matching the carousel's own "just plays, no visible
+          // player chrome" feel. No crop/focal-point control here the way
+          // FadeImage's object-position does for photos (Sanity has no
+          // hotspot equivalent for file/video assets) - plain object-cover,
+          // centered, so the video should be framed the way it's meant to
+          // appear before it's uploaded.
+          <video
+            key={videoUrl}
+            autoPlay
+            muted
+            loop
+            playsInline
+            className="absolute inset-0 h-full w-full object-cover"
+            src={videoUrl}
+          />
+        ) : (
+          /* Every mounted slide stays in the DOM, stacked, and only opacity
+             decides which one is visible - a plain crossfade rather than a
+             slide/swipe transition, so it reads as one continuous photo
+             breathing rather than a slideshow control. */
+          slides.map((src, i) => {
+            if (!mountedIndices.has(i)) return null;
+            const isActive = i === activeIndex;
+            return (
+              <div
+                key={src + i}
+                aria-hidden={!isActive}
+                className="absolute inset-0 transition-opacity ease-in-out"
+                style={{ opacity: isActive ? 1 : 0, transitionDuration: `${CROSSFADE_MS}ms` }}
+              >
+                <FadeImage
+                  src={src}
+                  srcSet={
+                    isLocalHeroImage(src)
+                      ? "/images/hero-mobile.jpg 800w, /images/hero.jpg 1600w"
+                      : undefined
+                  }
+                  sizes={isLocalHeroImage(src) ? "100vw" : undefined}
+                  alt="Freediver underwater in Dahab"
+                  eager={i === 0}
+                  wrapperClassName="absolute inset-0 h-[calc(100%+150px)]"
+                  className="h-full w-full object-cover object-[center_65%] md:scale-[1.35] md:object-[calc(50%_-_100px)_calc(65%_+_60px)]"
+                />
+              </div>
+            );
+          })
+        )}
         {/* Directional overlay (was a flat black wash at a fixed opacity) -
             darkest on the left where the text sits, easing off across the
             middle, and nearly clear on the right so the diver and the
@@ -266,7 +294,7 @@ export default function Hero({
           right-aligned baseline rather than overlapping the copy block,
           which owns the left two-thirds of the frame. Each dot both shows
           progress and is a direct jump control. */}
-      {slideCount > 1 && (
+      {!videoUrl && slideCount > 1 && (
         <div
           role="tablist"
           aria-label="Hero image slides"

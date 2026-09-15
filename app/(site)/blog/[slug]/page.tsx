@@ -142,6 +142,7 @@ export default async function BlogPostPage({ params }: Props) {
               eager
               wrapperClassName="h-full w-full"
               className="h-full w-full object-cover"
+              style={{ objectPosition: post.coverImagePosition ?? "50% 50%" }}
             />
           </div>
         )}

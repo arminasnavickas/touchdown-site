@@ -8,6 +8,14 @@ import { getSiteContent } from "@/lib/content";
 // Navigation/Footer chrome - this covers genuinely unmatched top-level URLs
 // that fall outside every defined route, while the (site) version handles
 // notFound() triggered from within any real page.
+//
+// Without this, Next.js prerenders the special /_not-found route as fully
+// static at build time (revalidate: false by default) since this file has
+// no route segment config of its own - so a fetch here only ever runs once,
+// at build. Matching the revalidate window used on every real page (see
+// app/(site)/page.tsx) keeps this in sync with Sanity without a redeploy.
+export const revalidate = 60;
+
 export default async function NotFound() {
   const siteContent = await getSiteContent();
   return (
@@ -19,17 +27,27 @@ export default async function NotFound() {
           eager
           wrapperClassName="h-full w-full"
           className="h-full w-full object-cover"
+          style={{ objectPosition: siteContent.notFoundImagePosition }}
         />
       </div>
 
       <div className="relative z-10 flex -translate-y-5 flex-col items-center px-6 pb-12 pt-12 text-center md:px-16 md:pt-16">
-        <p className="font-switzer text-base uppercase tracking-widest text-dark-ocean-blue">
+        <p
+          className="font-switzer text-base uppercase tracking-widest"
+          style={{ color: siteContent.notFoundTextColor }}
+        >
           404
         </p>
-        <h1 className="mt-2 font-switzer text-4xl font-light tracking-tight text-dark-ocean-blue md:text-6xl">
+        <h1
+          className="mt-2 font-switzer text-4xl font-light tracking-tight md:text-6xl"
+          style={{ color: siteContent.notFoundTextColor }}
+        >
           {siteContent.notFoundHeadline}
         </h1>
-        <p className="mt-4 max-w-md font-switzer text-lg font-light text-dark-ocean-blue/80 md:max-w-none md:whitespace-nowrap">
+        <p
+          className="mt-4 max-w-md font-switzer text-lg font-light md:max-w-none md:whitespace-nowrap"
+          style={{ color: siteContent.notFoundTextColor, opacity: 0.8 }}
+        >
           {siteContent.notFoundSubtext}
         </p>
 

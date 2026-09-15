@@ -1,6 +1,7 @@
 import { defineConfig } from "sanity";
 import { structureTool } from "sanity/structure";
 import { visionTool } from "@sanity/vision";
+import { colorInput } from "@sanity/color-input";
 import { schemaTypes } from "./sanity/schemaTypes";
 
 const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || "";
@@ -166,6 +167,9 @@ export default defineConfig({
           ]),
     }),
     visionTool(),
+    // Gives the 404 page text color field (siteContent.notFoundTextColor) a
+    // real hex/RGB swatch picker in the Studio instead of a plain text input.
+    colorInput(),
   ],
   schema: {
     types: schemaTypes,

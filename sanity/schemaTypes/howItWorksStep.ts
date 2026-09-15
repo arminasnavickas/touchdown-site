@@ -11,7 +11,7 @@ export default defineType({
       type: "string",
       description: "e.g. Theory, Practice, Repetition, Results",
     }),
-    defineField({ name: "image", title: "Image", type: "image" }),
+    defineField({ name: "image", title: "Image", type: "image", options: { hotspot: true } }),
     defineField({
       name: "paragraphs",
       title: "Paragraphs",

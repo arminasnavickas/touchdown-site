@@ -24,6 +24,7 @@ export default function BlogAuthorBlock({
 }) {
   const member = findTeamMember(author, team);
   const photo = author.photo ?? member?.image ?? null;
+  const photoPosition = author.photo ? author.photoPosition : member?.imagePosition;
   const role = member?.role;
   const bioLine = member?.bio;
   const firstName = author.name.trim().split(/\s+/)[0];
@@ -42,6 +43,7 @@ export default function BlogAuthorBlock({
                 alt={author.name}
                 wrapperClassName="size-14 shrink-0 overflow-hidden rounded-full"
                 className="h-full w-full object-cover"
+                style={{ objectPosition: photoPosition ?? "50% 50%" }}
               />
             ) : (
               <div className="flex size-14 shrink-0 items-center justify-center rounded-full bg-dark-ocean-blue/10 font-switzer text-lg font-light text-dark-ocean-blue/50">

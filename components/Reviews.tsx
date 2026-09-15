@@ -100,6 +100,7 @@ function ReviewCard({
           alt={review.name}
           wrapperClassName="size-9 shrink-0 rounded-full"
           className="h-full w-full object-cover"
+          style={{ objectPosition: review.imagePosition ?? "50% 50%" }}
         />
         <div className="flex flex-1 flex-col gap-0.5">
           <p className="font-switzer text-sm font-medium text-navy">
@@ -267,6 +268,7 @@ export default function Reviews({
             title: reviews[openIndex].name,
             kicker: reviews[openIndex].role ?? undefined,
             avatar: reviews[openIndex].image,
+            avatarPosition: reviews[openIndex].imagePosition,
             rating: reviews[openIndex].rating,
             paragraphs: [reviews[openIndex].quote],
           }}

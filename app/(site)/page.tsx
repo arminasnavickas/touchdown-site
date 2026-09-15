@@ -69,12 +69,21 @@ export default async function Home() {
 
   return (
     <main>
-      <Hero headline={siteContent.heroHeadline} subcopy={siteContent.heroSubcopy} slides={heroSlides} />
+      <Hero
+        headline={siteContent.heroHeadline}
+        subcopy={siteContent.heroSubcopy}
+        // Skip fetching/preloading the photo carousel entirely once a video
+        // is set - Hero would ignore them anyway, this just avoids the
+        // wasted downloads.
+        slides={siteContent.heroVideoUrl ? [] : heroSlides}
+        videoUrl={siteContent.heroVideoUrl}
+      />
       <Gallery images={galleryImages} />
       <WhoWeAre
         heading={siteContent.whoWeAreHeading}
         copy={siteContent.whoWeAreCopy}
         image={siteContent.whoWeAreImage}
+        imagePosition={siteContent.whoWeAreImagePosition}
       />
       <HowItWorks
         heading={siteContent.howItWorksHeading}

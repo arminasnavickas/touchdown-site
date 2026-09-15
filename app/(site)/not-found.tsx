@@ -2,6 +2,11 @@ import Link from "next/link";
 import FadeImage from "@/components/FadeImage";
 import { getSiteContent } from "@/lib/content";
 
+// Revalidate content from Sanity every 60s, matching every real page (see
+// app/(site)/page.tsx) - without this, Next.js prerenders this as fully
+// static at build time and the fetch below only ever runs once, at build.
+export const revalidate = 60;
+
 export default async function NotFound() {
   const siteContent = await getSiteContent();
   return (
@@ -13,17 +18,27 @@ export default async function NotFound() {
           eager
           wrapperClassName="h-full w-full"
           className="h-full w-full object-cover"
+          style={{ objectPosition: siteContent.notFoundImagePosition }}
         />
       </div>
 
       <div className="relative z-10 flex -translate-y-5 flex-col items-center px-6 pb-12 pt-12 text-center md:px-16 md:pt-16">
-        <p className="font-switzer text-base uppercase tracking-widest text-dark-ocean-blue">
+        <p
+          className="font-switzer text-base uppercase tracking-widest"
+          style={{ color: siteContent.notFoundTextColor }}
+        >
           404
         </p>
-        <h1 className="mt-2 font-switzer text-4xl font-light tracking-tight text-dark-ocean-blue md:text-6xl">
+        <h1
+          className="mt-2 font-switzer text-4xl font-light tracking-tight md:text-6xl"
+          style={{ color: siteContent.notFoundTextColor }}
+        >
           {siteContent.notFoundHeadline}
         </h1>
-        <p className="mt-4 max-w-md font-switzer text-lg font-light text-dark-ocean-blue/80 md:max-w-none md:whitespace-nowrap">
+        <p
+          className="mt-4 max-w-md font-switzer text-lg font-light md:max-w-none md:whitespace-nowrap"
+          style={{ color: siteContent.notFoundTextColor, opacity: 0.8 }}
+        >
           {siteContent.notFoundSubtext}
         </p>
 

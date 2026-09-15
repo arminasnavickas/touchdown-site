@@ -2,6 +2,7 @@
 
 import FadeImage from "./FadeImage";
 import { useLightbox } from "./LightboxContext";
+import type { SitePhoto } from "@/lib/content";
 
 // LOCKED LAYOUT - approved reference: a clean, uniform 4x2 grid (2x4 on
 // mobile), every tile the same size, no featured/larger tiles, no gap
@@ -21,8 +22,9 @@ function ViewIndicator() {
   );
 }
 
-export default function Gallery({ images }: { images: string[] }) {
+export default function Gallery({ images }: { images: SitePhoto[] }) {
   const { openLightbox } = useLightbox();
+  const urls = images.map((image) => image.url);
 
   return (
     // Restored to the original composition: no heading/intro copy at all,
@@ -46,19 +48,20 @@ export default function Gallery({ images }: { images: string[] }) {
           larger tiles. shadow-xl separates the floating grid from the hero
           photo it overlaps. */}
       <div className="relative z-10 grid grid-cols-2 gap-0 overflow-hidden rounded-lg shadow-xl md:grid-cols-4">
-        {images.map((src, i) => (
+        {images.map((photo, i) => (
           <button
             key={i}
             type="button"
-            onClick={() => openLightbox(images, i)}
+            onClick={() => openLightbox(urls, i)}
             aria-label={`View photo ${i + 1} of ${images.length}`}
             className="group relative h-[160px] cursor-zoom-in overflow-hidden md:h-[190px]"
           >
             <FadeImage
-              src={src}
+              src={photo.url}
               alt={`Freediving with Touchdown Freediving, photo ${i + 1} of ${images.length}`}
               wrapperClassName="h-full w-full"
               className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.03]"
+              style={{ objectPosition: photo.position }}
             />
             {/* Restrained hover: a soft dark wash + small cyan "View ->"
                 label - the photograph stays dominant, this just confirms

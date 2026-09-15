@@ -81,12 +81,20 @@ const components: PortableTextComponents = {
     image: ({ value }) => {
       const src = urlForImage(value);
       if (!src) return null;
+      // value is the raw Sanity image reference straight from Portable Text,
+      // so its hotspot (set in Studio by dragging the focal point circle) is
+      // available directly here - no content.ts plumbing needed for inline
+      // body images the way the rest of the site's photos need.
+      const position = value?.hotspot
+        ? `${(value.hotspot.x * 100).toFixed(1)}% ${(value.hotspot.y * 100).toFixed(1)}%`
+        : "50% 50%";
       return (
         <FadeImage
           src={src}
           alt={value?.alt || ""}
           wrapperClassName="my-8 h-[320px] w-full rounded-lg md:h-[440px]"
           className="h-full w-full object-cover"
+          style={{ objectPosition: position }}
         />
       );
     },

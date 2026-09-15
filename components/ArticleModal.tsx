@@ -78,6 +78,9 @@ export type ArticleModalContent = {
   // when set. Mobile keeps the imagePosition/default crop untouched.
   imagePositionClassName?: string;
   avatar?: string;
+  // CSS object-position for `avatar` (e.g. from a Sanity hotspot) - Reviews
+  // only for now, same "50% 50%" plain-center default as before when unset.
+  avatarPosition?: string;
   instagram?: string;
   // Star rating (e.g. "5", "4.5"), rendered alongside the avatar/name header
   // when present - Reviews only for now, same rating value the card shows.
@@ -134,7 +137,7 @@ export default function ArticleModal({
   // Which way the last prev/next navigation went - drives the directional
   // slide-in animation below (modal-slide-next/prev, globals.css) on the
   // content region. Every place that can trigger navigation (keyboard,
-  // floating arrows, edge-peek nubs, header chevrons, touch swipe) goes
+  // floating arrows, header chevrons, touch swipe) goes
   // through goPrev/goNext below instead of calling onPrev/onNext directly,
   // so this stays in sync with whichever direction actually fired.
   const [direction, setDirection] = useState<"next" | "prev">("next");
@@ -159,30 +162,6 @@ export default function ArticleModal({
     return () => window.removeEventListener("keydown", onKeyDown);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [onClose, onPrev, onNext]);
-
-  // Measures the actual white card's rendered height (it has no fixed
-  // height - just a max-h cap - so a short review and a long one produce
-  // different card heights) so the mobile edge-peek nubs can size
-  // themselves proportionally instead of a flat h-72 that either
-  // overshoots a short card or falls short of a tall one. ResizeObserver
-  // (not a one-off measurement) keeps this in sync across navigation,
-  // window resize, and the card's own max-h clamp kicking in.
-  const cardRef = useRef<HTMLDivElement>(null);
-  const [cardHeight, setCardHeight] = useState<number | null>(null);
-  useEffect(() => {
-    const el = cardRef.current;
-    if (!el) return;
-    const observer = new ResizeObserver(([entry]) => {
-      setCardHeight(entry.contentRect.height);
-    });
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, [currentIndex]);
-  // Inset from the card's top/bottom edge, evenly on both sides - the nub
-  // reads as a shorter fragment tucked inside the card's height rather than
-  // exactly matching it edge to edge.
-  const NUB_VERTICAL_INSET = 32;
-  const nubHeight = cardHeight ? Math.max(cardHeight - NUB_VERTICAL_INSET * 2, 40) : null;
 
   // Render via a portal into document.body: this component is opened from
   // inside HowItWorks's <section>, which has overflow-hidden for its Blob
@@ -223,13 +202,15 @@ export default function ArticleModal({
       // caption below needs to stack under the card rather than sit beside
       // it. Still centers the whole card+caption group both ways via
       // items-center/justify-center exactly as it did with just the card.
-      // px-12 (48px) on mobile is the full gutter budget: a 24px margin
-      // (matching the Reviews section's own px-6 side padding) before the
-      // edge-peek nub, then the 14px nub itself, then a ~10px gap before
-      // the card - margin, peek, gap, card, left to right. The nub's own
-      // left-6/right-6 offset below is what carves the margin out of this
-      // budget; the remainder becomes the gap since the card's start is
-      // fixed by this padding value.
+      // px-12 (48px) on mobile matches the Reviews section's own px-6 side
+      // padding, giving the card a consistent margin from the screen edge
+      // (a mobile edge-peek nub used to live in part of this gutter, but it
+      // read as an artificial-looking sliver rather than a real affordance,
+      // so it was removed - navigation on mobile is swipe + header chevrons).
+      // Uniform bg-black/90 across the entire overlay, margins included
+      // (briefly split into a transparent margin + a separately-filled
+      // inner backdrop, then reverted - one flat fill everywhere reads
+      // more consistent than a see-through strip at the true screen edge).
       className="fixed inset-0 z-[100] flex flex-col items-center justify-center gap-8 bg-black/90 px-12 py-2.5 md:p-6"
       onClick={onClose}
     >
@@ -322,7 +303,6 @@ export default function ArticleModal({
         // the slide-in animation now moves the card itself (was scoped to
         // just the inner scrollable content region before).
         key={currentIndex}
-        ref={cardRef}
         className={`relative flex max-h-[80vh] w-full max-w-[724px] flex-col overflow-hidden rounded-lg bg-white md:max-h-[80vh] ${
           direction === "next" ? "modal-slide-next" : "modal-slide-prev"
         }`}
@@ -402,6 +382,7 @@ export default function ArticleModal({
                   eager
                   wrapperClassName="size-16 shrink-0 rounded-full md:size-20"
                   className="h-full w-full object-cover"
+                  style={{ objectPosition: content.avatarPosition ?? "50% 50%" }}
                 />
                 <div className="flex flex-1 flex-col gap-0.5">
                   {content.kicker && (
@@ -584,8 +565,10 @@ export default function ArticleModal({
       {/* Large floating prev/next arrows on the overlay itself - same style
           as the review carousel's own arrow buttons (Reviews.tsx) - in
           addition to the compact "04 / 18" chevrons in the header bar above.
-          Desktop only (md:flex): mobile gets its own edge-peek nubs below
-          instead, sized for touch and for a near-full-screen modal. */}
+          Desktop only (md:flex): mobile relies on the swipe gesture and the
+          header chevrons instead (a mobile-only edge-peek nub sliver used to
+          sit at the card's edges here too, but it read as an artificial-
+          looking sliver rather than a real affordance, so it was removed). */}
       {typeof currentIndex === "number" && typeof total === "number" && total > 1 && (
         <>
           <button
@@ -610,58 +593,6 @@ export default function ArticleModal({
           >
             <ArrowIcon direction="right" />
           </button>
-
-          {/* Mobile edge-peek: a short sliver, rounded on the same corner
-              radius as the card itself (rounded-lg, not rounded-full) so it
-              reads as a fragment of another card's edge rather than a
-              slider/scrollbar handle - the earlier tall thin pill's problem
-              was its proportions, not the idea itself. Taller (h-72) so it
-              reads as a soft glimpse of something behind the card rather
-              than a solid tab. Only the outer corner is rounded
-              (rounded-l-lg / rounded-r-lg) - the inner side stays square, as
-              if the rest of the shape is tucked behind the main card rather
-              than a free-floating pill. Plain (no icon): the edge is the
-              signal.
-              Same opacity-gradient fade as the Reviews carousel's edge fade
-              (Reviews.tsx) instead of a flat bg-white/40: solid near the
-              main card (the inner edge) and fading to transparent toward
-              the screen edge (the outer edge), so the two "there's more
-              here" cues on the site read as the same visual language.
-              left-6/right-6 (24px) matches the Reviews section's own side
-              margin, so reading left to right it's margin, then this 14px
-              nub, then whatever's left of the overlay's px-12 before the
-              card - margin, peek, gap, card.
-              Height is no longer a flat h-72 - the card has no fixed
-              height (just a max-h cap), so a short review and a long one
-              render very different card heights. nubHeight (measured off
-              the card via ResizeObserver above) keeps the nub proportional
-              to whichever card is actually showing, inset evenly top and
-              bottom (NUB_VERTICAL_INSET) rather than running edge to edge
-              with it. Falls back to h-72 until the first measurement lands. */}
-          <button
-            type="button"
-            onClick={(e) => {
-              e.stopPropagation();
-              goPrev();
-            }}
-            aria-label="Previous"
-            style={nubHeight ? { height: `${nubHeight}px` } : undefined}
-            className={`absolute left-6 top-1/2 w-3.5 -translate-y-1/2 rounded-l-lg bg-gradient-to-r from-transparent to-white/70 shadow-sm transition active:to-aquatic/40 md:hidden ${
-              nubHeight ? "" : "h-72"
-            }`}
-          />
-          <button
-            type="button"
-            onClick={(e) => {
-              e.stopPropagation();
-              goNext();
-            }}
-            aria-label="Next"
-            style={nubHeight ? { height: `${nubHeight}px` } : undefined}
-            className={`absolute right-6 top-1/2 w-3.5 -translate-y-1/2 rounded-r-lg bg-gradient-to-l from-transparent to-white/70 shadow-sm transition active:to-aquatic/40 md:hidden ${
-              nubHeight ? "" : "h-72"
-            }`}
-          />
         </>
       )}
     </div>,

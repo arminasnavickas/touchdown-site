@@ -1,6 +1,25 @@
 import { sanityClient, isSanityConfigured } from "./sanityClient";
 import { urlForImage } from "./sanityImage";
 
+// Converts a Sanity image's hotspot ({x, y} fractions of the image, 0-1 from
+// the top-left - set in Studio by dragging an image field's focal-point
+// circle, which only appears once that field has options.hotspot: true) into
+// a CSS object-position value ("62.0% 38.0%"). Both use the same top-left-
+// origin, 0-1/0%-100% convention, so this is a direct unit conversion, no
+// remapping. Falls back to plain center when no hotspot has been set yet
+// (a fresh upload, or a field that doesn't have hotspot enabled).
+function objectPositionFromHotspot(
+  image: { hotspot?: { x: number; y: number } } | null | undefined
+): string {
+  return image?.hotspot
+    ? `${(image.hotspot.x * 100).toFixed(1)}% ${(image.hotspot.y * 100).toFixed(1)}%`
+    : "50% 50%";
+}
+
+// Shared shape for the site's plain photo collections (Gallery, Facility) -
+// just a URL plus the CSS position derived from that photo's Sanity hotspot.
+export type SitePhoto = { url: string; position: string };
+
 // ---------------------------------------------------------------------------
 // Fallback content — this is the site's original hardcoded copy. Every
 // getX() function below tries Sanity first (if NEXT_PUBLIC_SANITY_PROJECT_ID
@@ -94,6 +113,12 @@ export type TeamBioSection = { title: string; paragraphs: string[] };
 export type TeamMember = {
   name: string;
   image: string;
+  // CSS object-position derived from this photo's Sanity hotspot. Optional
+  // (unset for the hardcoded fallback members below, who keep their existing
+  // default crop) - callers fall back to their own default when this is
+  // undefined, same pattern as MODAL_IMAGE_POSITION_BY_NAME in
+  // MeetOurTeam.tsx, which still wins when it has an explicit override.
+  imagePosition?: string;
   // Short role tags for the card/modal header (e.g. "Founder · Instructor
   // · Coach") - distinct from `bio`, which is the longer one-line
   // description shown in the card body.
@@ -580,7 +605,7 @@ export const fallbackPricing: PricingTier[] = [
   },
 ];
 
-export type Review = { name: string; role: string | null; image: string; rating: string; quote: string };
+export type Review = { name: string; role: string | null; image: string; imagePosition?: string; rating: string; quote: string };
 
 export const fallbackReviews: Review[] = [
   {
@@ -729,7 +754,7 @@ export const fallbackReviews: Review[] = [
   },
 ];
 
-export type Author = { name: string; photo: string | null };
+export type Author = { name: string; photo: string | null; photoPosition?: string };
 
 export type BlogPost = {
   title: string;
@@ -737,6 +762,7 @@ export type BlogPost = {
   category: string | null;
   excerpt: string;
   coverImage: string;
+  coverImagePosition?: string;
   author: Author | null;
   publishedAt: string;
   // Sanity portable-text blocks when sourced from the CMS; a plain string
@@ -867,6 +893,7 @@ export type SiteContent = {
   whoWeAreHeading: string;
   whoWeAreCopy: string;
   whoWeAreImage: string;
+  whoWeAreImagePosition: string;
   facilityHeading: string;
   facilityCopy: string;
   howItWorksHeading: string;
@@ -886,6 +913,12 @@ export type SiteContent = {
   notFoundHeadline: string;
   notFoundSubtext: string;
   notFoundImage: string;
+  // CSS object-position value ("62% 38%") derived from the image's Sanity
+  // hotspot, so the crop set in Studio (Edit > drag the focal point circle
+  // on notFoundImage) actually affects the live page instead of the image
+  // always being centered.
+  notFoundImagePosition: string;
+  notFoundTextColor: string;
   footerEmail: string;
   footerPhone: string;
   footerLocation: string;
@@ -921,6 +954,7 @@ export const fallbackSiteContent: SiteContent = {
   whoWeAreCopy:
     'Touchdown Freediving was founded by Lithuanian record holder Gus Kreivenas and has grown into a world-renowned centre in Dahab — the true "Mecca of freediving." Here, expert instruction meets a holistic approach, blending science, mindset, and practice to deliver lasting results. Train at Egypt\'s iconic Blue Hole while developing your full potential with personalized guidance and dedicated facilities.',
   whoWeAreImage: "/images/whoweare-team.jpg",
+  whoWeAreImagePosition: "50% 50%",
   facilityHeading: "Where you'll train",
   facilityCopy:
     "We train in Egypt's world-renowned Blue Hole, where 90 metres of depth sit just a few steps from shore, sheltered from current and waves. This will give you the chance to experience real depth in calm, forgiving conditions while building trust and skill in open water. Our school keeps a dedicated space right at the site, so your equipment is always close at hand.\nOn land, our facility is built to meet every freediver's needs: a yoga area and stretching zone to develop flexibility and breath control, a gym for strength work, and a classroom for dry practice to refine technique out of the water. Line training rounds out the routine, and recovery is built into the rhythm too, with bike rides, sauna sessions and ice baths supporting your body between training days, so you arrive at every session ready to perform and progress.",
@@ -948,6 +982,8 @@ export const fallbackSiteContent: SiteContent = {
   notFoundSubtext:
     "We couldn't find the page you were looking for. It may have moved, or the link might be out of date.",
   notFoundImage: "/images/404-diver.jpg",
+  notFoundImagePosition: "50% 50%",
+  notFoundTextColor: "#023048",
   footerEmail: "info@touchdownfreediving.com",
   footerPhone: "+20 115 4061629",
   footerLocation: "Dahab, Egypt",
@@ -1008,6 +1044,7 @@ export const fallbackScheduleDays: ScheduleDay[] = [
 export type ScheduleCard = {
   title: string;
   image: string;
+  imagePosition?: string;
   copy: string;
   time?: string;
   // Short action word shown in the time badge ("07:00 · PICK-UP") - see
@@ -1091,6 +1128,7 @@ export const fallbackWhatYouGet: WhatYouGetItem[] = [
 export type HowItWorksStep = {
   title: string;
   image: string;
+  imagePosition?: string;
   paragraphs: string[];
   // Scannable "what you'll learn" points shown in the step's modal, below a
   // divider, instead of the second long paragraph these used to carry. Same
@@ -1442,6 +1480,7 @@ export async function getTeamMembers(): Promise<TeamMember[]> {
     return items.map((item: { name: string; image: unknown; role: string | null; bio: string; fullBio: string[] | null; bioSections: TeamBioSection[] | null; qualifications: string[] | null; records: TeamRecord[] | null; instagram: string | null; website: string | null }) => ({
       ...item,
       role: item.role ?? "",
+      imagePosition: objectPositionFromHotspot(item.image as never),
       image: urlForImage(item.image as never) || "",
       fullBio: item.fullBio ?? [],
       bioSections: item.bioSections ?? [],
@@ -1476,6 +1515,7 @@ export async function getReviews(): Promise<Review[]> {
     if (!items?.length) return fallbackReviews;
     return items.map((item: { name: string; role: string | null; image: unknown; rating: string; quote: string }) => ({
       ...item,
+      imagePosition: objectPositionFromHotspot(item.image as never),
       image: urlForImage(item.image as never) || "",
     }));
   } catch {
@@ -1494,9 +1534,20 @@ export async function getSiteContent(): Promise<SiteContent> {
       whoWeAreImage: doc.whoWeAreImage
         ? urlForImage(doc.whoWeAreImage as never) || fallbackSiteContent.whoWeAreImage
         : fallbackSiteContent.whoWeAreImage,
+      whoWeAreImagePosition: doc.whoWeAreImage
+        ? objectPositionFromHotspot(doc.whoWeAreImage)
+        : fallbackSiteContent.whoWeAreImagePosition,
       notFoundImage: doc.notFoundImage
         ? urlForImage(doc.notFoundImage as never) || fallbackSiteContent.notFoundImage
         : fallbackSiteContent.notFoundImage,
+      notFoundImagePosition: doc.notFoundImage
+        ? objectPositionFromHotspot(doc.notFoundImage)
+        : fallbackSiteContent.notFoundImagePosition,
+      // Sanity's color field returns an object ({ hex, alpha, hsl, hsv, rgb }),
+      // not a plain string - pull out just the hex value the frontend uses.
+      notFoundTextColor:
+        (doc.notFoundTextColor?.hex as string | undefined) ||
+        fallbackSiteContent.notFoundTextColor,
     };
   } catch {
     return fallbackSiteContent;
@@ -1517,8 +1568,15 @@ export async function getBlogPosts(): Promise<BlogPost[]> {
     return items.map((item: { title: string; slug: string; category: string | null; excerpt: string | null; coverImage: unknown; author: { name: string; photo: unknown } | null; publishedAt: string; body: unknown }) => ({
       ...item,
       excerpt: item.excerpt ?? "",
+      coverImagePosition: objectPositionFromHotspot(item.coverImage as never),
       coverImage: urlForImage(item.coverImage as never) || "",
-      author: item.author ? { name: item.author.name, photo: urlForImage(item.author.photo as never) } : null,
+      author: item.author
+        ? {
+            name: item.author.name,
+            photoPosition: objectPositionFromHotspot(item.author.photo as never),
+            photo: urlForImage(item.author.photo as never),
+          }
+        : null,
     }));
   } catch {
     return fallbackBlogPosts;
@@ -1538,8 +1596,15 @@ export async function getBlogPost(slug: string): Promise<BlogPost | null> {
     return {
       ...item,
       excerpt: item.excerpt ?? "",
+      coverImagePosition: objectPositionFromHotspot(item.coverImage as never),
       coverImage: urlForImage(item.coverImage as never) || "",
-      author: item.author ? { name: item.author.name, photo: urlForImage(item.author.photo as never) } : null,
+      author: item.author
+        ? {
+            name: item.author.name,
+            photoPosition: objectPositionFromHotspot(item.author.photo as never),
+            photo: urlForImage(item.author.photo as never),
+          }
+        : null,
     };
   } catch {
     return fallbackBlogPosts.find((post) => post.slug === slug) ?? null;
@@ -1568,6 +1633,7 @@ async function getScheduleCards(section: "Water day" | "Dry day", fallback: Sche
     if (!items?.length) return fallback;
     return items.map((item: { title: string; image: unknown; copy: string; time: string | null; badge?: string | null }) => ({
       ...item,
+      imagePosition: objectPositionFromHotspot(item.image as never),
       image: urlForImage(item.image as never) || "",
     }));
   } catch {
@@ -1604,6 +1670,7 @@ export async function getHowItWorksSteps(): Promise<HowItWorksStep[]> {
     if (!items?.length) return fallbackHowItWorksSteps;
     return items.map((item: { title: string; image: unknown; paragraphs: string[] }) => ({
       ...item,
+      imagePosition: objectPositionFromHotspot(item.image as never),
       image: urlForImage(item.image as never) || "",
     }));
   } catch {
@@ -1611,33 +1678,47 @@ export async function getHowItWorksSteps(): Promise<HowItWorksStep[]> {
   }
 }
 
-export async function getGalleryImages(): Promise<string[]> {
-  if (!isSanityConfigured || !sanityClient) return fallbackGalleryImages;
+// fallbackGalleryImages/fallbackFacilityPhotos below stay plain string[] -
+// the hardcoded local photos have nothing to derive a position from, so
+// they're wrapped in plain center ("50% 50%") here rather than every
+// fallback entry carrying a redundant explicit position.
+function toSitePhotos(urls: string[]): SitePhoto[] {
+  return urls.map((url) => ({ url, position: "50% 50%" }));
+}
+
+export async function getGalleryImages(): Promise<SitePhoto[]> {
+  if (!isSanityConfigured || !sanityClient) return toSitePhotos(fallbackGalleryImages);
   try {
     const items = await sanityClient.fetch(
       `*[_type == "galleryImage"] | order(order asc){ "image": image }`
     );
-    if (!items?.length) return fallbackGalleryImages;
+    if (!items?.length) return toSitePhotos(fallbackGalleryImages);
     return items
-      .map((item: { image: unknown }) => urlForImage(item.image as never) || "")
-      .filter(Boolean);
+      .map((item: { image: unknown }) => ({
+        url: urlForImage(item.image as never) || "",
+        position: objectPositionFromHotspot(item.image as never),
+      }))
+      .filter((photo: SitePhoto) => photo.url);
   } catch {
-    return fallbackGalleryImages;
+    return toSitePhotos(fallbackGalleryImages);
   }
 }
 
-export async function getFacilityPhotos(): Promise<string[]> {
-  if (!isSanityConfigured || !sanityClient) return fallbackFacilityPhotos;
+export async function getFacilityPhotos(): Promise<SitePhoto[]> {
+  if (!isSanityConfigured || !sanityClient) return toSitePhotos(fallbackFacilityPhotos);
   try {
     const items = await sanityClient.fetch(
       `*[_type == "facilityPhoto"] | order(order asc){ "image": image }`
     );
-    if (!items?.length) return fallbackFacilityPhotos;
+    if (!items?.length) return toSitePhotos(fallbackFacilityPhotos);
     return items
-      .map((item: { image: unknown }) => urlForImage(item.image as never) || "")
-      .filter(Boolean);
+      .map((item: { image: unknown }) => ({
+        url: urlForImage(item.image as never) || "",
+        position: objectPositionFromHotspot(item.image as never),
+      }))
+      .filter((photo: SitePhoto) => photo.url);
   } catch {
-    return fallbackFacilityPhotos;
+    return toSitePhotos(fallbackFacilityPhotos);
   }
 }
 

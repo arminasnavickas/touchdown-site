@@ -13,7 +13,7 @@ export default defineType({
       validation: (Rule) => Rule.required(),
     }),
     defineField({ name: "title", title: "Title", type: "string" }),
-    defineField({ name: "image", title: "Image", type: "image" }),
+    defineField({ name: "image", title: "Image", type: "image", options: { hotspot: true } }),
     defineField({ name: "copy", title: "Copy", type: "text", rows: 4 }),
     defineField({ name: "time", title: "Time", type: "string" }),
     defineField({

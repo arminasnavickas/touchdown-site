@@ -5,7 +5,13 @@ export default defineType({
   title: "Facility Photo",
   type: "document",
   fields: [
-    defineField({ name: "image", title: "Image", type: "image", validation: (Rule) => Rule.required() }),
+    defineField({
+      name: "image",
+      title: "Image",
+      type: "image",
+      options: { hotspot: true },
+      validation: (Rule) => Rule.required(),
+    }),
     defineField({ name: "alt", title: "Alt text", type: "string" }),
     defineField({ name: "order", title: "Order", type: "number" }),
   ],

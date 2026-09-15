@@ -28,12 +28,19 @@ const TITLE_SIZE_BY_INDEX = ["text-xl md:text-[26px]", "text-xl md:text-[28px]",
 // the original center crop untouched. Lower Y% reveals more of the top
 // of the source photo (fixes heads cut off at the top); higher Y%
 // reveals more of the bottom.
+//
+// Steps can now also carry a crop/focal point set in Sanity Studio
+// (step.imagePosition, from the photo field's hotspot). That's used
+// whenever an index has no entry here (an inline style, so it would
+// otherwise always beat a Tailwind class regardless of the md: prefix) -
+// this array still wins when it has a value for that index.
 const OBJECT_POSITION_BY_INDEX = ["md:object-[center_35%]", "md:object-[center_25%]", "md:object-[center_75%]", ""];
 
 function ProgressionStep({
   index,
   title,
   image,
+  imagePosition,
   paragraphs,
   onReadMore,
 }: HowItWorksStep & { index: number; onReadMore: () => void }) {
@@ -83,6 +90,11 @@ function ProgressionStep({
             alt={title}
             wrapperClassName="h-full w-full"
             className={`h-full w-full object-cover ${OBJECT_POSITION_BY_INDEX[index]} transition-transform duration-500 ease-out group-hover:scale-105`}
+            style={
+              OBJECT_POSITION_BY_INDEX[index]
+                ? undefined
+                : { objectPosition: imagePosition ?? "50% 50%" }
+            }
           />
         </button>
 
@@ -176,6 +188,7 @@ export default function HowItWorks({
             kicker: `${String(openStep + 1).padStart(2, "0")} · How it works`,
             image: steps[openStep].image,
             imagePositionClassName: OBJECT_POSITION_BY_INDEX[openStep],
+            imagePosition: steps[openStep].imagePosition,
             // Only the short intro paragraph - the old second paragraph's
             // information now lives in learnPoints below, restructured into
             // something scannable instead of one more wall of text.
