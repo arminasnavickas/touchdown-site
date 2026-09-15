@@ -265,17 +265,20 @@ async function seed() {
     });
   }
 
-  console.log("Seeding gallery images (fetching photos, this may take a moment)...");
-  for (const [i, src] of fallbackGalleryImages.entries()) {
-    const image = await uploadImageFromUrl(src, `Gallery image ${i + 1}`);
-    await client.create({ _type: "galleryImage", order: i, ...(image ? { image } : {}) });
-  }
+console.log("Seeding hero slides (fetching photos, this may take a moment)...");
 
-  console.log("Seeding hero slides (fetching photos, this may take a moment)...");
-  for (const [i, src] of fallbackHeroSlides.entries()) {
-    const image = await uploadImageFromUrl(src, `Hero slide ${i + 1}`);
-    await client.create({ _type: "heroSlide", order: i, ...(image ? { image } : {}) });
-  }
+for (const [i, src] of fallbackHeroSlides.entries()) {
+  const image = await uploadImageFromUrl(
+    src.image,
+    `Hero slide ${i + 1}`
+  );
+
+  await client.create({
+    _type: "heroSlide",
+    order: i,
+    ...(image ? { image } : {}),
+  });
+}
 
   console.log("Seeding Privacy Policy...");
   await client.createOrReplace({

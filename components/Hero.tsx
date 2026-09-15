@@ -235,12 +235,8 @@ export default function Hero({
         />
       </div>
 
-      {/* Decorative blob */}
-      <div
-        aria-hidden
-        className="absolute left-[13px] top-[75px] hidden h-[919px] w-[806px] rounded-[58%_42%_45%_55%/52%_48%_55%_45%] bg-[#65CEE6] opacity-60 mix-blend-screen blur-[100px] md:block"
-      />
-
+    
+    
       {/* Copy + CTA - bottom-anchored on desktop (was vertically centered),
           a lower-third title-card composition instead of a mid-frame block,
           so the top two-thirds of the photograph gets to breathe as pure

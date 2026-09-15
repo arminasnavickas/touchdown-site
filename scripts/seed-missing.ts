@@ -242,16 +242,26 @@ async function run() {
     }
   }
 
-  const heroSlideCount = (await client.fetch(`count(*[_type == "heroSlide"])`)) as number;
-  if (heroSlideCount > 0) {
-    console.log(`Hero slides: ${heroSlideCount} already exist — skipping.`);
-  } else {
-    console.log("Seeding hero slides (fetching photos, this may take a moment)...");
-    for (const [i, src] of fallbackHeroSlides.entries()) {
-      const image = await uploadImageFromUrl(src, `Hero slide ${i + 1}`);
-      await client.create({ _type: "heroSlide", order: i, ...(image ? { image } : {}) });
-    }
+const heroSlideCount = (await client.fetch(`count(*[_type == "heroSlide"])`)) as number;
+
+if (heroSlideCount > 0) {
+  console.log(`Hero slides: ${heroSlideCount} already exist — skipping.`);
+} else {
+  console.log("Seeding hero slides (fetching photos, this may take a moment)...");
+
+  for (const [i, src] of fallbackHeroSlides.entries()) {
+    const image = await uploadImageFromUrl(
+      src.image,
+      `Hero slide ${i + 1}`
+    );
+
+    await client.create({
+      _type: "heroSlide",
+      order: i,
+      ...(image ? { image } : {}),
+    });
   }
+}
 
   const scheduleDayCount = (await client.fetch(`count(*[_type == "scheduleDay"])`)) as number;
   if (scheduleDayCount > 0) {

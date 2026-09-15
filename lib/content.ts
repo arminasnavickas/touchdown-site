@@ -1257,9 +1257,15 @@ export const fallbackGalleryImages: string[] = [
 export type LegalSection = { heading: string; body: string[] };
 export type LegalPage = { lastUpdated: string; sections: LegalSection[] };
 
-export const fallbackHeroSlides: string[] = [
-  "/images/hero.jpg",
-  "/images/hero-2.jpg",
+export const fallbackHeroSlides: { image: string; video: string }[] = [
+  {
+    image: "/images/hero.jpg",
+    video: "",
+  },
+  {
+    image: "/images/hero-2.jpg",
+    video: "",
+  },
 ];
 
 export const fallbackPrivacyPolicy: LegalPage = {
@@ -1745,16 +1751,25 @@ export async function getFriendLogos(): Promise<FriendLogo[]> {
   }
 }
 
-export async function getHeroSlides(): Promise<string[]> {
+export async function getHeroSlides(): Promise<{ image: string; video: string }[]> {
   if (!isSanityConfigured || !sanityClient) return fallbackHeroSlides;
+
   try {
     const items = await sanityClient.fetch(
-      `*[_type == "heroSlide"] | order(order asc){ "image": image }`
+      `*[_type == "heroSlide"] | order(order asc){
+        "image": image,
+        "video": video.asset->url
+      }`
     );
-    if (!items?.length) return fallbackHeroSlides;
-    return items
-      .map((item: { image: unknown }) => urlForImage(item.image as never) || "")
-      .filter(Boolean);
+
+    if (!items?.length) return [];
+
+return items
+  .map((item: { image: unknown; video?: string }) => ({
+    image: urlForImage(item.image as never) || "",
+    video: item.video || "",
+  }))
+  .filter((item: { image: string; video: string }) => item.image || item.video);
   } catch {
     return fallbackHeroSlides;
   }
