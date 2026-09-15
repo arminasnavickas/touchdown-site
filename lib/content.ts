@@ -888,6 +888,7 @@ export const fallbackBlogPosts: BlogPost[] = [
 export type FooterLink = { id: string; label: string };
 
 export type SiteContent = {
+  heroVideoUrl?: string;
   heroHeadline: string;
   heroSubcopy: string;
   whoWeAreHeading: string;
