@@ -1,5 +1,5 @@
 import { sanityClient, isSanityConfigured } from "./sanityClient";
-import { urlForImage } from "./sanityImage";
+import { srcSetForImage, urlForImage } from "./sanityImage";
 
 // Converts a Sanity image's hotspot ({x, y} fractions of the image, 0-1 from
 // the top-left - set in Studio by dragging an image field's focal-point
@@ -1751,7 +1751,7 @@ export async function getFriendLogos(): Promise<FriendLogo[]> {
   }
 }
 
-export async function getHeroSlides(): Promise<{ image: string; video: string }[]> {
+export async function getHeroSlides(): Promise<{ image: string; imageSrcSet?: string; video: string }[]> {
   if (!isSanityConfigured || !sanityClient) return fallbackHeroSlides;
 
   try {
@@ -1767,6 +1767,7 @@ export async function getHeroSlides(): Promise<{ image: string; video: string }[
 return items
   .map((item: { image: unknown; video?: string }) => ({
     image: urlForImage(item.image as never) || "",
+    imageSrcSet: srcSetForImage(item.image as never) || undefined,
     video: item.video || "",
   }))
   .filter((item: { image: string; video: string }) => item.image || item.video);

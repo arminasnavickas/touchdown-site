@@ -20,7 +20,7 @@ export default function Hero({
 }: {
   headline: string;
   subcopy: string;
-  slides: string[];
+  slides: { src: string; srcSet?: string }[];
   // When set (siteContent.heroVideoUrl), replaces the whole slide carousel
   // below with a single looping background video - see the render branch
   // further down. slides/the carousel hooks are otherwise untouched, so
@@ -58,19 +58,6 @@ export default function Hero({
   useEffect(() => {
     setMountedIndices((prev) => (prev.has(activeIndex) ? prev : new Set(prev).add(activeIndex)));
   }, [activeIndex]);
-
-  // One slide ahead gets warmed in the background - a plain Image() fetch,
-  // not a mount - so that by the time the crossfade reaches it, it's
-  // already sitting in the browser's cache instead of starting a fresh
-  // download right as it needs to appear. Still only ever one slide ahead,
-  // never the whole set.
-  useEffect(() => {
-    if (slideCount < 2) return;
-    const nextSrc = slides[(activeIndex + 1) % slideCount];
-    if (!nextSrc) return;
-    const preload = new window.Image();
-    preload.src = nextSrc;
-  }, [activeIndex, slideCount, slides]);
 
   // Autoplay - skipped entirely for a single-slide hero, and for anyone who
   // has asked their OS/browser for reduced motion. Re-runs on every index
@@ -160,24 +147,24 @@ export default function Hero({
              decides which one is visible - a plain crossfade rather than a
              slide/swipe transition, so it reads as one continuous photo
              breathing rather than a slideshow control. */
-          slides.map((src, i) => {
+          slides.map((slide, i) => {
             if (!mountedIndices.has(i)) return null;
             const isActive = i === activeIndex;
             return (
               <div
-                key={src + i}
+                key={slide.src + i}
                 aria-hidden={!isActive}
                 className="absolute inset-0 transition-opacity ease-in-out"
                 style={{ opacity: isActive ? 1 : 0, transitionDuration: `${CROSSFADE_MS}ms` }}
               >
                 <FadeImage
-                  src={src}
+                  src={slide.src}
                   srcSet={
-                    isLocalHeroImage(src)
+                    isLocalHeroImage(slide.src)
                       ? "/images/hero-mobile.jpg 800w, /images/hero.jpg 1600w"
-                      : undefined
+                      : slide.srcSet
                   }
-                  sizes={isLocalHeroImage(src) ? "100vw" : undefined}
+                  sizes="100vw"
                   alt="Freediver underwater in Dahab"
                   eager={i === 0}
                   wrapperClassName="absolute inset-0 h-[calc(100%+150px)]"

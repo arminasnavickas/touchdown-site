@@ -72,7 +72,7 @@ export default async function Home() {
       <Hero
   headline={siteContent.heroHeadline}
   subcopy={siteContent.heroSubcopy}
-  slides={heroSlides.map((slide) => slide.image)}
+  slides={heroSlides.map((slide) => ({ src: slide.image, srcSet: slide.imageSrcSet }))}
   videoUrl={heroSlides.find((slide) => slide.video)?.video ?? null}
 />
       <Gallery images={galleryImages} />
