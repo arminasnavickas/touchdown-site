@@ -1579,7 +1579,7 @@ export async function getBlogPosts(): Promise<BlogPost[]> {
       ...item,
       excerpt: item.excerpt ?? "",
       coverImagePosition: objectPositionFromHotspot(item.coverImage as never),
-      coverImage: urlForImage(item.coverImage as never) || "",
+      coverImage: urlForImage(item.coverImage as never, { width: 960 }) || "",
       coverImageSrcSet: srcSetForImage(item.coverImage as never) || undefined,
       author: item.author
         ? {
@@ -1608,7 +1608,7 @@ export async function getBlogPost(slug: string): Promise<BlogPost | null> {
       ...item,
       excerpt: item.excerpt ?? "",
       coverImagePosition: objectPositionFromHotspot(item.coverImage as never),
-      coverImage: urlForImage(item.coverImage as never) || "",
+      coverImage: urlForImage(item.coverImage as never, { width: 960 }) || "",
       coverImageSrcSet: srcSetForImage(item.coverImage as never) || undefined,
       author: item.author
         ? {
@@ -1646,7 +1646,7 @@ async function getScheduleCards(section: "Water day" | "Dry day", fallback: Sche
     return items.map((item: { title: string; image: unknown; copy: string; time: string | null; badge?: string | null }) => ({
       ...item,
       imagePosition: objectPositionFromHotspot(item.image as never),
-      image: urlForImage(item.image as never) || "",
+      image: urlForImage(item.image as never, { width: 960 }) || "",
       imageSrcSet: srcSetForImage(item.image as never) || undefined,
     }));
   } catch {
@@ -1684,7 +1684,7 @@ export async function getHowItWorksSteps(): Promise<HowItWorksStep[]> {
     return items.map((item: { title: string; image: unknown; paragraphs: string[] }) => ({
       ...item,
       imagePosition: objectPositionFromHotspot(item.image as never),
-      image: urlForImage(item.image as never) || "",
+      image: urlForImage(item.image as never, { width: 960 }) || "",
       imageSrcSet: srcSetForImage(item.image as never) || undefined,
     }));
   } catch {

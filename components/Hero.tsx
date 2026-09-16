@@ -21,12 +21,12 @@ export default function Hero({
   headline: string;
   subcopy: string;
   slides: { src: string; srcSet?: string }[];
-  // When set (siteContent.heroVideoUrl), replaces the whole slide carousel
+  // When true (a video is configured in Sanity), replaces the whole slide carousel
   // below with a single looping background video - see the render branch
   // further down. slides/the carousel hooks are otherwise untouched, so
   // removing the video in Studio falls straight back to the photo carousel
   // with no other change needed.
-  videoUrl?: string | null;
+  videoUrl?: boolean;
 }) {
   const parallaxRef = useRef<HTMLDivElement>(null);
   const headlineLines = headline.split("\n");
@@ -57,10 +57,15 @@ export default function Hero({
   // screen now plus whichever ones have been on screen before it.
   const [activeIndex, setActiveIndex] = useState(0);
   const [mountedIndices, setMountedIndices] = useState<Set<number>>(() => new Set([0]));
+  const [videoReady, setVideoReady] = useState(false);
 
   useEffect(() => {
     setMountedIndices((prev) => (prev.has(activeIndex) ? prev : new Set(prev).add(activeIndex)));
   }, [activeIndex]);
+
+  useEffect(() => {
+    setVideoReady(false);
+  }, [videoUrl]);
 
   // Autoplay - skipped entirely for a single-slide hero, and for anyone who
   // has asked their OS/browser for reduced motion. Re-runs on every index
@@ -151,19 +156,21 @@ export default function Hero({
               loading="eager"
               fetchPriority="high"
               decoding="async"
-              className="absolute inset-0 h-full w-full object-cover object-[center_65%] md:scale-[1.35] md:object-[calc(50%_-_100px)_calc(65%_+_60px)]"
+              className={`absolute inset-0 h-full w-full object-cover object-[center_65%] transition-opacity duration-700 md:scale-[1.35] md:object-[calc(50%_-_100px)_calc(65%_+_60px)] ${videoReady ? "opacity-0" : "opacity-100"}`}
             />
             <video
-              key={videoUrl}
+              key="touchdown-hero-video"
               autoPlay
               muted
               loop
               playsInline
               preload="metadata"
-              poster={posterSrc}
-              className="absolute inset-0 h-full w-full object-cover"
-              src={videoUrl}
-            />
+              onCanPlay={() => setVideoReady(true)}
+              className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-700 ${videoReady ? "opacity-100" : "opacity-0"}`}
+            >
+              <source src="/videos/touchdown-hero.webm" type="video/webm" />
+              <source src="/videos/touchdown-hero.mp4" type="video/mp4" />
+            </video>
           </>
         ) : (
           /* Every mounted slide stays in the DOM, stacked, and only opacity
