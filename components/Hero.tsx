@@ -20,13 +20,13 @@ export default function Hero({
 }: {
   headline: string;
   subcopy: string;
-  slides: { src: string; srcSet?: string }[];
-  // When true (a video is configured in Sanity), replaces the whole slide carousel
+  slides: string[];
+  // When set (siteContent.heroVideoUrl), replaces the whole slide carousel
   // below with a single looping background video - see the render branch
   // further down. slides/the carousel hooks are otherwise untouched, so
   // removing the video in Studio falls straight back to the photo carousel
   // with no other change needed.
-  videoUrl?: boolean;
+  videoUrl?: string | null;
 }) {
   const parallaxRef = useRef<HTMLDivElement>(null);
   const headlineLines = headline.split("\n");
@@ -43,7 +43,6 @@ export default function Hero({
   const mainLineLastWord = mainLineWords[mainLineWords.length - 1];
 
   const slideCount = slides.length;
-  const posterSrc = "/images/hero-video-poster.jpg";
 
   // Carousel, take two. The first version rendered every slide's full-size
   // <img> up front, which meant a school with half a dozen hero photos in
@@ -55,15 +54,23 @@ export default function Hero({
   // screen now plus whichever ones have been on screen before it.
   const [activeIndex, setActiveIndex] = useState(0);
   const [mountedIndices, setMountedIndices] = useState<Set<number>>(() => new Set([0]));
-  const [videoReady, setVideoReady] = useState(false);
 
   useEffect(() => {
     setMountedIndices((prev) => (prev.has(activeIndex) ? prev : new Set(prev).add(activeIndex)));
   }, [activeIndex]);
 
+  // One slide ahead gets warmed in the background - a plain Image() fetch,
+  // not a mount - so that by the time the crossfade reaches it, it's
+  // already sitting in the browser's cache instead of starting a fresh
+  // download right as it needs to appear. Still only ever one slide ahead,
+  // never the whole set.
   useEffect(() => {
-    setVideoReady(false);
-  }, [videoUrl]);
+    if (slideCount < 2) return;
+    const nextSrc = slides[(activeIndex + 1) % slideCount];
+    if (!nextSrc) return;
+    const preload = new window.Image();
+    preload.src = nextSrc;
+  }, [activeIndex, slideCount, slides]);
 
   // Autoplay - skipped entirely for a single-slide hero, and for anyone who
   // has asked their OS/browser for reduced motion. Re-runs on every index
@@ -139,60 +146,38 @@ export default function Hero({
           // hotspot equivalent for file/video assets) - plain object-cover,
           // centered, so the video should be framed the way it's meant to
           // appear before it's uploaded.
-          <>
-            <picture
-              className={`absolute inset-0 block transition-opacity duration-700 ${videoReady ? "opacity-0" : "opacity-100"}`}
-            >
-              <source media="(max-width: 767px)" srcSet="/images/hero-video-poster-mobile.jpg" />
-              <img
-                src={posterSrc}
-                width={1600}
-                height={900}
-                alt=""
-                loading="eager"
-                fetchPriority="high"
-                decoding="async"
-                className="h-full w-full object-cover object-[center_65%] md:scale-[1.35] md:object-[calc(50%_-_100px)_calc(65%_+_60px)]"
-              />
-            </picture>
-            <video
-              key="touchdown-hero-video"
-              autoPlay
-              muted
-              loop
-              playsInline
-              preload="metadata"
-              onCanPlay={() => setVideoReady(true)}
-              onError={() => setVideoReady(false)}
-              className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-700 ${videoReady ? "opacity-100" : "opacity-0"}`}
-            >
-              <source src="/videos/touchdown-hero.webm" type="video/webm; codecs=vp09.00.10.08" />
-              <source src="/videos/touchdown-hero.mp4" type="video/mp4; codecs=avc1.64001f" />
-            </video>
-          </>
+          <video
+            key={videoUrl}
+            autoPlay
+            muted
+            loop
+            playsInline
+            className="absolute inset-0 h-full w-full object-cover"
+            src={videoUrl}
+          />
         ) : (
           /* Every mounted slide stays in the DOM, stacked, and only opacity
              decides which one is visible - a plain crossfade rather than a
              slide/swipe transition, so it reads as one continuous photo
              breathing rather than a slideshow control. */
-          slides.map((slide, i) => {
+          slides.map((src, i) => {
             if (!mountedIndices.has(i)) return null;
             const isActive = i === activeIndex;
             return (
               <div
-                key={slide.src + i}
+                key={src + i}
                 aria-hidden={!isActive}
                 className="absolute inset-0 transition-opacity ease-in-out"
                 style={{ opacity: isActive ? 1 : 0, transitionDuration: `${CROSSFADE_MS}ms` }}
               >
                 <FadeImage
-                  src={slide.src}
+                  src={src}
                   srcSet={
-                    isLocalHeroImage(slide.src)
+                    isLocalHeroImage(src)
                       ? "/images/hero-mobile.jpg 800w, /images/hero.jpg 1600w"
-                      : slide.srcSet
+                      : undefined
                   }
-                  sizes="100vw"
+                  sizes={isLocalHeroImage(src) ? "100vw" : undefined}
                   alt="Freediver underwater in Dahab"
                   eager={i === 0}
                   wrapperClassName="absolute inset-0 h-[calc(100%+150px)]"

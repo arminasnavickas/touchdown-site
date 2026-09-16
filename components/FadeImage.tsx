@@ -82,7 +82,6 @@ export default function FadeImage({
         fetchPriority={eager ? "high" : "auto"}
         onLoad={() => setLoaded(true)}
         onError={() => setErrored(true)}
-        decoding="async"
         style={style}
         className={`transition-opacity duration-500 ${loaded ? "opacity-100" : "opacity-0"} ${className}`}
       />

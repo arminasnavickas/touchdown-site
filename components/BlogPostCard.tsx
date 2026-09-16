@@ -27,8 +27,6 @@ export default function BlogPostCard({ post }: { post: BlogPost }) {
         {post.coverImage ? (
           <FadeImage
             src={post.coverImage}
-            srcSet={post.coverImageSrcSet}
-            sizes="(min-width: 768px) 33vw, 100vw"
             alt={post.title}
             wrapperClassName="h-full w-full"
             className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"

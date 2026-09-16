@@ -40,7 +40,6 @@ function ProgressionStep({
   index,
   title,
   image,
-  imageSrcSet,
   imagePosition,
   paragraphs,
   onReadMore,
@@ -88,8 +87,6 @@ function ProgressionStep({
         >
           <FadeImage
             src={image}
-            srcSet={imageSrcSet}
-            sizes="(min-width: 768px) 25vw, 100vw"
             alt={title}
             wrapperClassName="h-full w-full"
             className={`h-full w-full object-cover ${OBJECT_POSITION_BY_INDEX[index]} transition-transform duration-500 ease-out group-hover:scale-105`}

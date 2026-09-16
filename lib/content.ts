@@ -1,5 +1,5 @@
 import { sanityClient, isSanityConfigured } from "./sanityClient";
-import { srcSetForImage, urlForImage } from "./sanityImage";
+import { urlForImage } from "./sanityImage";
 
 // Converts a Sanity image's hotspot ({x, y} fractions of the image, 0-1 from
 // the top-left - set in Studio by dragging an image field's focal-point
@@ -762,7 +762,6 @@ export type BlogPost = {
   category: string | null;
   excerpt: string;
   coverImage: string;
-  coverImageSrcSet?: string;
   coverImagePosition?: string;
   author: Author | null;
   publishedAt: string;
@@ -1046,7 +1045,6 @@ export const fallbackScheduleDays: ScheduleDay[] = [
 export type ScheduleCard = {
   title: string;
   image: string;
-  imageSrcSet?: string;
   imagePosition?: string;
   copy: string;
   time?: string;
@@ -1131,7 +1129,6 @@ export const fallbackWhatYouGet: WhatYouGetItem[] = [
 export type HowItWorksStep = {
   title: string;
   image: string;
-  imageSrcSet?: string;
   imagePosition?: string;
   paragraphs: string[];
   // Scannable "what you'll learn" points shown in the step's modal, below a
@@ -1579,8 +1576,7 @@ export async function getBlogPosts(): Promise<BlogPost[]> {
       ...item,
       excerpt: item.excerpt ?? "",
       coverImagePosition: objectPositionFromHotspot(item.coverImage as never),
-      coverImage: urlForImage(item.coverImage as never, { width: 960 }) || "",
-      coverImageSrcSet: srcSetForImage(item.coverImage as never) || undefined,
+      coverImage: urlForImage(item.coverImage as never) || "",
       author: item.author
         ? {
             name: item.author.name,
@@ -1608,8 +1604,7 @@ export async function getBlogPost(slug: string): Promise<BlogPost | null> {
       ...item,
       excerpt: item.excerpt ?? "",
       coverImagePosition: objectPositionFromHotspot(item.coverImage as never),
-      coverImage: urlForImage(item.coverImage as never, { width: 960 }) || "",
-      coverImageSrcSet: srcSetForImage(item.coverImage as never) || undefined,
+      coverImage: urlForImage(item.coverImage as never) || "",
       author: item.author
         ? {
             name: item.author.name,
@@ -1646,8 +1641,7 @@ async function getScheduleCards(section: "Water day" | "Dry day", fallback: Sche
     return items.map((item: { title: string; image: unknown; copy: string; time: string | null; badge?: string | null }) => ({
       ...item,
       imagePosition: objectPositionFromHotspot(item.image as never),
-      image: urlForImage(item.image as never, { width: 960 }) || "",
-      imageSrcSet: srcSetForImage(item.image as never) || undefined,
+      image: urlForImage(item.image as never) || "",
     }));
   } catch {
     return fallback;
@@ -1684,8 +1678,7 @@ export async function getHowItWorksSteps(): Promise<HowItWorksStep[]> {
     return items.map((item: { title: string; image: unknown; paragraphs: string[] }) => ({
       ...item,
       imagePosition: objectPositionFromHotspot(item.image as never),
-      image: urlForImage(item.image as never, { width: 960 }) || "",
-      imageSrcSet: srcSetForImage(item.image as never) || undefined,
+      image: urlForImage(item.image as never) || "",
     }));
   } catch {
     return fallbackHowItWorksSteps;
@@ -1758,7 +1751,7 @@ export async function getFriendLogos(): Promise<FriendLogo[]> {
   }
 }
 
-export async function getHeroSlides(): Promise<{ image: string; imageSrcSet?: string; video: string }[]> {
+export async function getHeroSlides(): Promise<{ image: string; video: string }[]> {
   if (!isSanityConfigured || !sanityClient) return fallbackHeroSlides;
 
   try {
@@ -1774,7 +1767,6 @@ export async function getHeroSlides(): Promise<{ image: string; imageSrcSet?: st
 return items
   .map((item: { image: unknown; video?: string }) => ({
     image: urlForImage(item.image as never) || "",
-    imageSrcSet: srcSetForImage(item.image as never) || undefined,
     video: item.video || "",
   }))
   .filter((item: { image: string; video: string }) => item.image || item.video);
