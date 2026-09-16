@@ -43,9 +43,7 @@ export default function Hero({
   const mainLineLastWord = mainLineWords[mainLineWords.length - 1];
 
   const slideCount = slides.length;
-  const posterSlide = slides.find((slide) => slide.src);
-  const posterSrc = posterSlide?.src || "/images/hero.jpg";
-  const posterSrcSet = posterSlide?.srcSet;
+  const posterSrc = "/images/hero-video-poster.jpg";
 
   // Carousel, take two. The first version rendered every slide's full-size
   // <img> up front, which meant a school with half a dozen hero photos in
@@ -142,22 +140,21 @@ export default function Hero({
           // centered, so the video should be framed the way it's meant to
           // appear before it's uploaded.
           <>
-            <img
-              src={posterSrc}
-              srcSet={
-                isLocalHeroImage(posterSrc)
-                  ? "/images/hero-mobile.jpg 800w, /images/hero.jpg 1600w"
-                  : posterSrcSet
-              }
-              sizes="100vw"
-              width={1600}
-              height={900}
-              alt=""
-              loading="eager"
-              fetchPriority="high"
-              decoding="async"
-              className={`absolute inset-0 h-full w-full object-cover object-[center_65%] transition-opacity duration-700 md:scale-[1.35] md:object-[calc(50%_-_100px)_calc(65%_+_60px)] ${videoReady ? "opacity-0" : "opacity-100"}`}
-            />
+            <picture
+              className={`absolute inset-0 block transition-opacity duration-700 ${videoReady ? "opacity-0" : "opacity-100"}`}
+            >
+              <source media="(max-width: 767px)" srcSet="/images/hero-video-poster-mobile.jpg" />
+              <img
+                src={posterSrc}
+                width={1600}
+                height={900}
+                alt=""
+                loading="eager"
+                fetchPriority="high"
+                decoding="async"
+                className="h-full w-full object-cover object-[center_65%] md:scale-[1.35] md:object-[calc(50%_-_100px)_calc(65%_+_60px)]"
+              />
+            </picture>
             <video
               key="touchdown-hero-video"
               autoPlay
@@ -166,10 +163,11 @@ export default function Hero({
               playsInline
               preload="metadata"
               onCanPlay={() => setVideoReady(true)}
+              onError={() => setVideoReady(false)}
               className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-700 ${videoReady ? "opacity-100" : "opacity-0"}`}
             >
-              <source src="/videos/touchdown-hero.webm" type="video/webm" />
-              <source src="/videos/touchdown-hero.mp4" type="video/mp4" />
+              <source src="/videos/touchdown-hero.webm" type="video/webm; codecs=vp09.00.10.08" />
+              <source src="/videos/touchdown-hero.mp4" type="video/mp4; codecs=avc1.64001f" />
             </video>
           </>
         ) : (
