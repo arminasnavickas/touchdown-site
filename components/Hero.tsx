@@ -43,6 +43,9 @@ export default function Hero({
   const mainLineLastWord = mainLineWords[mainLineWords.length - 1];
 
   const slideCount = slides.length;
+  const posterSlide = slides.find((slide) => slide.src);
+  const posterSrc = posterSlide?.src || "/images/hero.jpg";
+  const posterSrcSet = posterSlide?.srcSet;
 
   // Carousel, take two. The first version rendered every slide's full-size
   // <img> up front, which meant a school with half a dozen hero photos in
@@ -133,15 +136,35 @@ export default function Hero({
           // hotspot equivalent for file/video assets) - plain object-cover,
           // centered, so the video should be framed the way it's meant to
           // appear before it's uploaded.
-          <video
-            key={videoUrl}
-            autoPlay
-            muted
-            loop
-            playsInline
-            className="absolute inset-0 h-full w-full object-cover"
-            src={videoUrl}
-          />
+          <>
+            <img
+              src={posterSrc}
+              srcSet={
+                isLocalHeroImage(posterSrc)
+                  ? "/images/hero-mobile.jpg 800w, /images/hero.jpg 1600w"
+                  : posterSrcSet
+              }
+              sizes="100vw"
+              width={1600}
+              height={900}
+              alt=""
+              loading="eager"
+              fetchPriority="high"
+              decoding="async"
+              className="absolute inset-0 h-full w-full object-cover object-[center_65%] md:scale-[1.35] md:object-[calc(50%_-_100px)_calc(65%_+_60px)]"
+            />
+            <video
+              key={videoUrl}
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="metadata"
+              poster={posterSrc}
+              className="absolute inset-0 h-full w-full object-cover"
+              src={videoUrl}
+            />
+          </>
         ) : (
           /* Every mounted slide stays in the DOM, stacked, and only opacity
              decides which one is visible - a plain crossfade rather than a

@@ -762,6 +762,7 @@ export type BlogPost = {
   category: string | null;
   excerpt: string;
   coverImage: string;
+  coverImageSrcSet?: string;
   coverImagePosition?: string;
   author: Author | null;
   publishedAt: string;
@@ -1045,6 +1046,7 @@ export const fallbackScheduleDays: ScheduleDay[] = [
 export type ScheduleCard = {
   title: string;
   image: string;
+  imageSrcSet?: string;
   imagePosition?: string;
   copy: string;
   time?: string;
@@ -1129,6 +1131,7 @@ export const fallbackWhatYouGet: WhatYouGetItem[] = [
 export type HowItWorksStep = {
   title: string;
   image: string;
+  imageSrcSet?: string;
   imagePosition?: string;
   paragraphs: string[];
   // Scannable "what you'll learn" points shown in the step's modal, below a
@@ -1577,6 +1580,7 @@ export async function getBlogPosts(): Promise<BlogPost[]> {
       excerpt: item.excerpt ?? "",
       coverImagePosition: objectPositionFromHotspot(item.coverImage as never),
       coverImage: urlForImage(item.coverImage as never) || "",
+      coverImageSrcSet: srcSetForImage(item.coverImage as never) || undefined,
       author: item.author
         ? {
             name: item.author.name,
@@ -1605,6 +1609,7 @@ export async function getBlogPost(slug: string): Promise<BlogPost | null> {
       excerpt: item.excerpt ?? "",
       coverImagePosition: objectPositionFromHotspot(item.coverImage as never),
       coverImage: urlForImage(item.coverImage as never) || "",
+      coverImageSrcSet: srcSetForImage(item.coverImage as never) || undefined,
       author: item.author
         ? {
             name: item.author.name,
@@ -1642,6 +1647,7 @@ async function getScheduleCards(section: "Water day" | "Dry day", fallback: Sche
       ...item,
       imagePosition: objectPositionFromHotspot(item.image as never),
       image: urlForImage(item.image as never) || "",
+      imageSrcSet: srcSetForImage(item.image as never) || undefined,
     }));
   } catch {
     return fallback;
@@ -1679,6 +1685,7 @@ export async function getHowItWorksSteps(): Promise<HowItWorksStep[]> {
       ...item,
       imagePosition: objectPositionFromHotspot(item.image as never),
       image: urlForImage(item.image as never) || "",
+      imageSrcSet: srcSetForImage(item.image as never) || undefined,
     }));
   } catch {
     return fallbackHowItWorksSteps;

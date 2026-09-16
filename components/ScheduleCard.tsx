@@ -7,6 +7,7 @@ import { useLightbox } from "./LightboxContext";
 export type ScheduleCardData = {
   title: string;
   image: string;
+  imageSrcSet?: string;
   imagePosition?: string;
   copy: string;
   time?: string;
@@ -30,6 +31,7 @@ export default function ScheduleCard({
   index,
   title,
   image,
+  imageSrcSet,
   imagePosition,
   copy,
   time = "07:00 - 10:00",
@@ -87,6 +89,8 @@ export default function ScheduleCard({
         >
           <FadeImage
             src={image}
+            srcSet={imageSrcSet}
+            sizes={featured ? "(min-width: 768px) 50vw, 100vw" : "(min-width: 768px) 25vw, 100vw"}
             alt={title}
             wrapperClassName="h-full w-full"
             className="h-full w-full object-cover transition-transform duration-300 hover:scale-110"
