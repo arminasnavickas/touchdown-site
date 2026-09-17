@@ -5,6 +5,7 @@ import FadeImage from "./FadeImage";
 import { useLightbox } from "./LightboxContext";
 import Reveal from "./Reveal";
 import BookInButton from "./BookInButton";
+import SectionKicker from "./SectionKicker";
 
 export default function WhoWeAre({
   heading,
@@ -23,7 +24,7 @@ export default function WhoWeAre({
   return (
     <section
       id="about-us"
-      className="relative flex flex-col items-center gap-10 px-6 py-20 md:px-16 lg:flex-row lg:items-center lg:justify-between lg:gap-16 scroll-mt-20"
+      className="relative flex flex-col items-center gap-10 px-6 py-[40px] md:px-16 md:py-20 lg:flex-row lg:items-center lg:justify-between lg:gap-16 scroll-mt-20"
     >
       {/* Anchored to the section's bottom-right corner, behind the team
           photo (which sits on the right at the lg two-column layout), and
@@ -36,7 +37,7 @@ export default function WhoWeAre({
           own overflow-hidden - that only clips its own children, not a
           glow bleeding in from the section above. opacity-80 brings it down
           slightly from Blob's own baked-in 60% alpha (~48% effective). */}
-      <Blob className="bottom-[-120px] right-6 h-[380px] w-[380px] opacity-80" />
+      <Blob className="bottom-[-40px] right-6 h-[380px] w-[380px] opacity-40" />
 
       {/* order-1/order-2 put the text above the photo on mobile (where the
           section stacks in a single column) without touching the two-column
@@ -49,11 +50,9 @@ export default function WhoWeAre({
       <div className="relative z-10 order-1 flex w-full max-w-xl flex-col gap-10 lg:order-none">
         <div className="flex flex-col items-center gap-3 text-center lg:items-start lg:text-left">
           {/* Small eyebrow - matches the kicker treatment already used
-              elsewhere (Gallery, FAQ) so About gets its own masthead moment
-              instead of opening straight on the heading. */}
-          <p className="font-switzer text-xs font-semibold uppercase tracking-[0.25em] text-cta md:text-sm">
-            About us
-          </p>
+              elsewhere (Gallery, FAQ, Hero) so About gets its own masthead
+              moment instead of opening straight on the heading. */}
+          <SectionKicker>About us</SectionKicker>
           <h2 className="font-switzer text-4xl font-extralight tracking-tight text-white md:text-6xl">
             {heading}
           </h2>
