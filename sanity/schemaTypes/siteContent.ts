@@ -8,7 +8,17 @@ export default defineType({
     defineField({
       name: "heroHeadline",
       title: "Hero headline",
-      type: "string",
+      // Was "string" (a single-line input). A plain single-line field can
+      // never actually hold a line break once a person edits it - pressing
+      // Enter in that box does nothing, so any edit silently collapsed the
+      // intended "small line + big headline" into one line and blanked out
+      // the big headline on the live site (2026-09-17). "text" gives editors
+      // a real multi-line box where Enter works, so the format below is
+      // actually achievable through Studio, not just through seed data.
+      type: "text",
+      rows: 2,
+      description:
+        'Two lines, with a real line break between them (press Enter here). First line: the small label above the headline, e.g. "Freediving school". Second line: the big headline itself, e.g. "Consistently delivering quality". One line with no break is also fine - it just renders as the big headline with no small label above it.',
       initialValue: "Freediving school\nFounded by Gus Kreivenas",
     }),
     defineField({

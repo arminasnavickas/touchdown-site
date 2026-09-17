@@ -29,15 +29,31 @@ export default function Hero({
   videoUrl?: string | null;
 }) {
   const parallaxRef = useRef<HTMLDivElement>(null);
-  const headlineLines = headline.split("\n");
+  // The Sanity field this comes from is a plain single-line text input, so
+  // it CANNOT actually hold a "\n" once a person edits it through Studio -
+  // the browser strips newlines from a single-line <input> as you type,
+  // even though the schema's own initialValue has one baked in. That footgun
+  // is exactly what broke the homepage headline on 2026-09-17: someone
+  // edited the field, the kicker/newline structure silently collapsed to
+  // one line, and the old version of this component rendered a blank h1
+  // because it assumed a second line would always be there. So: only treat
+  // this as a two-part "kicker + big headline" if a real newline survived;
+  // otherwise treat the whole string as the big headline and skip the
+  // kicker line entirely, rather than ever leaving the headline blank.
+  const headlineLines = headline
+    .split("\n")
+    .map((line) => line.trim())
+    .filter(Boolean);
   const subcopyLines = subcopy.split(". ").filter(Boolean);
+  const hasKicker = headlineLines.length > 1;
+  const kickerLine = hasKicker ? headlineLines[0] : null;
   // Deliberate mobile line break: everything but the last word on its own
   // line, the last word on its own below that ("Consistently delivering" /
   // "quality") - instead of leaving the browser to wrap wherever the
   // viewport happens to cut it, which could just as easily strand a single
   // short word up top or leave an awkward ragged break mid-phrase. On
   // tablet/desktop the <br> is hidden and this reads as one normal line.
-  const mainLine = headlineLines.slice(1).join(" ");
+  const mainLine = hasKicker ? headlineLines.slice(1).join(" ") : headlineLines[0] ?? "";
   const mainLineWords = mainLine.split(" ");
   const mainLineLead = mainLineWords.slice(0, -1).join(" ");
   const mainLineLastWord = mainLineWords[mainLineWords.length - 1];
@@ -249,9 +265,11 @@ export default function Hero({
           spare. */}
       <div className="relative z-10 flex h-full max-w-3xl translate-y-[35px] flex-col justify-start gap-5 px-6 pb-[95px] pt-6 md:translate-y-0 md:justify-end md:-translate-y-[100px] md:gap-8 md:px-16 md:pb-[195px]">
         <Reveal className="flex flex-col gap-2">
-          <p className="font-switzer text-base font-medium uppercase tracking-[0.2em] text-white/80 md:text-lg">
-            {headlineLines[0]}
-          </p>
+          {hasKicker && (
+            <p className="font-switzer text-base font-medium uppercase tracking-[0.2em] text-white/80 md:text-lg">
+              {kickerLine}
+            </p>
+          )}
           {/* Mobile stays restrained at text-5xl (room for the deliberate
               two-line break below); desktop holds at 8xl - wider than that
               risks the headline wrapping mid-word inside its own column, so
