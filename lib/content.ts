@@ -888,6 +888,11 @@ export const fallbackBlogPosts: BlogPost[] = [
 export type FooterLink = { id: string; label: string };
 
 export type SiteContent = {
+  // SEO meta title/description - editable in Sanity now instead of being
+  // hardcoded in app/layout.tsx. Optional because generateMetadata() falls
+  // back to the same hardcoded defaults when either is left blank in Studio.
+  metaTitle?: string;
+  metaDescription?: string;
   heroVideoUrl?: string;
   heroHeadline: string;
   heroSubcopy: string;
@@ -942,6 +947,9 @@ export type SiteContent = {
 };
 
 export const fallbackSiteContent: SiteContent = {
+  metaTitle: "Touchdown Freediving School — Dahab, Egypt",
+  metaDescription:
+    "Freediving school founded by Gus Kreivenas in Dahab, Egypt. World-class coaching, depth training, and tailored courses at the legendary Blue Hole.",
   // Rewritten so the literal keywords "Freediving" and "Dahab" both land
   // inside the rendered <h1> (Hero.tsx renders everything after the first
   // line as the H1) - the old H1 text ("Consistently delivering quality")

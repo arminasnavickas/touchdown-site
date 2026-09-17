@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import FadeImage from "./FadeImage";
 import BookInButton from "./BookInButton";
 import Reveal from "./Reveal";
+import SectionKicker from "./SectionKicker";
 
 const logoBadge = "/images/touchdown-stamp.svg";
 
@@ -265,11 +266,13 @@ export default function Hero({
           spare. */}
       <div className="relative z-10 flex h-full max-w-3xl translate-y-[35px] flex-col justify-start gap-5 px-6 pb-[95px] pt-6 md:translate-y-0 md:justify-end md:-translate-y-[100px] md:gap-8 md:px-16 md:pb-[195px]">
         <Reveal className="flex flex-col gap-2">
-          {hasKicker && (
-            <p className="font-switzer text-base font-medium uppercase tracking-[0.2em] text-white/80 md:text-lg">
-              {kickerLine}
-            </p>
-          )}
+          {/* Same SectionKicker used for every other section's small
+              uppercase eyebrow label (About us, Gallery, FAQ) - was its own
+              bigger, separately-styled <p> before, which is how this line
+              drifted out of sync with the rest of the site. tone="white"
+              because Hero sits over a photo/video background instead of the
+              solid section backgrounds the default cta-cyan is tuned for. */}
+          {hasKicker && <SectionKicker tone="white">{kickerLine}</SectionKicker>}
           {/* Mobile stays restrained at text-5xl (room for the deliberate
               two-line break below); desktop holds at 8xl - wider than that
               risks the headline wrapping mid-word inside its own column, so
