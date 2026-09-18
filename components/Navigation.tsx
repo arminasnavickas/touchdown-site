@@ -113,6 +113,7 @@ export default function Navigation({
   useLayoutEffect(() => {
     if (!open) return;
     const scrollY = window.scrollY;
+    const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
     const { style } = document.body;
     const html = document.documentElement;
     style.position = "fixed";
@@ -120,12 +121,14 @@ export default function Navigation({
     style.left = "0";
     style.right = "0";
     style.overflow = "hidden";
+    style.paddingRight = `${scrollbarWidth}px`;
     return () => {
       style.position = "";
       style.top = "";
       style.left = "";
       style.right = "";
       style.overflow = "";
+      style.paddingRight = "";
       // globals.css sets `scroll-behavior: smooth` on <html>, and that
       // applies to every scrollTo() call site-wide - including this one.
       // Without overriding it, restoring the scroll position here doesn't
@@ -331,7 +334,7 @@ export default function Navigation({
               key={link.id}
               href={hrefById[link.id] ?? "#"}
               onClick={() => setOpen(false)}
-              className={`flex items-center py-4 font-switzer text-2xl font-light uppercase tracking-tight transition hover:text-horizon ${
+              className={`flex items-center py-4 font-switzer text-2xl font-medium tracking-tight transition hover:text-horizon ${
                 i > 0 ? "border-t border-danish-blue/20" : ""
               } ${isActive(link.id) ? "text-horizon" : "text-dark-ocean-blue"}`}
             >
