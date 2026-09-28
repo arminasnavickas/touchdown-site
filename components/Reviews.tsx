@@ -21,7 +21,7 @@ function StarIcon({ filled }: { filled: boolean }) {
       viewBox="0 0 20 20"
       className="size-4"
       fill={filled ? RATING_STAR_COLOR : "none"}
-      stroke={filled ? RATING_STAR_COLOR : "#D1D5DB"}
+      stroke={filled ? RATING_STAR_COLOR : "rgba(255,255,255,0.35)"}
       strokeWidth="1"
     >
       <path d="M10 1.5l2.6 5.4 5.9.8-4.3 4.2 1 5.9L10 15l-5.2 2.8 1-5.9L1.5 7.7l5.9-.8L10 1.5Z" />
@@ -32,23 +32,11 @@ function StarIcon({ filled }: { filled: boolean }) {
 function StarRating({ rating }: { rating: string }) {
   const filledCount = Math.round(parseFloat(rating) || 5);
   return (
-    <div className="flex gap-0.5">
+    <div className="flex gap-0.5 self-start">
       {Array.from({ length: 5 }).map((_, i) => (
         <StarIcon key={i} filled={i < filledCount} />
       ))}
     </div>
-  );
-}
-
-function ArrowIcon({ direction }: { direction: "left" | "right" }) {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="size-6">
-      <path
-        d={direction === "left" ? "M15 6l-6 6 6 6" : "M9 6l6 6-6 6"}
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
   );
 }
 
@@ -86,38 +74,35 @@ function ReviewCard({
     // different, self-contained job (quoting someone else's words, not
     // presenting the brand's own content).
     <div
-      className="flex h-full w-full flex-col gap-3 rounded-lg p-6 shadow-sm transition-shadow duration-300 hover:shadow-md"
+      className="flex h-full w-full flex-col gap-3 rounded-2xl border border-white/[0.06] p-6 [backdrop-filter:blur(12px)_saturate(125%)] transition duration-300 shadow-[inset_0_1px_0_rgba(255,255,255,0.07),0_6px_24px_rgba(0,20,40,0.18)] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.07),0_12px_40px_rgba(0,20,40,0.4)]"
       style={{
         backgroundImage:
-          "linear-gradient(180deg, #FFFFFF 24.83%, rgba(208,235,242,0.1) 98.162%), linear-gradient(#FFFFFF, #FFFFFF)",
+          "linear-gradient(135deg, rgba(255,255,255,0.10) 0%, rgba(255,255,255,0.03) 50%, rgba(101,206,230,0.02) 100%)",
       }}
     >
       {/* Reviewer row - photo/name/role left, rating right, with a divider
           below it separating the byline from the quote that follows. */}
-      <div className="flex items-center gap-2.5 border-b border-dark-ocean-blue/10 pb-3">
+      <div className="flex items-center gap-3.5 border-b border-white/15 pb-3">
         <FadeImage
           src={review.image}
           alt={review.name}
-          wrapperClassName="size-9 shrink-0 rounded-full"
+          wrapperClassName="size-14 shrink-0 rounded-full"
           className="h-full w-full object-cover"
           style={{ objectPosition: review.imagePosition ?? "50% 50%" }}
         />
         <div className="flex flex-1 flex-col gap-0.5">
-          <p className="font-switzer text-sm font-medium text-navy">
+          <p className="font-switzer text-lg font-medium leading-tight text-white">
             {review.name}
           </p>
           {review.role && (
-            <p className="font-switzer text-xs text-dark-ocean-blue/60">{review.role}</p>
+            <p className="font-switzer text-sm text-white/60">{review.role}</p>
           )}
         </div>
         <StarRating rating={review.rating} />
       </div>
-      <span aria-hidden className="font-switzer text-4xl font-light leading-none text-cta/25">
-        &ldquo;
-      </span>
       <p
         ref={quoteRef}
-        className="-mt-3 line-clamp-4 font-switzer text-[15px] font-light leading-relaxed text-dark-ocean-blue"
+        className="mt-3 line-clamp-4 font-switzer text-[13px] font-light leading-relaxed text-white/85"
       >
         {review.quote}
       </p>
@@ -125,7 +110,7 @@ function ReviewCard({
         <button
           type="button"
           onClick={() => onOpen(index)}
-          className="group relative inline-block w-fit self-start font-switzer text-base font-medium text-horizon transition hover:text-cta"
+          className="group relative inline-block w-fit self-end font-switzer text-base font-medium text-aquatic transition hover:text-cta"
         >
           Read more
           <span className="absolute -bottom-1 left-0 h-[2px] w-0 bg-cta transition-all duration-300 group-hover:w-full" />
@@ -133,6 +118,16 @@ function ReviewCard({
       )}
     </div>
   );
+}
+
+// Exact distance from the first card to its duplicate in the second set
+// (card widths plus every gap). scrollWidth / 2 is short by half a gap, which
+// showed up as a small jump at the loop point.
+function getLoopWidth(el: HTMLElement) {
+  const half = el.children.length / 2;
+  const a = el.children[0] as HTMLElement | undefined;
+  const b = el.children[half] as HTMLElement | undefined;
+  return a && b ? b.offsetLeft - a.offsetLeft : el.scrollWidth / 2;
 }
 
 export default function Reviews({
@@ -146,13 +141,57 @@ export default function Reviews({
   const [isDragging, setIsDragging] = useState(false);
   const dragState = useRef({ startX: 0, startScrollLeft: 0, moved: false });
   const [openIndex, setOpenIndex] = useState<number | null>(null);
+  const [hovered, setHovered] = useState(false);
+  const [reducedMotion, setReducedMotion] = useState(false);
+  const [inView, setInView] = useState(true);
+  const touching = useRef(false);
 
-  const scrollBy = (dir: "left" | "right") => {
+  useEffect(() => {
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    setReducedMotion(mq.matches);
+    const onChange = () => setReducedMotion(mq.matches);
+    mq.addEventListener("change", onChange);
+    return () => mq.removeEventListener("change", onChange);
+  }, []);
+
+  useEffect(() => {
     const el = scrollerRef.current;
     if (!el) return;
-    const cardWidth = el.firstElementChild?.clientWidth ?? 340;
-    el.scrollBy({ left: dir === "left" ? -(cardWidth + 24) : cardWidth + 24, behavior: "smooth" });
-  };
+    const io = new IntersectionObserver(([entry]) => setInView(entry.isIntersecting), {
+      threshold: 0.1,
+    });
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
+  // Auto scroll marquee. The card list is rendered twice, so once scrollLeft
+  // passes the width of one full set it jumps back by that width and the loop
+  // is seamless. A float position is kept because browsers round scrollLeft,
+  // which would stall very slow speeds.
+  const paused = hovered || isDragging || openIndex !== null || reducedMotion || !inView;
+  useEffect(() => {
+    const el = scrollerRef.current;
+    if (!el || paused || reviews.length < 2) return;
+    const SPEED = 40; // px per second
+    let pos = el.scrollLeft;
+    let last = performance.now();
+    let raf = 0;
+    const tick = (now: number) => {
+      const dt = Math.min(now - last, 64);
+      last = now;
+      if (touching.current) {
+        pos = el.scrollLeft;
+      } else {
+        const loopWidth = getLoopWidth(el);
+        pos += (SPEED * dt) / 1000;
+        if (pos >= loopWidth) pos -= loopWidth;
+        el.scrollLeft = pos;
+      }
+      raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [paused, reviews.length]);
 
   const onPointerDown = (e: React.PointerEvent) => {
     // Mouse only - click-and-drag scrolling is a desktop affordance (no
@@ -185,10 +224,10 @@ export default function Reviews({
   return (
     <section
       id="reviews"
-      className="relative flex flex-col items-center gap-12 overflow-hidden px-6 py-20 md:gap-16 md:px-16 scroll-mt-20"
+      className="relative flex flex-col items-center gap-12 overflow-hidden pb-[32px] pt-[64px] md:pb-[80px] md:pt-[96px] md:gap-24 scroll-mt-20"
     >
       <Reveal>
-        <div className="relative z-10 flex flex-col items-center gap-4 text-center">
+        <div className="relative z-10 flex flex-col items-center gap-4 px-6 text-center md:px-16">
           <p className="font-switzer text-xs font-semibold uppercase tracking-[0.25em] text-cta md:text-sm">
             The proof is in the pudding
           </p>
@@ -208,23 +247,15 @@ export default function Reviews({
           onPointerMove={onPointerMove}
           onPointerUp={endDrag}
           onPointerLeave={endDrag}
-          className={`flex w-full gap-6 overflow-x-auto px-1 pb-4 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden ${
-            isDragging ? "cursor-grabbing select-none" : "cursor-grab snap-x snap-mandatory scroll-smooth"
+          onMouseEnter={() => setHovered(true)}
+          onMouseLeave={() => setHovered(false)}
+          onFocus={() => setHovered(true)}
+          onBlur={() => setHovered(false)}
+          onTouchStart={() => (touching.current = true)}
+          onTouchEnd={() => setTimeout(() => (touching.current = false), 1500)}
+          className={`flex w-full gap-6 overflow-x-auto pb-16 pt-8 -mb-12 -mt-8 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden ${
+            isDragging ? "cursor-grabbing select-none" : "cursor-grab"
           }`}
-          // Opacity-gradient edge fade instead of a hard clip - the
-          // scroller's own overflow-x-auto was cutting the next card off
-          // sharply at the section's right edge. A mask-image fades the
-          // painted result of this element to transparent over its outer
-          // 40px on the right only - the left edge stays fully opaque since
-          // the first card there is meant to read as fully "arrived", not
-          // fading in. The mask is fixed to this box's own edge regardless
-          // of scroll position, so it fades whichever card is currently
-          // sitting at the right.
-          style={{
-            scrollPaddingLeft: "1px",
-            maskImage: "linear-gradient(to right, black, black calc(100% - 40px), transparent)",
-            WebkitMaskImage: "linear-gradient(to right, black, black calc(100% - 40px), transparent)",
-          }}
         >
           {/* Big featured testimonial removed - every review, including
               what used to be reviews[0], now shows as an equal small card
@@ -233,33 +264,19 @@ export default function Reviews({
               (Pricing.tsx) - Reveal carries the sizing/shrink/snap classes
               that used to live on the card's own div, and the card fills it
               with h-full w-full instead. */}
-          {reviews.map((review, i) => (
-            <Reveal
-              key={review.name}
-              delay={i * 100}
-              className="h-full w-[80%] shrink-0 snap-start sm:w-[320px]"
-            >
-              <ReviewCard review={review} index={i} onOpen={setOpenIndex} />
-            </Reveal>
-          ))}
+          {[...reviews, ...(reviews.length > 1 ? reviews : [])].map((review, i) => {
+            const isCopy = i >= reviews.length;
+            return (
+              <div
+                key={`${review.name}-${i}`}
+                className="h-full w-[80%] shrink-0 sm:w-[320px]"
+                aria-hidden={isCopy || undefined}
+              >
+                <ReviewCard review={review} index={i % reviews.length} onOpen={setOpenIndex} />
+              </div>
+            );
+          })}
         </div>
-
-        <button
-          type="button"
-          onClick={() => scrollBy("left")}
-          aria-label="Previous review"
-          className="absolute left-0 top-1/2 hidden -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-white text-dark-ocean-blue shadow-lg transition hover:bg-aquatic md:flex md:size-12"
-        >
-          <ArrowIcon direction="left" />
-        </button>
-        <button
-          type="button"
-          onClick={() => scrollBy("right")}
-          aria-label="Next review"
-          className="absolute right-0 top-1/2 hidden -translate-y-1/2 translate-x-1/2 items-center justify-center rounded-full bg-white text-dark-ocean-blue shadow-lg transition hover:bg-aquatic md:flex md:size-12"
-        >
-          <ArrowIcon direction="right" />
-        </button>
       </div>
 
       {openIndex !== null && (

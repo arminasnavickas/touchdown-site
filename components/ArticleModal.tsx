@@ -34,9 +34,9 @@ function StarIcon({ filled }: { filled: boolean }) {
   return (
     <svg
       viewBox="0 0 20 20"
-      className="size-4"
+      className="size-5"
       fill={filled ? RATING_STAR_COLOR : "none"}
-      stroke={filled ? RATING_STAR_COLOR : "#D1D5DB"}
+      stroke={filled ? RATING_STAR_COLOR : "rgba(255,255,255,0.35)"}
       strokeWidth="1"
     >
       <path d="M10 1.5l2.6 5.4 5.9.8-4.3 4.2 1 5.9L10 15l-5.2 2.8 1-5.9L1.5 7.7l5.9-.8L10 1.5Z" />
@@ -47,7 +47,7 @@ function StarIcon({ filled }: { filled: boolean }) {
 function StarRating({ rating }: { rating: string }) {
   const filledCount = Math.round(parseFloat(rating) || 5);
   return (
-    <div className="flex shrink-0 gap-0.5">
+    <div className="flex shrink-0 gap-0.5 self-start">
       {Array.from({ length: 5 }).map((_, i) => (
         <StarIcon key={i} filled={i < filledCount} />
       ))}
@@ -224,7 +224,7 @@ export default function ArticleModal({
           of the close button, instead of both being grouped at the right
           edge under justify-end. */}
       <div
-        className="relative flex w-full max-w-[724px] shrink-0 items-center justify-end"
+        className="relative flex w-full max-w-[724px] shrink-0 items-center justify-end md:hidden"
         onClick={(e) => e.stopPropagation()}
       >
         {typeof currentIndex === "number" && typeof total === "number" && total > 1 && (
@@ -239,7 +239,7 @@ export default function ArticleModal({
           // the black overlay with no fill at all, so the chevrons/total
           // switch to white (was dark-ocean-blue, illegible on black) to
           // stay visible; the current-index number keeps its cta blue.
-          <div className="absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 items-center gap-1 py-1 pl-1 pr-2.5 text-white">
+          <div className="absolute left-1/2 top-1/2 flex md:hidden -translate-x-1/2 -translate-y-1/2 items-center gap-1 py-1 pl-1 pr-2.5 text-white">
             <button
               type="button"
               onClick={(e) => {
@@ -271,14 +271,6 @@ export default function ArticleModal({
             </button>
           </div>
         )}
-        <button
-          type="button"
-          onClick={onClose}
-          aria-label="Close"
-          className="flex size-10 items-center justify-center rounded-full bg-white/50 text-dark-ocean-blue transition hover:bg-aquatic hover:text-dark-ocean-blue"
-        >
-          <CloseIcon />
-        </button>
       </div>
 
       {/* Narrowed from max-w-2xl (672px) to a slightly wider but more
@@ -303,13 +295,29 @@ export default function ArticleModal({
         // the slide-in animation now moves the card itself (was scoped to
         // just the inner scrollable content region before).
         key={currentIndex}
-        className={`relative flex max-h-[80vh] w-full max-w-[724px] flex-col overflow-hidden rounded-lg bg-white md:max-h-[80vh] ${
+        className={`relative flex max-h-[80vh] w-full max-w-[724px] flex-col ${
+          content.avatar
+            ? "rounded-2xl border border-white/[0.06] bg-body-navy bg-[linear-gradient(135deg,rgba(255,255,255,0.10)_0%,rgba(255,255,255,0.03)_50%,rgba(101,206,230,0.02)_100%)] shadow-[0_12px_40px_rgba(0,20,40,0.4)]"
+            : "rounded-lg bg-white"
+        } md:max-h-[80vh] ${
           direction === "next" ? "modal-slide-next" : "modal-slide-prev"
         }`}
         onClick={(e) => e.stopPropagation()}
         onTouchStart={onTouchStart}
         onTouchEnd={onTouchEnd}
       >
+        <button
+          type="button"
+          onClick={onClose}
+          aria-label="Close"
+          className={`absolute -right-3 -top-3 z-10 flex size-10 items-center justify-center rounded-full transition ${
+            content.avatar
+              ? "bg-white text-dark-ocean-blue shadow-lg hover:bg-white/80"
+              : "bg-white text-dark-ocean-blue shadow-md hover:bg-aquatic"
+          }`}
+        >
+          <CloseIcon />
+        </button>
         {/* flex-auto (not flex-1) deliberately: flex-1's flex-basis:0%
             contributes nothing to this auto-height flex column's size
             calculation, so the outer card would resolve to header height
@@ -319,7 +327,7 @@ export default function ArticleModal({
             the default flex-item min-height (also content-based) so this
             region can still shrink below that once max-h-[85vh] is
             actually hit, which is what lets overflow-y-auto ever kick in. */}
-        <div className="modal-scroll min-h-0 flex-auto overflow-y-auto">
+        <div className="modal-scroll min-h-0 flex-auto overflow-y-auto rounded-[inherit] [scrollbar-gutter:stable_both-edges]">
           {content.image && (
             // Portraits ("tall") get a much taller frame - fluid between the
             // mobile and desktop targets via clamp() so it scales with actual
@@ -367,32 +375,30 @@ export default function ArticleModal({
               round) instead of the previous asymmetric px-5/py-6, so the
               modal's content feels consistent with the card that opened it.
               Desktop keeps its own more generous 12/10. */}
-          <div className="p-6 md:px-12 md:py-10">
-          <div className="mx-auto max-w-[560px]">
+          <div className={content.avatar ? "p-6 md:p-8" : "p-6 md:px-12 md:py-10"}>
+          <div className={content.avatar ? "" : "mx-auto max-w-[560px]"}>
             {content.avatar ? (
               // Byline-style header (Reviews): avatar left, kicker/name
               // stacked to its right, rating on the far right of the same
               // row - matches how the review card itself lays out its
               // header, instead of the stacked avatar-above-name layout the
               // other callers below still use.
-              <div className="mb-4 flex items-center gap-4 border-b border-dark-ocean-blue/10 pb-4">
+              <div className="flex items-center gap-4 border-b border-white/15 pb-4">
                 <FadeImage
                   src={content.avatar}
                   alt={content.title}
                   eager
-                  wrapperClassName="size-16 shrink-0 rounded-full md:size-20"
+                  wrapperClassName="size-24 shrink-0 rounded-full"
                   className="h-full w-full object-cover"
                   style={{ objectPosition: content.avatarPosition ?? "50% 50%" }}
                 />
                 <div className="flex flex-1 flex-col gap-0.5">
-                  {content.kicker && (
-                    <p className="font-switzer text-sm font-medium uppercase tracking-widest text-horizon">
-                      {content.kicker}
-                    </p>
-                  )}
-                  <h3 className="font-switzer text-3xl font-light tracking-tight text-dark-ocean-blue md:text-5xl">
+                  <h3 className="font-switzer text-[26px] font-normal leading-tight text-white">
                     {content.title}
                   </h3>
+                  {content.kicker && (
+                    <p className="font-switzer text-[17px] text-white/60 md:text-[15px]">{content.kicker}</p>
+                  )}
                 </div>
                 {content.rating && <StarRating rating={content.rating} />}
               </div>
@@ -449,16 +455,7 @@ export default function ArticleModal({
               </div>
             )}
 
-            {/* Quote mark (Reviews only) - same glyph/treatment as the
-                card, sitting right above the quote text with the paragraph
-                block pulled up close beneath it via the negative margin
-                below, instead of the plain mt-6 gap other callers get. */}
-            {content.avatar && (
-              <span aria-hidden className="mt-4 block font-switzer text-4xl font-light leading-none text-cta/25">
-                &ldquo;
-              </span>
-            )}
-            <div className={content.avatar ? "-mt-2" : "mt-6"}>
+            <div className={content.avatar ? "mt-8" : "mt-6"}>
               {content.sections && content.sections.length > 0 ? (
                 <div className="flex flex-col gap-6">
                   {content.sections.map((section) => (
@@ -481,7 +478,9 @@ export default function ArticleModal({
                 content.paragraphs.map((p, i) => (
                   <p
                     key={i}
-                    className="mb-5 font-switzer text-[15px] font-light leading-relaxed text-dark-ocean-blue/80 last:mb-0"
+                    className={`mb-5 font-switzer text-[15px] font-light leading-relaxed last:mb-0 ${
+                      content.avatar ? "text-white/85" : "text-dark-ocean-blue/80"
+                    }`}
                   >
                     {p}
                   </p>
@@ -578,7 +577,7 @@ export default function ArticleModal({
               goPrev();
             }}
             aria-label="Previous"
-            className="absolute left-4 top-1/2 hidden -translate-y-1/2 items-center justify-center rounded-full bg-white text-dark-ocean-blue shadow-lg transition hover:bg-aquatic md:flex md:size-12"
+            className="absolute top-1/2 hidden -translate-y-1/2 md:flex md:size-14 [&_svg]:size-8 md:left-[max(1rem,calc(50%-362px-6.5rem))] items-center justify-center rounded-full text-white/70 transition hover:bg-white/10 hover:text-white"
           >
             <ArrowIcon direction="left" />
           </button>
@@ -589,7 +588,7 @@ export default function ArticleModal({
               goNext();
             }}
             aria-label="Next"
-            className="absolute right-4 top-1/2 hidden -translate-y-1/2 items-center justify-center rounded-full bg-white text-dark-ocean-blue shadow-lg transition hover:bg-aquatic md:flex md:size-12"
+            className="absolute top-1/2 hidden -translate-y-1/2 md:flex md:size-14 [&_svg]:size-8 md:right-[max(1rem,calc(50%-362px-6.5rem))] items-center justify-center rounded-full text-white/70 transition hover:bg-white/10 hover:text-white"
           >
             <ArrowIcon direction="right" />
           </button>
