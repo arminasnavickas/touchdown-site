@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Blob from "./Blob";
 import Reveal from "./Reveal";
 import FadeImage from "./FadeImage";
@@ -15,18 +15,6 @@ import type { SitePhoto } from "@/lib/content";
 // facilityCopy + the facilityPhoto document type) with hardcoded fallbacks,
 // same pattern as the rest of the site - only the "The facility" eyebrow
 // stays fixed here, matching how WhoWeAre's "About us" eyebrow is fixed too.
-
-function ViewIndicator() {
-  return (
-    <span
-      aria-hidden
-      className="pointer-events-none absolute bottom-3 left-3 flex items-center gap-1 font-switzer text-xs font-semibold uppercase tracking-widest text-cta opacity-0 transition-opacity duration-300 group-hover:opacity-100 md:bottom-4 md:left-4"
-    >
-      View
-      <span>→</span>
-    </span>
-  );
-}
 
 export default function OurFacility({
   heading,
@@ -45,11 +33,34 @@ export default function OurFacility({
   // than tracking the src itself so it stays valid even if `images`
   // changes shape (e.g. a Sanity edit reorders the set).
   const [selected, setSelected] = useState(0);
+  const count = images.length;
+  const goPrev = () => setSelected((i) => (i - 1 + count) % count);
+  const goNext = () => setSelected((i) => (i + 1) % count);
+  const onArrowKeys = (e: React.KeyboardEvent) => {
+    if (count < 2) return;
+    if (e.key === "ArrowLeft") goPrev();
+    if (e.key === "ArrowRight") goNext();
+  };
+
+  // Keep the selected thumbnail visible inside the (desktop) scrolling
+  // column by scrolling the column itself - scrollIntoView would also
+  // scroll the page.
+  const thumbColRef = useRef<HTMLDivElement>(null);
+  const thumbRefs = useRef<(HTMLButtonElement | null)[]>([]);
+  useEffect(() => {
+    const col = thumbColRef.current;
+    const el = thumbRefs.current[selected];
+    if (!col || !el || col.scrollHeight <= col.clientHeight) return;
+    col.scrollTo({
+      top: el.offsetTop - col.clientHeight / 2 + el.clientHeight / 2,
+      behavior: "smooth",
+    });
+  }, [selected]);
 
   return (
     <section
       id="facility"
-      className="relative flex flex-col items-center gap-10 px-6 py-20 md:px-16 scroll-mt-20"
+      className="relative flex flex-col items-center gap-10 px-6 py-[40px] md:px-16 scroll-mt-20"
     >
       {/* Anchored to this section's top-left corner, bled upward past its
           own top edge into How It Works above (this section renders after
@@ -60,7 +71,7 @@ export default function OurFacility({
           seam. opacity-40 brings it down from Blob's own baked-in 60%
           alpha (~24% effective), matching What You Get/Faq rather than
           sitting at full strength like About Us. */}
-      <Blob className="top-[-120px] left-6 h-[380px] w-[380px] opacity-40" />
+      <Blob className="top-[-180px] left-6 h-[380px] w-[380px] opacity-40" />
       <Reveal>
         <div className="relative z-10 flex max-w-3xl flex-col items-center gap-4 text-center">
           <p className="font-switzer text-xs font-semibold uppercase tracking-[0.25em] text-cta md:text-sm">
@@ -125,56 +136,94 @@ export default function OurFacility({
         // of a big photo." This only pushes the photo block down, so the
         // eyebrow/heading/paragraph stack above keeps its own tighter
         // rhythm.
-        <Reveal delay={140} className="relative z-10 mt-6 flex w-full flex-col gap-2 md:mt-10 md:flex-row md:items-stretch md:gap-4">
-          {/* aspect-video (16:9) on both the featured photo and every
-              thumbnail, so the whole gallery shares one photo ratio at any
-              width. md:flex-1 lets the photo take whatever width the
-              thumbnail column (fixed at md:w-56) doesn't need. */}
-          <button
-            type="button"
-            onClick={() => openLightbox(urls, selected)}
-            aria-label={`View facility photo ${selected + 1} of ${images.length}, full size`}
-            className="group relative aspect-video w-full cursor-zoom-in overflow-hidden rounded-lg md:flex-1"
+        <Reveal
+          delay={140}
+          className="relative z-10 mt-6 flex w-full flex-col gap-2 md:mt-10 md:h-[85vh] md:flex-row md:items-stretch md:gap-4"
+        >
+          {/* Desktop: the whole gallery is capped to 85% of the screen
+              height (same as the lightbox photo) so photo, arrows and thumbnails are all
+              visible at once - it used to be a full-width 16:9 photo that
+              ran taller than the viewport. Mobile keeps aspect-video. */}
+          <div
+            className="relative aspect-video w-full md:aspect-auto md:min-w-0 md:flex-1"
+            onKeyDown={onArrowKeys}
           >
-            <FadeImage
-              key={images[selected].url}
-              src={images[selected].url}
-              alt={`Touchdown Freediving's training facility in Dahab, photo ${selected + 1} of ${images.length}`}
-              wrapperClassName="h-full w-full"
-              className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.03]"
-              style={{ objectPosition: images[selected].position }}
-            />
-            <div className="absolute inset-0 bg-dark-ocean-blue/0 transition-colors duration-300 group-hover:bg-dark-ocean-blue/25" />
-            <ViewIndicator />
-          </button>
-          {images.length > 1 && (
-            // Mobile: horizontal row, each tile sharing the row's width
-            // equally (flex-1), plain gap-2 between them (was fanned,
-            // pulled left over its neighbour via -ml-6). Desktop: a
-            // fixed-width column (w-56) with that same gap-2, where every
-            // tile is flex-1 and aspect-auto (was aspect-video), so the
-            // tiles divide the column's full height - stretched by the
-            // parent's md:items-stretch to match the photo - evenly
-            // between them instead of each keeping its own 16:9 crop.
-            // z-index still climbs with index so the selected tile stays
-            // on top of its own ring/hover state, even though tiles don't
-            // overlap each other physically at either width anymore.
-            <div className="relative z-20 flex w-full gap-2 md:w-56 md:flex-none md:flex-col">
+            <button
+              type="button"
+              onClick={() => openLightbox(urls, selected)}
+              aria-label={`View facility photo ${selected + 1} of ${count}, full size`}
+              className="group absolute inset-0 cursor-zoom-in overflow-hidden rounded-lg"
+            >
+              <FadeImage
+                key={images[selected].url}
+                src={images[selected].url}
+                alt={`Touchdown Freediving's training facility in Dahab, photo ${selected + 1} of ${count}`}
+                wrapperClassName="h-full w-full"
+                className="h-full w-full object-cover"
+                style={{ objectPosition: images[selected].position }}
+              />
+            </button>
+            {count > 1 && (
+              <>
+                <button
+                  type="button"
+                  onClick={goPrev}
+                  aria-label="Previous photo"
+                  className="absolute left-4 top-1/2 hidden size-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/10 bg-dark-ocean-blue/40 text-white backdrop-blur-md transition hover:bg-dark-ocean-blue/60 md:flex"
+                >
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="size-6">
+                    <path d="M15 6l-6 6 6 6" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </button>
+                <button
+                  type="button"
+                  onClick={goNext}
+                  aria-label="Next photo"
+                  className="absolute right-4 top-1/2 hidden size-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/10 bg-dark-ocean-blue/40 text-white backdrop-blur-md transition hover:bg-dark-ocean-blue/60 md:flex"
+                >
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="size-6">
+                    <path d="M9 6l6 6-6 6" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </button>
+                <span
+                  aria-hidden
+                  className="pointer-events-none absolute bottom-4 right-4 rounded-full bg-dark-ocean-blue/50 px-3 py-1 font-switzer text-xs font-medium tabular-nums text-white backdrop-blur-md"
+                >
+                  {String(selected + 1).padStart(2, "0")} / {String(count).padStart(2, "0")}
+                </span>
+              </>
+            )}
+          </div>
+          {count > 1 && (
+            // Mobile: horizontal row of equal tiles. Desktop: fixed width
+            // column matching the photo's height that scrolls inside
+            // itself, fixed 16:9 tiles, inactive ones dimmed, the selected
+            // one gets a thin inset ring (inset so the column's overflow
+            // never clips it).
+            <div
+              ref={thumbColRef}
+              onKeyDown={onArrowKeys}
+              className="relative z-20 flex w-full gap-2 md:min-h-0 md:w-48 md:flex-none md:flex-col md:overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+            >
               {images.map((photo, i) => (
                 <button
                   key={`${i}-${photo.url}`}
+                  ref={(el) => {
+                    thumbRefs.current[i] = el;
+                  }}
                   type="button"
                   onClick={() => setSelected(i)}
-                  aria-label={`Show facility photo ${i + 1} of ${images.length}`}
+                  aria-label={`Show facility photo ${i + 1} of ${count}`}
                   aria-pressed={i === selected}
-                  style={{ zIndex: i === selected ? images.length + 1 : i }}
-                  className={`group/thumb relative aspect-video flex-1 overflow-hidden rounded-lg border-2 border-dark-ocean-blue shadow-lg shadow-black/40 transition duration-200 hover:z-[999] md:aspect-auto md:w-full ${
-                    i === selected ? "ring-2 ring-cta" : ""
+                  className={`relative aspect-video flex-1 overflow-hidden rounded-lg transition duration-200 md:w-full md:flex-none ${
+                    i === selected
+                      ? "ring-2 ring-inset ring-white/80"
+                      : "opacity-45 grayscale-[50%] hover:opacity-100 hover:grayscale-0"
                   }`}
                 >
                   <FadeImage
                     src={photo.url}
-                    alt={`Touchdown Freediving facility, thumbnail ${i + 1} of ${images.length}`}
+                    alt={`Touchdown Freediving facility, thumbnail ${i + 1} of ${count}`}
                     wrapperClassName="h-full w-full"
                     className="h-full w-full object-cover"
                     style={{ objectPosition: photo.position }}
