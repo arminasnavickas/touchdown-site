@@ -288,7 +288,7 @@ export default function Navigation({
               <WhatsappIcon />
             </a>
           </div>
-          <BookInButton />
+          <BookInButton>Book a dive</BookInButton>
         </div>
 
         <button
@@ -341,7 +341,7 @@ export default function Navigation({
               {link.label}
             </a>
           ))}
-          <BookInButton className="mt-4 w-full" />
+          <BookInButton className="mt-4 w-full">Book a dive</BookInButton>
           <div className="mt-4 flex items-center justify-center gap-8 border-t border-danish-blue/20 pb-8 pt-6 text-dark-ocean-blue">
             <a href={`mailto:${email}`} aria-label="Email" className="transition hover:text-horizon">
               <EnvelopeIcon className="size-9" />

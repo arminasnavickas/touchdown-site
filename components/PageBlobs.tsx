@@ -12,8 +12,8 @@
 // If one of these still lands somewhere unwanted, nudge/remove that entry
 // rather than disabling the whole layer again.
 const blobs = [
-  { top: "63%", left: "-10.8%", size: 900 },
-  { top: "75.7%", left: "83.3%", size: 950 },
+  { top: "63%", left: "-10.8%", size: 900, opacity: 0.58 },
+  { top: "75.7%", left: "83.3%", size: 950, opacity: 0.74 },
 ];
 
 export default function PageBlobs() {
@@ -22,12 +22,13 @@ export default function PageBlobs() {
       {blobs.map((b, i) => (
         <div
           key={i}
-          className="absolute rounded-[58%_42%_45%_55%/52%_48%_55%_45%] bg-[#65CEE6] opacity-70 mix-blend-screen blur-[60px]"
+          className="blob-noise absolute rounded-[58%_42%_45%_55%/52%_48%_55%_45%] bg-[#65CEE6] mix-blend-screen blur-[60px]"
           style={{
             top: b.top,
             left: b.left,
             width: b.size,
             height: b.size,
+            opacity: b.opacity,
           }}
         />
       ))}

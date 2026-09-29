@@ -12,7 +12,7 @@ export default function Blob({ className }: { className?: string }) {
   return (
     <div
       aria-hidden
-      className={`pointer-events-none absolute z-0 rounded-[58%_42%_45%_55%/52%_48%_55%_45%] bg-[#65CEE6]/60 blur-[60px] md:blur-[90px] ${className ?? ""}`}
+      className={`blob-noise pointer-events-none absolute z-0 rounded-[58%_42%_45%_55%/52%_48%_55%_45%] bg-[#65CEE6]/60 blur-[60px] md:blur-[90px] ${className ?? ""}`}
     />
   );
 }

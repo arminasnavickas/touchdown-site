@@ -68,7 +68,7 @@ export default function WhoWeAre({
             above it, and in single-column mode this one just repeated it
             right after the About Us copy. lg:inline-flex brings it back at
             the two-column layout, where that's no longer true. */}
-        <BookInButton className="mx-auto hidden w-fit lg:mx-0 lg:inline-flex" />
+        <BookInButton className="mx-auto hidden w-fit lg:mx-0 lg:inline-flex">Dive with us</BookInButton>
       </div>
 
       <div className="order-2 flex flex-1 lg:order-none">

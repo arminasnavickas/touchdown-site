@@ -25,8 +25,8 @@ const hrefById: Record<string, string> = {
 
 function FooterColumn({ title, links }: { title: string; links: FooterLink[] }) {
   return (
-    <div className="flex w-full flex-col items-start gap-4 text-left">
-      <p className="font-switzer text-sm font-semibold uppercase tracking-[0.15em] text-aquatic">
+    <div className="flex w-full flex-col items-start gap-3 text-left">
+      <p className="font-switzer text-xs font-semibold uppercase tracking-[0.2em] text-white/40">
         {title}
       </p>
       {links.map((link) => (
@@ -34,7 +34,7 @@ function FooterColumn({ title, links }: { title: string; links: FooterLink[] }) 
           key={link.id}
           href={hrefById[link.id] ?? "#"}
           data-fab-avoid
-          className="font-switzer text-base font-light text-white/50 transition hover:text-aquatic"
+          className="font-switzer text-base font-light text-white/70 transition hover:text-cta"
         >
           {link.label}
         </a>
@@ -78,6 +78,7 @@ export default function Footer({
 }) {
   return (
     <footer id="site-footer" className="relative w-full flex flex-col items-center overflow-hidden bg-body-navy text-white">
+      <div className="relative flex w-full flex-col items-center">
       {/* Third and final glow of exactly three on the page (Hero, Pricing,
           and here) - sits behind the closing "Ready to Dive In?" CTA so the
           page's last beat gets the same quiet emphasis as its first,
@@ -105,13 +106,13 @@ export default function Footer({
             tagline (5xl -> 6xl) than the pass before it, so the site
             visibly concludes on a statement instead of just running out of
             sections. */}
-        <div className="grid w-full grid-cols-2 items-start gap-x-4 gap-y-6 py-10 sm:gap-x-6 md:items-center md:gap-8 md:py-20">
-          <div className="flex flex-col items-start gap-4 sm:gap-6">
+        <div className="grid w-full grid-cols-1 items-start gap-x-8 gap-y-12 py-14 md:grid-cols-5 md:py-24">
+          <div className="flex w-full flex-row flex-wrap items-end justify-between gap-x-6 gap-y-4 md:col-span-3 md:flex-col md:items-start md:justify-start md:gap-6">
             <div className="flex flex-col gap-1 sm:gap-3">
-              <p className="font-switzer text-3xl font-light tracking-tight sm:text-4xl md:text-6xl">
+              <p className="font-switzer text-4xl font-extralight tracking-tight sm:text-5xl md:text-5xl lg:text-6xl">
                 {tagline}
               </p>
-              <p className="font-switzer text-[15px] font-light leading-relaxed text-white/60">
+              <p className="font-switzer text-base font-light leading-relaxed text-white/70 md:text-lg">
                 {ctaSubcopy}
               </p>
             </div>
@@ -120,35 +121,29 @@ export default function Footer({
                 naturally with "Ready to Dive In?" above it. Compact on
                 mobile (this column is only half the screen now), full size
                 from sm up. */}
-            <BookInButton className="w-fit" />
+            <BookInButton className="ml-auto w-fit md:ml-0" />
+          </div>
+          <div className="hidden w-full flex-col gap-5 md:col-span-2 md:col-start-4 md:flex md:self-end">
+            <div className="flex flex-col gap-1.5">
+              <p className="font-switzer text-xl font-medium text-white md:text-2xl">
+                Stay in the loop
+              </p>
+              <p className="font-switzer text-base font-light text-white/60">
+                Diving tips, course updates and Dahab stories, straight to your inbox.
+              </p>
+            </div>
+            <NewsletterSignup className="w-full" />
           </div>
 
-          {/* Right-aligned (was items-start, which left the logo/icons
-              sitting at this column's own left edge - only halfway across
-              the container, not at its actual right edge). items-end pins
-              both the logo and the icon row flush against this column's
-              right edge, which - since this is the grid's second and last
-              column - is exactly the container's own right edge, mirroring
-              the CTA's flush-left edge on the other side. Same container,
-              same grid, both sides now genuinely edge-to-edge. */}
-          <div className="flex flex-col items-end gap-3 sm:gap-5">
-            <Link href="/" className="shrink-0">
-              {/* Capped to ~170px on mobile (was rendering much wider at a
-                  fixed height with no max-width) so it doesn't dominate a
-                  column that's now only half the screen. */}
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={logo} alt="Touchdown" className="h-5 w-auto max-w-[170px] sm:h-7 sm:max-w-none" />
-            </Link>
-            {/* Icons grouped tight to the logo, and sized down on mobile via
-                the [&>svg] override below - SocialIcons' own size-8 default
-                is sized for a desktop-width column, not a 2-up mobile one.
-                justify-end keeps the group's right edge anchored even if it
-                ever wraps to a second line. */}
-            <div className="flex flex-wrap items-center justify-end gap-4 sm:gap-6">
-              <a href={instagram} target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="transition hover:text-cta [&>svg]:size-6 sm:[&>svg]:size-7"><InstagramIcon /></a>
-              <a href={telegram} target="_blank" rel="noopener noreferrer" aria-label="Telegram" className="transition hover:text-cta [&>svg]:size-6 sm:[&>svg]:size-7"><TelegramIcon /></a>
-              <a href={facebook} target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="transition hover:text-cta [&>svg]:size-6 sm:[&>svg]:size-7"><FacebookIcon /></a>
-              <a href={whatsapp} target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" className="transition hover:text-cta [&>svg]:size-6 sm:[&>svg]:size-7"><WhatsappIcon /></a>
+          <div className="flex w-full flex-col items-start gap-5 border-t border-white/10 pt-12 md:hidden">
+            <p className="font-switzer text-xs font-semibold uppercase tracking-[0.2em] text-white/40">
+              Follow our dives
+            </p>
+            <div className="flex flex-wrap items-center gap-3">
+              <a href={instagram} target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="flex size-12 items-center justify-center md:size-14 rounded-full border border-white/10 bg-white/[0.04] text-white/80 transition hover:border-cta/40 hover:text-cta [&>svg]:size-6 md:[&>svg]:size-7"><InstagramIcon /></a>
+              <a href={telegram} target="_blank" rel="noopener noreferrer" aria-label="Telegram" className="flex size-12 items-center justify-center md:size-14 rounded-full border border-white/10 bg-white/[0.04] text-white/80 transition hover:border-cta/40 hover:text-cta [&>svg]:size-6 md:[&>svg]:size-7"><TelegramIcon /></a>
+              <a href={facebook} target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="flex size-12 items-center justify-center md:size-14 rounded-full border border-white/10 bg-white/[0.04] text-white/80 transition hover:border-cta/40 hover:text-cta [&>svg]:size-6 md:[&>svg]:size-7"><FacebookIcon /></a>
+              <a href={whatsapp} target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" className="flex size-12 items-center justify-center md:size-14 rounded-full border border-white/10 bg-white/[0.04] text-white/80 transition hover:border-cta/40 hover:text-cta [&>svg]:size-6 md:[&>svg]:size-7"><WhatsappIcon /></a>
             </div>
           </div>
         </div>
@@ -162,13 +157,24 @@ export default function Footer({
             own), and Contact spans both columns on mobile (col-span-2)
             rather than fighting About/Experience for width in a cramped
             3-up row. */}
-        <div className="grid w-full grid-cols-2 gap-x-8 gap-y-6 py-6 md:grid-cols-3 md:gap-y-8 md:py-8">
-          <FooterColumn title={aboutTitle} links={aboutLinks} />
-          <FooterColumn title={experienceTitle} links={experienceLinks} />
+        <div className="grid w-full grid-cols-2 gap-x-8 gap-y-8 py-10 max-md:!border-t-0 md:grid-cols-5 md:gap-y-8 md:py-12">
+          <div className="hidden w-full flex-col items-start gap-5 md:col-span-1 md:flex">
+            <p className="font-switzer text-xs font-semibold uppercase tracking-[0.2em] text-white/40">
+              Follow our dives
+            </p>
+            <div className="flex flex-wrap items-center gap-3">
+              <a href={instagram} target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="flex size-12 items-center justify-center md:size-14 rounded-full border border-white/10 bg-white/[0.04] text-white/80 transition hover:border-cta/40 hover:text-cta [&>svg]:size-6 md:[&>svg]:size-7"><InstagramIcon /></a>
+              <a href={telegram} target="_blank" rel="noopener noreferrer" aria-label="Telegram" className="flex size-12 items-center justify-center md:size-14 rounded-full border border-white/10 bg-white/[0.04] text-white/80 transition hover:border-cta/40 hover:text-cta [&>svg]:size-6 md:[&>svg]:size-7"><TelegramIcon /></a>
+              <a href={facebook} target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="flex size-12 items-center justify-center md:size-14 rounded-full border border-white/10 bg-white/[0.04] text-white/80 transition hover:border-cta/40 hover:text-cta [&>svg]:size-6 md:[&>svg]:size-7"><FacebookIcon /></a>
+              <a href={whatsapp} target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" className="flex size-12 items-center justify-center md:size-14 rounded-full border border-white/10 bg-white/[0.04] text-white/80 transition hover:border-cta/40 hover:text-cta [&>svg]:size-6 md:[&>svg]:size-7"><WhatsappIcon /></a>
+            </div>
+          </div>
+          <FooterColumn title="Get to know us" links={aboutLinks} />
+          <FooterColumn title="Dive with us" links={experienceLinks} />
 
-          <div className="col-span-2 flex w-full flex-col items-start gap-3 md:col-span-1 md:gap-4">
-            <p className="font-switzer text-sm font-semibold uppercase tracking-[0.15em] text-aquatic">
-              {contactTitle}
+          <div className="flex w-full min-w-0 flex-col items-start gap-3 md:col-span-1">
+            <p className="font-switzer text-xs font-semibold uppercase tracking-[0.2em] text-white/40">
+              Say hello
             </p>
             {/* Email in the cyan CTA color and a size up from the other
                 contact lines - the one piece of contact info most likely to
@@ -176,19 +182,35 @@ export default function Footer({
                 rather than reading identically to a nav link. */}
             <a
               href={`mailto:${email}`}
-              className="font-switzer text-base font-medium text-cta transition hover:text-white"
+              className="break-all font-switzer text-base font-medium text-cta transition hover:text-white"
             >
               {email}
             </a>
             <a
               href={`tel:${phone}`}
-              className="font-switzer text-base font-light text-white/50 transition hover:text-aquatic"
+              className="font-switzer text-base font-light text-white/70 transition hover:text-cta"
             >
               {phone}
             </a>
-            <p className="font-switzer text-base font-light text-white/50">
+            <p className="font-switzer text-base font-light text-white/70">
               {location}
             </p>
+          </div>
+
+          <div className="min-w-0 md:col-span-1">
+            <FooterColumn title="The small print" links={legalLinks} />
+          </div>
+
+          <div className="col-span-2 flex w-full flex-col gap-5 border-t border-white/10 pt-12 md:hidden">
+            <div className="flex flex-col gap-1.5">
+              <p className="font-switzer text-xl font-medium text-white md:text-2xl">
+                Stay in the loop
+              </p>
+              <p className="font-switzer text-base font-light text-white/60">
+                Diving tips, course updates and Dahab stories, straight to your inbox.
+              </p>
+            </div>
+            <NewsletterSignup className="w-full" />
           </div>
         </div>
 
@@ -202,18 +224,6 @@ export default function Footer({
           icon circle, and a taller form (see NewsletterSignup's own sizing).
           Sits outside the divide-y container above so its own border does
           not fight with the automatic divider that container adds. */}
-      <div className="relative z-10 mx-6 mb-6 flex w-[calc(100%-3rem)] flex-col gap-6 rounded-lg border border-white/10 bg-white/[0.03] p-6 md:mx-16 md:mb-10 md:w-[calc(100%-8rem)] md:flex-row md:items-center md:justify-between md:gap-10 md:p-10">
-        <div className="flex flex-col gap-1.5">
-          <p className="font-switzer text-2xl font-bold text-white md:text-3xl">
-            Stay in the loop
-          </p>
-          <p className="font-switzer text-base font-light text-white/50 md:text-lg">
-            Diving tips, course updates and Dahab stories, straight to your inbox.
-          </p>
-        </div>
-        <NewsletterSignup className="w-full md:w-auto md:min-w-[460px]" />
-      </div>
-
       {/* Legal lives here now as a compact inline list next to the
           copyright, instead of a whole column above for two short links -
           also lets Back to top keep its exact spot at the far right.
@@ -221,62 +231,57 @@ export default function Footer({
           the page (Pricing, FAQ, What You Get, Training Rhythm) already
           agrees on a quiet white hairline; this was the one place a bright,
           saturated cyan rule broke that shared convention. */}
-      <div className="relative z-10 flex w-full flex-col items-start gap-3 border-t border-white/10 px-6 py-5 text-left md:flex-row md:items-center md:justify-between md:gap-6 md:px-16">
-        {/* Two separate elements (was one <p> joined by a <br/>) - a screen
-            reader announced the copyright notice and the design/photo
-            credit as a single run-on paragraph; splitting them costs
-            nothing visually (the gap below matches the old line's spacing)
-            but reads as two distinct statements instead of one. */}
-        <div className="flex flex-col gap-0.5">
-          <p className="font-switzer text-sm font-light text-aquatic/80">
-            © {new Date().getFullYear()} Touchdown Space. All rights reserved.
-          </p>
-          <p className="font-switzer text-sm font-light text-aquatic/80">
-            Website design by{" "}
-            <a
-              href="https://arminas.website"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="underline transition hover:text-white"
-            >
-              Arminas
-            </a>
-            . Pictures by{" "}
-            <a
-              href="https://eslampiko.com/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="underline transition hover:text-white"
-            >
-              Eslam Piko
-            </a>
-            .
-          </p>
-        </div>
+      {/* Oversized, near invisible wordmark sitting above the copyright bar. Decorative only, so it is hidden from assistive tech. */}
+      <div aria-hidden className="pointer-events-none relative z-0 w-full select-none px-6 pb-10 pt-4 md:px-16 md:pb-14">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={logo} alt="" className="w-full opacity-[0.07]" />
+      </div>
 
-        <div className="flex items-center gap-6">
-          <p className="font-switzer text-sm font-light text-aquatic/80">
-            {legalLinks.map((link, i) => (
-              <span key={link.id}>
-                {i > 0 && <span className="mx-1.5 text-aquatic/40">·</span>}
-                <a href={hrefById[link.id] ?? "#"} className="transition hover:text-white">
-                  {link.label}
-                </a>
-              </span>
-            ))}
-          </p>
+      <div className="relative z-10 w-full px-6 md:px-16">
+        <div className="flex w-full flex-col items-center gap-4 border-t border-white/10 py-6 text-center md:flex-row md:items-center md:justify-between md:gap-6 md:text-left">
+          {/* Copyright and credits on one quiet line; two separate spans so a
+              screen reader still reads them as distinct statements. */}
+          <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-1 font-switzer text-sm font-light text-white/45 md:justify-start">
+            <p>© {new Date().getFullYear()} Touchdown Space. All rights reserved.</p>
+            <p>
+              Website design by{" "}
+              <a
+                href="https://arminas.website"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="transition hover:text-white"
+              >
+                Arminas
+              </a>
+              . Pictures by{" "}
+              <a
+                href="https://eslampiko.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="transition hover:text-white"
+              >
+                Eslam Piko
+              </a>
+              .
+            </p>
+          </div>
+
           <a
             href="#"
             aria-label="Back to top"
-            className="flex shrink-0 items-center gap-1.5 font-switzer text-xs font-medium uppercase tracking-widest text-aquatic/80 transition hover:text-white"
+            className="group/top flex shrink-0 items-center gap-2 font-switzer text-xs font-medium uppercase tracking-widest text-white/60 transition hover:text-white"
           >
             Back to top
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="size-3.5">
-              <path d="M12 19V5M5 12l7-7 7 7" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
+            <span className="flex size-8 items-center justify-center rounded-full border border-white/10 bg-white/[0.04] transition group-hover/top:border-cta/40 group-hover/top:text-cta">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="size-3.5">
+                <path d="M12 19V5M5 12l7-7 7 7" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </span>
           </a>
         </div>
       </div>
+
+    </div>
     </footer>
   );
 }

@@ -1,7 +1,6 @@
 import BookInButton from "./BookInButton";
 import { Clock } from "lucide-react";
 import Blob from "./Blob";
-import Reveal from "./Reveal";
 import type { ScheduleDay } from "@/lib/content";
 
 // Day type is inferred from the label text rather than added as a new CMS
@@ -70,7 +69,7 @@ export default function TrainingRhythm({
           stacks on top of Blob's own baked-in 60%-alpha fill (~24%
           effective). */}
       <Blob className="bottom-[-120px] left-6 h-[360px] w-[360px] opacity-30" />
-      <Reveal>
+      <div>
         <div className="relative z-10 flex flex-col items-center gap-3 text-center">
           {/* "The training system · Part 01" kicker removed - this section
               no longer frames itself as part of a numbered system. */}
@@ -78,7 +77,7 @@ export default function TrainingRhythm({
             {heading}
           </h2>
         </div>
-      </Reveal>
+      </div>
 
       {/* Pattern strip removed - it repeated the exact same WATER/DRY/REST
           value for every day a second time, one paragraph above the row
@@ -100,7 +99,7 @@ export default function TrainingRhythm({
         {days.map(({ day, label, time }, i) => {
           const info = dayTypeInfo(label);
           return (
-            <Reveal key={day} delay={i * 60}>
+            <div key={day}>
               {/* data-fab-avoid: the floating Book In/back-to-top stack can
                   end up sitting over whichever row is scrolled into that
                   position - same issue hit on How It Works and the old
@@ -149,7 +148,7 @@ export default function TrainingRhythm({
                   )}
                 </div>
               </div>
-            </Reveal>
+            </div>
           );
         })}
       </div>
@@ -157,7 +156,7 @@ export default function TrainingRhythm({
       {/* "View full schedule" link removed - BOOK YOUR TRAINING is now the
           section's only action. */}
       <div className="relative z-10 flex items-center">
-        <BookInButton className="w-fit" />
+        <BookInButton className="w-fit">Start training with us</BookInButton>
       </div>
     </section>
   );

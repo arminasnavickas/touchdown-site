@@ -30,7 +30,7 @@ export default function OurFriends({
             overflowing or triggering a scrollbar. No flex-wrap, no
             overflow-x, no slider. */}
         <div
-          className="relative z-10 mx-auto grid w-full max-w-4xl items-center gap-x-4 md:gap-x-12"
+          className="relative z-10 mx-auto grid w-full max-w-6xl items-center gap-x-6 md:gap-x-20"
           style={{ gridTemplateColumns: `repeat(${logos.length}, minmax(0, 1fr))` }}
         >
           {logos.map((friend, i) => {

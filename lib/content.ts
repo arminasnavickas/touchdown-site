@@ -181,7 +181,7 @@ export const fallbackTeam: TeamMember[] = [
   {
     name: "Omar",
     image: "/images/team-omar.jpg",
-    role: "Coach · Athlete · Safety",
+    role: "Manager",
     bio: "Coach, athlete, safety. Specialized in frenzel equalisation. AIDA instructor, YOUTH instructor.",
     fullBio: [
       "Born in Giza, Egypt, I lived in Saudi Arabia, Bahrain, and Malaysia before moving back home to reconnect with my roots. Ultimately, I chose to settle down in Dahab: mostly because of the Blue Hole.",
@@ -599,7 +599,7 @@ export const fallbackPricing: PricingTier[] = [
     ],
     bonus: "High-performance training insights & mindset coaching",
     goodFor: null,
-    quote: "The most complete freediving experience we offer.",
+    quote: "The most complete freediving experience, for those ready to make it a lifestyle and push their limits.",
     quoteAuthor: "Student",
     popular: false,
   },

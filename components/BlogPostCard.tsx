@@ -81,9 +81,6 @@ export default function BlogPostCard({ post }: { post: BlogPost }) {
           </div>
           <span className="group/link flex w-fit shrink-0 items-center gap-1.5 font-switzer text-sm font-medium uppercase tracking-widest text-cta transition group-hover:text-cta">
             Read article
-            <span aria-hidden className="transition-transform duration-200 group-hover:translate-x-1">
-              →
-            </span>
           </span>
         </div>
       </div>

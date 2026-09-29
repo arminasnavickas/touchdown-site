@@ -106,12 +106,9 @@ function ProgressionStep({
           type="button"
           onClick={onReadMore}
           data-fab-avoid
-          className="group/link mt-auto flex w-fit shrink-0 items-center gap-2 self-end rounded-[6px] border border-cta px-4 py-2 font-switzer text-sm font-medium uppercase tracking-widest text-cta transition hover:border-white hover:text-white"
+          className="group/link mt-auto flex w-fit shrink-0 items-center gap-2 self-end rounded-md border border-white/[0.08] bg-[linear-gradient(135deg,rgba(255,255,255,0.05),rgba(255,255,255,0.015)_60%,rgba(0,191,255,0.02))] px-4 py-2 font-switzer text-sm font-medium uppercase tracking-widest text-cta shadow-[inset_0_1px_0_rgba(255,255,255,0.04)] [backdrop-filter:blur(8px)] transition hover:border-cta/30 hover:bg-white/[0.06]"
         >
           Read more
-          <span aria-hidden className="transition-transform duration-200 group-hover/link:translate-x-1">
-            →
-          </span>
         </button>
       </div>
     </div>
@@ -135,7 +132,7 @@ export default function HowItWorks({
     // it reads as a bigger beat than the supporting sections around it.
     <section
       id="courses"
-      className="relative flex flex-col items-center gap-14 overflow-hidden px-6 py-24 md:px-16 md:py-28 scroll-mt-20"
+      className="relative flex flex-col items-center gap-14 overflow-hidden px-6 py-[40px] md:px-16 md:py-28 scroll-mt-20"
     >
       {/* Glow removed - the numbered rail and photography carry this
           section on their own; the page's three deliberate glow moments are

@@ -97,7 +97,7 @@ export default async function BlogPostPage({ params }: Props) {
               href="/blog"
               className="inline-block font-switzer text-xs font-medium uppercase tracking-widest text-dark-ocean-blue/50 transition hover:text-cta md:text-sm"
             >
-              ← Back to blog
+              Back to blog
             </Link>
             <ShareButton
               title={post.title}
@@ -159,7 +159,7 @@ export default async function BlogPostPage({ params }: Props) {
               {olderPost ? (
                 <Link href={`/blog/${olderPost.slug}`} className="group block">
                   <p className="mb-2 font-switzer text-xs font-medium uppercase tracking-widest text-dark-ocean-blue/40">
-                    ← Previous article
+                    Previous article
                   </p>
                   <p className="font-switzer text-lg font-light text-dark-ocean-blue transition group-hover:text-cta">
                     {olderPost.title}
@@ -174,7 +174,7 @@ export default async function BlogPostPage({ params }: Props) {
                   className="group block text-left md:text-right"
                 >
                   <p className="mb-2 font-switzer text-xs font-medium uppercase tracking-widest text-dark-ocean-blue/40">
-                    Next article →
+                    Next article
                   </p>
                   <p className="font-switzer text-lg font-light text-dark-ocean-blue transition group-hover:text-cta">
                     {newerPost.title}
@@ -201,9 +201,6 @@ export default async function BlogPostPage({ params }: Props) {
                 className="group/link hidden shrink-0 items-center gap-1.5 font-switzer text-sm font-medium uppercase tracking-widest text-cta transition hover:text-dark-ocean-blue sm:flex"
               >
                 View all articles
-                <span aria-hidden className="transition-transform duration-200 group-hover/link:translate-x-1">
-                  →
-                </span>
               </Link>
             </div>
             <div className="grid grid-cols-1 gap-x-8 gap-y-14 sm:grid-cols-2 lg:grid-cols-3">
@@ -216,9 +213,6 @@ export default async function BlogPostPage({ params }: Props) {
               className="group/link mt-10 flex w-fit items-center gap-1.5 font-switzer text-sm font-medium uppercase tracking-widest text-cta transition hover:text-dark-ocean-blue sm:hidden"
             >
               View all articles
-              <span aria-hidden className="transition-transform duration-200 group-hover/link:translate-x-1">
-                →
-              </span>
             </Link>
           </div>
         )}

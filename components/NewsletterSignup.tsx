@@ -21,6 +21,9 @@ export default function NewsletterSignup({ className = "" }: { className?: strin
   const [status, setStatus] = useState<Status>("idle");
   const inputRef = useRef<HTMLInputElement>(null);
   const errorId = useId();
+  const uid = useId().replace(/[^a-zA-Z0-9]/g, "");
+  const inputId = `newsletter-email-${uid}`;
+  const frameName = `brevo-newsletter-frame-${uid}`;
 
   function handleChange(event: ChangeEvent<HTMLInputElement>) {
     setEmail(event.target.value);
@@ -69,18 +72,18 @@ export default function NewsletterSignup({ className = "" }: { className?: strin
       <form
         action={BREVO_ACTION_URL}
         method="POST"
-        target="brevo-newsletter-frame"
+        target={frameName}
         onSubmit={handleSubmit}
         noValidate
-        className="flex w-full flex-col items-stretch gap-3 sm:flex-row sm:items-start"
+        className={`flex w-full items-stretch gap-1.5 rounded-lg border bg-[linear-gradient(135deg,rgba(255,255,255,0.07),rgba(255,255,255,0.02)_60%,rgba(0,191,255,0.02))] p-1.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] [backdrop-filter:blur(10px)] transition focus-within:border-aquatic/60 ${status === "error" ? "border-cta/70" : "border-white/10"}`}
       >
-        <div className="flex min-w-0 flex-1 flex-col gap-2">
-          <label htmlFor="newsletter-email" className="sr-only">
+        <div className="flex min-w-0 flex-1">
+          <label htmlFor={inputId} className="sr-only">
             Email address
           </label>
           <input
             ref={inputRef}
-            id="newsletter-email"
+            id={inputId}
             type="email"
             name="EMAIL"
             required
@@ -91,17 +94,8 @@ export default function NewsletterSignup({ className = "" }: { className?: strin
             disabled={status === "submitting"}
             aria-invalid={status === "error"}
             aria-describedby={status === "error" ? errorId : undefined}
-            className={`w-full min-w-0 rounded-lg border bg-white/5 px-4 py-3.5 font-switzer text-base font-light text-white placeholder-white/40 transition focus:outline-none disabled:cursor-not-allowed disabled:opacity-60 ${
-              status === "error"
-                ? "border-cta/70 focus:border-cta"
-                : "border-white/20 focus:border-aquatic"
-            }`}
+            className="w-full min-w-0 rounded-md bg-transparent px-3.5 py-3 font-switzer text-base font-light text-white placeholder-white/40 focus:outline-none disabled:cursor-not-allowed disabled:opacity-60"
           />
-          {status === "error" && (
-            <p id={errorId} role="alert" className="font-switzer text-sm font-light text-cta">
-              Enter a valid email address.
-            </p>
-          )}
         </div>
 
         {/* Honeypot field Brevo uses to catch bots. Keep hidden. */}
@@ -118,15 +112,20 @@ export default function NewsletterSignup({ className = "" }: { className?: strin
         <button
           type="submit"
           disabled={status === "submitting"}
-          className="shrink-0 rounded-lg bg-cta px-7 py-3.5 font-switzer text-base font-medium uppercase tracking-wide text-white transition-all duration-200 ease-out hover:bg-aquatic hover:text-dark-ocean-blue focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cta focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
+          className="shrink-0 rounded-md border border-white/15 bg-white/[0.08] [backdrop-filter:blur(8px)] shadow-[inset_0_1px_0_rgba(255,255,255,0.12)] px-5 py-3 sm:px-7 font-switzer text-base font-medium uppercase tracking-wide text-white transition-all duration-200 ease-out hover:bg-white/[0.16] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cta focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
         >
           {status === "submitting" ? "Sending…" : "Subscribe"}
         </button>
 
         {/* Keeps the visitor on the page after submitting. */}
-        <iframe name="brevo-newsletter-frame" className="hidden" title="newsletter signup" />
+        <iframe name={frameName} className="hidden" title="newsletter signup" />
       </form>
-      <p className="font-switzer text-sm font-light text-white/35">
+      {status === "error" && (
+        <p id={errorId} role="alert" className="font-switzer text-sm font-light text-cta">
+          Enter a valid email address.
+        </p>
+      )}
+      <p className="font-switzer text-sm font-light text-white/40">
         No spam. Unsubscribe anytime.
       </p>
     </div>

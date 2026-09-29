@@ -16,7 +16,7 @@ export default function DryDaySchedule({
     // Same tightening as Water Day Schedule right above it - glow removed,
     // gap/padding brought down to match its scannable, compact role. id
     // added to match Water Day Schedule's own anchor (was missing here).
-    <section id="dry-schedule" className="relative flex flex-col items-center gap-10 px-6 py-14 md:gap-12 md:px-16 md:py-16 scroll-mt-20">
+    <section id="dry-schedule" className="relative flex flex-col items-center gap-10 px-6 py-[40px] md:gap-12 md:px-16 md:py-16 scroll-mt-20">
       {/* Bottom-right, bled downward into Pricing below (same seam-bleed
           logic as every other blob on the page - Pricing has no
           overflow-hidden of its own, so nothing on that side clips it

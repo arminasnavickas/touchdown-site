@@ -7,6 +7,7 @@ import { useLightbox } from "./LightboxContext";
 import type { TeamMember } from "@/lib/content";
 import Reveal from "./Reveal";
 import ArticleModal from "./ArticleModal";
+import { InstagramIcon, GlobeIcon } from "./SocialIcons";
 
 // Per-member vertical crop offset for the hero photo (CSS object-position
 // Y%). Most source photos read fine cropped from the very top (0%, the
@@ -26,7 +27,34 @@ import ArticleModal from "./ArticleModal";
 // (member.imagePosition, from the photo field's hotspot) - that's used as
 // the default whenever a member has no entry here, so this map is only for
 // the rare case where the code-level override still needs to win.
-const PHOTO_Y_OFFSET_BY_NAME: Record<string, number> = {};
+// Card title overrides, for when the CMS entry has no role set.
+const ROLE_OVERRIDE_BY_NAME: Record<string, string> = {
+  Omar: "Manager",
+  "Maksim Kalnibolotskii": "Instructor",
+  Francesco: "Physiotherapist and osteopath",
+  Denis: "Instructor",
+  Ilia: "Freediving and yoga instructor",
+};
+
+// Card and popup show first names only for these members.
+const DISPLAY_NAME_BY_NAME: Record<string, string> = {
+  "Maksim Kalnibolotskii": "Maksim",
+};
+
+// Backdrop fill for members nudged down, sampled from the top edge of each
+// photo (left to right) so the gap above the picture blends in.
+const BACKDROP_BY_NAME: Record<string, string> = {
+  Ilia: "linear-gradient(to right, #e4e4e4, #dadada 50%, #c9c9c9)",
+  Denis: "linear-gradient(to right, #f5f5f5, #f2f2f2 50%, #ebebeb)",
+};
+
+const PHOTO_NUDGE_PX_BY_NAME: Record<string, { x: number; y: number }> = {
+  // Pixel nudges from the base crop. Positive x moves the picture right,
+  // positive y moves it down. Example: Gus: { x: 0, y: 24 },
+  "Maksim Kalnibolotskii": { x: 0, y: -40 },
+  Denis: { x: 0, y: 15 },
+  Ilia: { x: 0, y: 30 },
+};
 
 // Per-member focal position for the PROFILE PANEL's hero image (separate
 // from the card crop above - the modal frame is a completely different
@@ -49,6 +77,20 @@ function TeamCard({
   onOpen: (index: number) => void;
 }) {
   const { openLightbox } = useLightbox();
+  // Role line + short description. When a member has no role of their own,
+  // the bio's first sentence ("Founder of TOUCHDOWN.") becomes the role
+  // label and the rest of the bio is the description, so the card always
+  // reads name, role, one short line instead of a bio cut off mid list.
+  const bioText = (member.bio ?? "").trim();
+  const firstSentenceEnd = bioText.search(/[.!?](\s|$)/);
+  const hasSentences = firstSentenceEnd > 0 && firstSentenceEnd < bioText.length - 1;
+  const roleOverride = ROLE_OVERRIDE_BY_NAME[member.name];
+  const roleLine = roleOverride || member.role?.trim() || (hasSentences ? bioText.slice(0, firstSentenceEnd) : "");
+  const description = roleOverride || member.role?.trim()
+    ? bioText
+    : hasSentences
+      ? bioText.slice(firstSentenceEnd + 1).trim()
+      : bioText;
   return (
     // Un-boxed - the old dark-ocean-blue rounded card with its own shadow
     // and hover-lift made a grid of eight read as a dense wall of tiles.
@@ -64,19 +106,23 @@ function TeamCard({
       <button
         type="button"
         onClick={() => openLightbox([member.image], 0)}
-        className="relative aspect-[4/5] w-full cursor-zoom-in overflow-hidden rounded-md"
+        className="relative aspect-square w-full shrink-0 cursor-zoom-in isolate overflow-hidden rounded-md bg-[#f2f2f2]"
+        style={BACKDROP_BY_NAME[member.name] ? { background: BACKDROP_BY_NAME[member.name] } : undefined}
         aria-label="View full image"
       >
         <FadeImage
           src={member.image}
           alt={member.name}
-          wrapperClassName="h-full w-full"
-          className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+          wrapperClassName="h-full w-full rounded-md"
+          // Several source photos (Gus, Omar, Denis) carry a thin dark strip
+          // baked into their right edge. Rendering the image 8px wider than
+          // its frame lets the frame's overflow-hidden clip that strip off.
+          className="h-full w-[calc(100%+8px)] max-w-none object-cover"
           style={{
-            objectPosition:
-              PHOTO_Y_OFFSET_BY_NAME[member.name] !== undefined
-                ? `50% ${PHOTO_Y_OFFSET_BY_NAME[member.name]}%`
-                : (member.imagePosition ?? "50% 0%"),
+            // Up nudges crop from the top via object-position. Down nudges
+            // translate the image; the frame's light backdrop fills the gap.
+            objectPosition: `calc(50% + ${(PHOTO_NUDGE_PX_BY_NAME[member.name]?.x ?? 0)}px) calc(0% + ${Math.min(PHOTO_NUDGE_PX_BY_NAME[member.name]?.y ?? 0, 0)}px)`,
+            translate: `0 ${Math.max(PHOTO_NUDGE_PX_BY_NAME[member.name]?.y ?? 0, 0)}px`,
           }}
         />
       </button>
@@ -86,11 +132,13 @@ function TeamCard({
           {/* Name is the primary text element right after the photo -
               deliberately the largest, boldest-weight text on the card. */}
           <p className="font-switzer text-2xl font-medium tracking-tight text-white md:text-3xl">
-            {member.name}
+            {DISPLAY_NAME_BY_NAME[member.name] ?? member.name}
           </p>
-          <p className="font-switzer text-xs font-medium uppercase tracking-wide text-cta">
-            {member.role}
-          </p>
+          {roleLine && (
+            <p className="font-switzer text-xs font-medium uppercase tracking-widest text-cta">
+              {roleLine}
+            </p>
+          )}
         </div>
         {/* Depth records removed from the card (still passed into the
             ArticleModal below via `stats`, so they remain fully visible in
@@ -103,8 +151,8 @@ function TeamCard({
             ragged; the popup is still one tap away for the rest. Width
             capped to 90% so the paragraph doesn't stretch edge-to-edge
             across the card. */}
-        <p className="line-clamp-2 w-[90%] font-switzer text-[15px] font-light leading-relaxed text-white/70">
-          {member.bio}
+        <p className="line-clamp-3 w-[90%] font-switzer text-[15px] font-light leading-relaxed text-white/70">
+          {description}
         </p>
         {/* Bottom action row - Instagram (secondary, left, muted) and Meet
             (primary, right, cyan) now share one baseline. The left wrapper
@@ -115,57 +163,41 @@ function TeamCard({
             against once the bio was clamped to 2 lines). The divider sits
             below this row (border-b + pb-4) as the card's bottom edge,
             instead of above it. */}
-        <div className="mt-6 flex items-center justify-between gap-4 border-b border-white/10 pb-4">
-          <div className="flex items-center gap-4">
-            {/* Instagram as an intentional "Instagram ->" text link instead
-                of a lone icon - matches the treatment used in the modal
-                header, rather than an unlabeled glyph sitting on its own. */}
+        <div className="mt-auto flex items-center justify-between gap-4 border-b border-white/10 pb-4 pt-4">
+          {/* Meet is the one clear action: an outlined button on the left.
+              Instagram / website are secondary and shrink to small icon
+              links on the right. */}
+          <button
+            type="button"
+            onClick={() => onOpen(index)}
+            className="group/link order-2 flex shrink-0 items-center gap-2 rounded-md border border-white/[0.08] bg-[linear-gradient(135deg,rgba(255,255,255,0.05),rgba(255,255,255,0.015)_60%,rgba(0,191,255,0.02))] px-4 py-2 font-switzer text-sm font-medium uppercase tracking-widest text-cta shadow-[inset_0_1px_0_rgba(255,255,255,0.04)] [backdrop-filter:blur(8px)] transition hover:border-cta/30 hover:bg-white/[0.06]"
+          >
+            Meet {member.name.split(" ")[0]}
+          </button>
+          <div className="order-1 flex items-center gap-3 text-white/60">
             {member.instagram && (
               <a
                 href={member.instagram}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-1 font-switzer text-sm font-medium uppercase tracking-widest text-white/60 transition hover:text-cta"
+                aria-label={`${member.name} on Instagram`}
+                className="transition hover:text-cta [&_svg]:size-6"
               >
-                Instagram
-                <span aria-hidden>→</span>
+                <InstagramIcon />
               </a>
             )}
-            {/* Given the exact same "Website ->" text treatment as
-                Instagram above (was an icon-only GlobeIcon at 32px with no
-                visible label - both an inconsistent size next to this
-                14px text row and an unlabeled link a reader had to guess
-                at). Matching text treatment reads as one consistent pair
-                of external links instead of two different UI patterns for
-                the same kind of action. */}
             {member.website && (
               <a
                 href={member.website}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-1 font-switzer text-sm font-medium uppercase tracking-widest text-white/60 transition hover:text-cta"
+                aria-label={`${member.name} website`}
+                className="transition hover:text-cta [&_svg]:size-6"
               >
-                Website
-                <span aria-hidden>→</span>
+                <GlobeIcon />
               </a>
             )}
           </div>
-          {/* Personalized CTA ("Meet Gus") replacing the generic "Read more" -
-              styled like How It Works' demoted read-more link (small
-              uppercase text + arrow) rather than the old underline-on-hover
-              treatment, to match the rest of the site's secondary-link
-              style. Now the row's primary action, right-aligned opposite
-              Instagram. */}
-          <button
-            type="button"
-            onClick={() => onOpen(index)}
-            className="group/link flex shrink-0 items-center gap-1.5 font-switzer text-sm font-medium uppercase tracking-widest text-cta transition hover:text-white"
-          >
-            Meet {member.name.split(" ")[0]}
-            <span aria-hidden className="transition-transform duration-200 group-hover/link:translate-x-1">
-              →
-            </span>
-          </button>
         </div>
       </div>
     </div>
@@ -189,7 +221,7 @@ export default function MeetOurTeam({
     // intentional.
     <section
       id="team"
-      className="relative flex flex-col items-center gap-14 px-6 py-20 md:gap-16 md:px-16 scroll-mt-20"
+      className="relative flex flex-col items-center gap-14 px-6 py-[40px] md:gap-16 md:px-16 scroll-mt-20"
     >
       {/* Top-center, bled upward into Pricing above (same
           later-section-paints-on-top logic as the other seam blobs on this
@@ -230,7 +262,7 @@ export default function MeetOurTeam({
       {openIndex !== null && (
         <ArticleModal
           content={{
-            title: members[openIndex].name,
+            title: DISPLAY_NAME_BY_NAME[members[openIndex].name] ?? members[openIndex].name,
             // Full portrait via `image` (the rectangular hero-photo
             // treatment already built for How It Works), not `avatar` - the
             // small circular crop reads as a footnote, not the header photo

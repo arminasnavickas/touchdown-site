@@ -71,9 +71,6 @@ export default function BlogAuthorBlock({
         className="group/link flex shrink-0 items-center gap-1.5 font-switzer text-sm font-medium uppercase tracking-widest text-cta transition hover:text-dark-ocean-blue sm:mt-8"
       >
         More from {firstName}
-        <span aria-hidden className="transition-transform duration-200 group-hover/link:translate-x-1">
-          →
-        </span>
       </Link>
     </div>
   );

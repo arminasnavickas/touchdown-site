@@ -17,7 +17,7 @@ export default function Faq({
   return (
     <section
       id="faq"
-      className="relative flex flex-col items-center gap-10 px-6 py-20 md:px-16 scroll-mt-20"
+      className="relative flex flex-col items-center gap-10 px-6 py-[40px] md:px-16 scroll-mt-20"
     >
       {/* Top-left, bled upward into whichever section renders directly
           above (Reviews when siteContent.showReviews is on, Meet Our Team
@@ -35,13 +35,13 @@ export default function Faq({
           same column and the same responsive max-width at every
           breakpoint, so they're never two different layouts stacked
           together. */}
-      <div className="relative z-10 flex w-full max-w-3xl flex-col items-center gap-10 md:max-w-4xl">
+      <div className="relative z-10 flex w-full max-w-3xl flex-col items-center gap-10 md:max-w-4xl lg:grid lg:max-w-6xl lg:grid-cols-[minmax(0,5fr)_minmax(0,8fr)] lg:items-start lg:gap-20">
         {/* Centred header (was left-aligned) - it now sits inside the same
             column as the accordion below it rather than the section's full
             width, so centring it reads as intentional instead of floating
             off to one side of a much wider row. */}
-        <Reveal>
-          <div className="flex w-full flex-col items-center gap-4 text-center">
+        <Reveal className="w-full lg:sticky lg:top-28">
+          <div className="flex w-full flex-col items-center gap-4 text-center lg:items-start lg:text-left">
             <p className="font-switzer text-xs font-semibold uppercase tracking-[0.25em] text-cta md:text-sm">
               Before you dive
             </p>
@@ -51,6 +51,17 @@ export default function Faq({
             <p className="font-switzer text-[15px] font-light leading-relaxed text-white/70">
               Everything you need to know before you dive.
             </p>
+            <div className="mt-6 hidden flex-col items-start gap-2 border-t border-white/10 pt-8 lg:flex">
+              <p className="font-switzer text-xs font-semibold uppercase tracking-[0.25em] text-cta">
+                Still have questions?
+              </p>
+              <a
+                href={`mailto:${contactEmail}`}
+                className="font-switzer text-3xl font-light text-white transition hover:text-cta"
+              >
+                Contact us
+              </a>
+            </div>
           </div>
         </Reveal>
 
@@ -77,7 +88,7 @@ export default function Faq({
                     {faq.category}
                   </p>
                 )}
-                <div className={`border-t border-white/10 ${i === items.length - 1 ? "border-b" : ""}`}>
+                <div className={`${i === 0 ? "" : "border-t"} border-white/10`}>
                   {/* Question number removed - text now sits flush at the
                       row's left edge instead of past a number gutter.
                       Generous vertical padding (was py-6) so each row reads
@@ -89,7 +100,7 @@ export default function Faq({
                     onClick={() => setOpenIndex(isOpen ? null : i)}
                     className="flex w-full items-start justify-between gap-4 py-6 text-left md:py-8"
                   >
-                    <span className="font-switzer text-xl font-light text-white md:text-[28px]">
+                    <span className="font-switzer text-xl font-light text-white md:text-[19px]">
                       {faq.question}
                     </span>
                     <span className="shrink-0 font-switzer text-2xl font-light leading-none text-cta">
@@ -133,7 +144,7 @@ export default function Faq({
             fades out around this section (data-fab-avoid above), so this
             gives the FAQ its own understated next-step instead of leaving
             visitors with no CTA at all once the fixed stack steps aside. */}
-        <div className="flex flex-col items-center gap-2 border-t border-white/10 pt-10 text-center">
+        <div className="flex flex-col items-center gap-2 border-t border-white/10 pt-10 text-center lg:hidden">
           <p className="font-switzer text-xs font-semibold uppercase tracking-[0.25em] text-cta">
             Still have questions?
           </p>
@@ -142,9 +153,6 @@ export default function Faq({
             className="group/link flex items-center gap-2 font-switzer text-2xl font-light text-white transition hover:text-cta md:text-3xl"
           >
             Contact us
-            <span aria-hidden className="transition-transform duration-200 group-hover/link:translate-x-1">
-              →
-            </span>
           </a>
         </div>
         </div>

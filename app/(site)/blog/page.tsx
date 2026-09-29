@@ -195,9 +195,6 @@ export default async function BlogIndexPage({
                   </div>
                   <span className="mt-6 flex w-fit items-center gap-1.5 font-switzer text-sm font-medium uppercase tracking-widest text-cta">
                     Read article
-                    <span aria-hidden className="transition-transform duration-200 group-hover:translate-x-1">
-                      →
-                    </span>
                   </span>
                 </div>
               </Link>

@@ -29,7 +29,6 @@ export default function BookInButton({
       {children ?? (
         <>
           Book your dive
-          <span aria-hidden>→</span>
         </>
       )}
     </button>

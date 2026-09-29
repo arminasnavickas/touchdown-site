@@ -429,7 +429,6 @@ export default function ArticleModal({
                       className="flex shrink-0 items-center gap-1 font-switzer text-sm font-medium uppercase tracking-widest text-cta transition hover:text-dark-ocean-blue"
                     >
                       Instagram
-                      <span aria-hidden>→</span>
                     </a>
                   )}
                 </div>
@@ -544,9 +543,6 @@ export default function ArticleModal({
                 className="group/link mt-8 flex w-fit items-center gap-2 rounded-[6px] border border-cta px-5 py-2.5 font-switzer text-sm font-medium uppercase tracking-widest text-cta transition hover:border-dark-ocean-blue hover:text-dark-ocean-blue"
               >
                 {content.ctaLabel}
-                <span aria-hidden className="transition-transform duration-200 group-hover/link:translate-x-1">
-                  →
-                </span>
               </a>
             )}
           </div>

@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useState } from "react";
 import Blob from "./Blob";
-import Reveal from "./Reveal";
 import FadeImage from "./FadeImage";
 import { useLightbox } from "./LightboxContext";
 import type { SitePhoto } from "@/lib/content";
@@ -72,7 +71,6 @@ export default function OurFacility({
           alpha (~24% effective), matching What You Get/Faq rather than
           sitting at full strength like About Us. */}
       <Blob className="top-[-180px] left-6 h-[380px] w-[380px] opacity-40" />
-      <Reveal>
         <div className="relative z-10 flex max-w-3xl flex-col items-center gap-4 text-center">
           <p className="font-switzer text-xs font-semibold uppercase tracking-[0.25em] text-cta md:text-sm">
             The facility
@@ -81,20 +79,17 @@ export default function OurFacility({
             {heading}
           </h2>
         </div>
-      </Reveal>
       {/* Left-aligned at every width now (was md:text-center) - this is
           genuine multi-sentence, multi-paragraph body copy, not a tagline.
           Centering reads fine for a single short line but makes a real
           paragraph harder to scan back to its own left edge line after
           line; centering stays reserved for the eyebrow/heading above,
           which are short enough for it not to matter. */}
-      <Reveal delay={80}>
         <div className="relative z-10 flex max-w-3xl flex-col gap-4 text-left font-switzer text-[15px] font-light leading-relaxed text-white/70">
           {paragraphs.map((p, i) => (
             <p key={i}>{p}</p>
           ))}
         </div>
-      </Reveal>
 
       {/* Featured photo + thumbnail strip (was a uniform NxN grid matching
           the main Gallery, then a featured photo + static supporting row) -
@@ -136,8 +131,7 @@ export default function OurFacility({
         // of a big photo." This only pushes the photo block down, so the
         // eyebrow/heading/paragraph stack above keeps its own tighter
         // rhythm.
-        <Reveal
-          delay={140}
+        <div
           className="relative z-10 mt-6 flex w-full flex-col gap-2 md:mt-10 md:h-[85vh] md:flex-row md:items-stretch md:gap-4"
         >
           {/* Desktop: the whole gallery is capped to 85% of the screen
@@ -232,7 +226,7 @@ export default function OurFacility({
               ))}
             </div>
           )}
-        </Reveal>
+        </div>
       )}
     </section>
   );

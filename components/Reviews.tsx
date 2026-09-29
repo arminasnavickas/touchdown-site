@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState } from "react";
 import FadeImage from "./FadeImage";
 import ArticleModal from "./ArticleModal";
-import Reveal from "./Reveal";
 import type { Review } from "@/lib/content";
 
 // Was a bare "#FBBF24" typed twice below with no traceable source - now
@@ -74,35 +73,18 @@ function ReviewCard({
     // different, self-contained job (quoting someone else's words, not
     // presenting the brand's own content).
     <div
-      className="flex h-full w-full flex-col gap-3 rounded-2xl border border-white/[0.06] p-6 [backdrop-filter:blur(12px)_saturate(125%)] transition duration-300 shadow-[inset_0_1px_0_rgba(255,255,255,0.07),0_6px_24px_rgba(0,20,40,0.18)] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.07),0_12px_40px_rgba(0,20,40,0.4)]"
+      className="flex h-full w-full flex-col gap-5 rounded-2xl border border-white/10 p-7 [backdrop-filter:blur(12px)_saturate(125%)] transition duration-300 shadow-[inset_0_1px_0_rgba(255,255,255,0.07),0_6px_24px_rgba(0,20,40,0.18)] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.07),0_12px_40px_rgba(0,20,40,0.4)]"
       style={{
         backgroundImage:
           "linear-gradient(135deg, rgba(255,255,255,0.10) 0%, rgba(255,255,255,0.03) 50%, rgba(101,206,230,0.02) 100%)",
       }}
     >
-      {/* Reviewer row - photo/name/role left, rating right, with a divider
-          below it separating the byline from the quote that follows. */}
-      <div className="flex items-center gap-3.5 border-b border-white/15 pb-3">
-        <FadeImage
-          src={review.image}
-          alt={review.name}
-          wrapperClassName="size-14 shrink-0 rounded-full"
-          className="h-full w-full object-cover"
-          style={{ objectPosition: review.imagePosition ?? "50% 50%" }}
-        />
-        <div className="flex flex-1 flex-col gap-0.5">
-          <p className="font-switzer text-lg font-medium leading-tight text-white">
-            {review.name}
-          </p>
-          {review.role && (
-            <p className="font-switzer text-sm text-white/60">{review.role}</p>
-          )}
-        </div>
+      <div className="flex items-center justify-between">
         <StarRating rating={review.rating} />
       </div>
       <p
         ref={quoteRef}
-        className="mt-3 line-clamp-4 font-switzer text-[13px] font-light leading-relaxed text-white/85"
+        className="line-clamp-6 font-switzer text-[16px] font-light leading-relaxed text-white/90"
       >
         {review.quote}
       </p>
@@ -110,12 +92,29 @@ function ReviewCard({
         <button
           type="button"
           onClick={() => onOpen(index)}
-          className="group relative inline-block w-fit self-end font-switzer text-base font-medium text-aquatic transition hover:text-cta"
+          className="group relative inline-block w-fit self-end font-switzer text-sm font-medium text-aquatic transition hover:text-cta"
         >
           Read more
           <span className="absolute -bottom-1 left-0 h-[2px] w-0 bg-cta transition-all duration-300 group-hover:w-full" />
         </button>
       )}
+      <div className="mt-auto flex items-center gap-3.5 border-t border-white/10 pt-5">
+        <FadeImage
+          src={review.image}
+          alt={review.name}
+          wrapperClassName="size-12 shrink-0 rounded-full"
+          className="h-full w-full object-cover"
+          style={{ objectPosition: review.imagePosition ?? "50% 50%" }}
+        />
+        <div className="flex flex-1 flex-col gap-0.5">
+          <p className="font-switzer text-base font-medium leading-tight text-white">
+            {review.name}
+          </p>
+          {review.role && (
+            <p className="font-switzer text-sm text-white/50">{review.role}</p>
+          )}
+        </div>
+      </div>
     </div>
   );
 }
@@ -226,7 +225,7 @@ export default function Reviews({
       id="reviews"
       className="relative flex flex-col items-center gap-12 overflow-hidden pb-[32px] pt-[64px] md:pb-[80px] md:pt-[96px] md:gap-24 scroll-mt-20"
     >
-      <Reveal>
+      <div>
         <div className="relative z-10 flex flex-col items-center gap-4 px-6 text-center md:px-16">
           <p className="font-switzer text-xs font-semibold uppercase tracking-[0.25em] text-cta md:text-sm">
             The proof is in the pudding
@@ -238,7 +237,7 @@ export default function Reviews({
             {subtitle}
           </p>
         </div>
-      </Reveal>
+      </div>
 
       <div className="relative z-10 w-full">
         <div
@@ -269,7 +268,7 @@ export default function Reviews({
             return (
               <div
                 key={`${review.name}-${i}`}
-                className="h-full w-[80%] shrink-0 sm:w-[320px]"
+                className="h-full w-[85%] shrink-0 sm:w-[380px]"
                 aria-hidden={isCopy || undefined}
               >
                 <ReviewCard review={review} index={i % reviews.length} onOpen={setOpenIndex} />

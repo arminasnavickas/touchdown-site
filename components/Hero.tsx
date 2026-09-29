@@ -302,7 +302,7 @@ export default function Hero({
             everywhere else the CTA appears (footer, pricing cards); this
             was the one spot still using the old generic label. */}
         <Reveal delay={160}>
-          <BookInButton className="w-fit" />
+          <BookInButton className="w-fit">Book your first dive</BookInButton>
         </Reveal>
       </div>
 

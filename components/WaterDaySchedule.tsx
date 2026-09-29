@@ -20,7 +20,7 @@ export default function WaterDaySchedule({
     // gap-[100px]/py-20 - this is a compact, scannable schedule, not a
     // showcase section, so it shouldn't carry the same amount of empty
     // space as one.
-    <section id="water-schedule" className="relative flex flex-col items-center gap-10 px-6 py-14 md:gap-12 md:px-16 md:py-16 scroll-mt-20">
+    <section id="water-schedule" className="relative flex flex-col items-center gap-10 px-6 py-[40px] md:gap-12 md:px-16 md:py-16 scroll-mt-20">
       {/* Top-right, bled upward into Weekly Training Rhythm above (same
           later-section-paints-on-top logic as the other seam blobs on this
           page). Sized up rather than down (460px vs. the 380px used at

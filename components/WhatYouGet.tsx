@@ -16,7 +16,7 @@ export default function WhatYouGet({
     // down from the site's flat py-20/gap-14 so a handful of short
     // title/copy rows doesn't sit inside as much empty space as the bigger
     // sections around it.
-    <section className="relative flex flex-col items-center gap-10 px-6 py-14 md:px-16 md:py-16">
+    <section className="relative flex flex-col items-center gap-10 px-6 py-[40px] md:px-16 md:py-16">
       {/* Top-center now (was dead-center, before that top-right) - bled
           upward past this section's own top edge into Where You'll Train
           above (this section renders after it in the DOM, so it naturally
