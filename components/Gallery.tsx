@@ -10,18 +10,6 @@ import type { SitePhoto } from "@/lib/content";
 // Do not reintroduce a masonry/editorial hierarchy here without an explicit
 // new instruction.
 
-function ViewIndicator() {
-  return (
-    <span
-      aria-hidden
-      className="pointer-events-none absolute bottom-3 left-3 flex items-center gap-1 font-switzer text-xs font-semibold uppercase tracking-widest text-cta opacity-0 transition-opacity duration-300 group-hover:opacity-100 md:bottom-4 md:left-4"
-    >
-      View
-      <span>→</span>
-    </span>
-  );
-}
-
 export default function Gallery({ images }: { images: SitePhoto[] }) {
   const { openLightbox } = useLightbox();
   const urls = images.map((image) => image.url);
@@ -68,7 +56,6 @@ export default function Gallery({ images }: { images: SitePhoto[] }) {
                 the tile is clickable. Hover-only, so it doesn't change the
                 grid's static appearance. */}
             <div className="absolute inset-0 bg-dark-ocean-blue/0 transition-colors duration-300 group-hover:bg-dark-ocean-blue/25" />
-            <ViewIndicator />
           </button>
         ))}
       </div>

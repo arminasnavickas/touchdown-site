@@ -57,7 +57,7 @@ export default function TrainingRhythm({
     // moved down to match.
     <section
       id="schedule"
-      className="relative flex flex-col items-center gap-8 px-6 py-14 md:gap-10 md:px-16 md:py-16 scroll-mt-20"
+      className="relative flex flex-col items-center gap-8 px-6 py-[40px] md:gap-10 md:px-16 md:py-16 scroll-mt-20"
     >
       {/* Bottom-left now (was bottom-center, before that dead-center) -
           bled downward past this section's own bottom edge into Water Day
@@ -69,7 +69,7 @@ export default function TrainingRhythm({
           it rather than the two overlapping at bottom-center. opacity-40
           stacks on top of Blob's own baked-in 60%-alpha fill (~24%
           effective). */}
-      <Blob className="bottom-[-120px] left-6 h-[360px] w-[360px] opacity-40" />
+      <Blob className="bottom-[-120px] left-6 h-[360px] w-[360px] opacity-30" />
       <Reveal>
         <div className="relative z-10 flex flex-col items-center gap-3 text-center">
           {/* "The training system · Part 01" kicker removed - this section
@@ -138,7 +138,7 @@ export default function TrainingRhythm({
                     (() => {
                       const sessions = time.split(" & ");
                       return (
-                        <span className="flex items-center gap-1.5 whitespace-nowrap rounded-full bg-white/10 px-3 py-1.5 font-switzer text-sm font-medium tracking-wide tabular-nums text-white sm:text-base">
+                        <span className="flex items-center gap-1.5 whitespace-nowrap rounded-full border border-white/[0.08] bg-[linear-gradient(135deg,rgba(255,255,255,0.10)_0%,rgba(255,255,255,0.03)_100%)] px-3 py-1.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.07),0_6px_24px_rgba(0,20,40,0.18)] [backdrop-filter:blur(12px)_saturate(125%)] font-switzer text-sm font-medium tracking-wide tabular-nums text-white sm:text-base">
                           <Clock className="size-4 shrink-0" strokeWidth={1.5} />
                           {sessions.join(" | ")}
                         </span>

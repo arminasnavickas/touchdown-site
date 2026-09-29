@@ -383,24 +383,28 @@ export default function ArticleModal({
               // row - matches how the review card itself lays out its
               // header, instead of the stacked avatar-above-name layout the
               // other callers below still use.
-              <div className="flex items-center gap-4 border-b border-white/15 pb-4">
+              <div className="flex flex-wrap items-center gap-x-4 gap-y-3 border-b border-white/15 pb-4">
                 <FadeImage
                   src={content.avatar}
                   alt={content.title}
                   eager
-                  wrapperClassName="size-24 shrink-0 rounded-full"
+                  wrapperClassName="size-20 shrink-0 rounded-full md:size-24"
                   className="h-full w-full object-cover"
                   style={{ objectPosition: content.avatarPosition ?? "50% 50%" }}
                 />
-                <div className="flex flex-1 flex-col gap-0.5">
-                  <h3 className="font-switzer text-[26px] font-normal leading-tight text-white">
+                <div className="flex min-w-0 flex-1 flex-col gap-0.5">
+                  <h3 className="font-switzer text-2xl md:text-[26px] font-normal leading-tight text-white">
                     {content.title}
                   </h3>
                   {content.kicker && (
-                    <p className="font-switzer text-[17px] text-white/60 md:text-[15px]">{content.kicker}</p>
+                    <p className="font-switzer text-base text-white/60 md:text-[15px]">{content.kicker}</p>
+                  )}
+                  {content.rating && (
+                    <div className="mt-1.5">
+                      <StarRating rating={content.rating} />
+                    </div>
                   )}
                 </div>
-                {content.rating && <StarRating rating={content.rating} />}
               </div>
             ) : (
               <>

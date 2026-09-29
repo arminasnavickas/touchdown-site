@@ -3,7 +3,6 @@
 import Blob from "./Blob";
 import FadeImage from "./FadeImage";
 import { useLightbox } from "./LightboxContext";
-import Reveal from "./Reveal";
 import BookInButton from "./BookInButton";
 import SectionKicker from "./SectionKicker";
 
@@ -72,7 +71,7 @@ export default function WhoWeAre({
         <BookInButton className="mx-auto hidden w-fit lg:mx-0 lg:inline-flex" />
       </div>
 
-      <Reveal delay={150} className="order-2 flex flex-1 lg:order-none">
+      <div className="order-2 flex flex-1 lg:order-none">
         {/* data-fab-avoid: the fixed bottom-right "Book now" pill (see
             FloatingActions) can otherwise land right on top of this photo -
             most noticeable on short/wide viewports like a landscape phone,
@@ -82,18 +81,18 @@ export default function WhoWeAre({
           type="button"
           data-fab-avoid
           onClick={() => openLightbox([image], 0)}
-          className="relative z-10 h-[250px] w-full flex-1 cursor-zoom-in md:h-[320px] lg:h-[660px]"
+          className="relative z-10 h-[250px] w-full flex-1 cursor-zoom-in md:h-[320px] lg:h-[560px]"
           aria-label="View full image"
         >
           <FadeImage
             src={image}
             alt="The Touchdown team together in Dahab"
             wrapperClassName="h-full w-full rounded-lg"
-            className="h-full w-full object-cover transition-transform duration-300 hover:scale-110"
+            className="h-full w-full object-cover"
             style={{ objectPosition: imagePosition }}
           />
         </button>
-      </Reveal>
+      </div>
     </section>
   );
 }

@@ -169,7 +169,7 @@ export default function OurFacility({
                   type="button"
                   onClick={goPrev}
                   aria-label="Previous photo"
-                  className="absolute left-4 top-1/2 hidden size-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/10 bg-dark-ocean-blue/40 text-white backdrop-blur-md transition hover:bg-dark-ocean-blue/60 md:flex"
+                  className="absolute left-8 top-1/2 hidden -translate-y-1/2 items-center justify-center rounded-full text-white drop-shadow-[0_1px_6px_rgba(0,0,0,0.55)] transition hover:bg-white/15 md:flex md:size-14 [&_svg]:size-8"
                 >
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="size-6">
                     <path d="M15 6l-6 6 6 6" strokeLinecap="round" strokeLinejoin="round" />
@@ -179,7 +179,7 @@ export default function OurFacility({
                   type="button"
                   onClick={goNext}
                   aria-label="Next photo"
-                  className="absolute right-4 top-1/2 hidden size-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/10 bg-dark-ocean-blue/40 text-white backdrop-blur-md transition hover:bg-dark-ocean-blue/60 md:flex"
+                  className="absolute right-8 top-1/2 hidden -translate-y-1/2 items-center justify-center rounded-full text-white drop-shadow-[0_1px_6px_rgba(0,0,0,0.55)] transition hover:bg-white/15 md:flex md:size-14 [&_svg]:size-8"
                 >
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="size-6">
                     <path d="M9 6l6 6-6 6" strokeLinecap="round" strokeLinejoin="round" />

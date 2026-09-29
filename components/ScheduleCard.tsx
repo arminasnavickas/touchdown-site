@@ -89,7 +89,7 @@ export default function ScheduleCard({
             src={image}
             alt={title}
             wrapperClassName="h-full w-full"
-            className="h-full w-full object-cover transition-transform duration-300 hover:scale-110"
+            className="h-full w-full object-cover transition-transform duration-300 hover:scale-[1.03]"
             style={{ objectPosition: imagePosition ?? "50% 50%" }}
           />
         </button>
@@ -103,14 +103,14 @@ export default function ScheduleCard({
         {/* Time badge now carries meaning on its own ("07:00 · PICK-UP")
             instead of a bare number floating over the photo - it reads as
             information belonging to this step, not a generic UI overlay. */}
-        <div className="absolute right-4 top-4 flex items-center gap-1.5 rounded-full bg-dark-ocean-blue/80 px-3 py-1.5 text-aquatic">
+        <div className="absolute right-4 top-4 flex items-center gap-1.5 rounded-full border border-white/[0.12] bg-dark-ocean-blue/55 bg-[linear-gradient(135deg,rgba(255,255,255,0.10)_0%,rgba(255,255,255,0.03)_100%)] px-3 py-1.5 text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.07),0_6px_24px_rgba(0,20,40,0.18)] [backdrop-filter:blur(16px)_saturate(125%)]">
           <ClockIcon />
           <span className="font-switzer text-base font-medium tracking-wide tabular-nums">
             {time}
           </span>
           {badge && (
             <>
-              <span aria-hidden className="text-aquatic/40">
+              <span aria-hidden className="text-white/40">
                 ·
               </span>
               <span className="font-switzer text-xs font-semibold uppercase tracking-widest">
