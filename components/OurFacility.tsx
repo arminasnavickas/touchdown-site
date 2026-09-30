@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import Blob from "./Blob";
 import FadeImage from "./FadeImage";
 import { useLightbox } from "./LightboxContext";
@@ -41,25 +41,10 @@ export default function OurFacility({
     if (e.key === "ArrowRight") goNext();
   };
 
-  // Keep the selected thumbnail visible inside the (desktop) scrolling
-  // column by scrolling the column itself - scrollIntoView would also
-  // scroll the page.
-  const thumbColRef = useRef<HTMLDivElement>(null);
-  const thumbRefs = useRef<(HTMLButtonElement | null)[]>([]);
-  useEffect(() => {
-    const col = thumbColRef.current;
-    const el = thumbRefs.current[selected];
-    if (!col || !el || col.scrollHeight <= col.clientHeight) return;
-    col.scrollTo({
-      top: el.offsetTop - col.clientHeight / 2 + el.clientHeight / 2,
-      behavior: "smooth",
-    });
-  }, [selected]);
-
   return (
     <section
       id="facility"
-      className="relative flex flex-col items-center gap-10 px-6 py-[40px] md:px-16 scroll-mt-20"
+      className="relative flex flex-col items-center gap-10 px-6 py-[40px] md:px-16 md:py-16 scroll-mt-20"
     >
       {/* Anchored to this section's top-left corner, bled upward past its
           own top edge into How It Works above (this section renders after
@@ -71,82 +56,24 @@ export default function OurFacility({
           alpha (~24% effective), matching What You Get/Faq rather than
           sitting at full strength like About Us. */}
       <Blob className="top-[-180px] left-6 h-[380px] w-[380px] opacity-40" />
-        <div className="relative z-10 flex max-w-3xl flex-col items-center gap-4 text-center">
-          <p className="font-switzer text-xs font-semibold uppercase tracking-[0.25em] text-cta md:text-sm">
-            The facility
-          </p>
-          <h2 className="font-switzer text-4xl font-extralight tracking-tight text-white md:text-6xl">
-            {heading}
-          </h2>
-        </div>
-      {/* Left-aligned at every width now (was md:text-center) - this is
-          genuine multi-sentence, multi-paragraph body copy, not a tagline.
-          Centering reads fine for a single short line but makes a real
-          paragraph harder to scan back to its own left edge line after
-          line; centering stays reserved for the eyebrow/heading above,
-          which are short enough for it not to matter. */}
-        <div className="relative z-10 flex max-w-3xl flex-col gap-4 text-left font-switzer text-[15px] font-light leading-relaxed text-white/70">
-          {paragraphs.map((p, i) => (
-            <p key={i}>{p}</p>
-          ))}
-        </div>
+      {/* Three column layout on desktop: feature photo, a column of
+          thumbnails as tall as the photo, then the label, heading and copy.
+          On mobile it stacks as heading, photo, thumbnail row, copy. */}
+      <div className="relative z-10 flex w-full flex-col gap-4 md:gap-0">
+        <p className="font-switzer text-xs font-semibold uppercase tracking-[0.2em] text-cta md:hidden">
+          The facility
+        </p>
+        <h2 className="font-switzer text-6xl font-extralight leading-[0.95] tracking-tighter text-white md:hidden">
+          {heading}
+        </h2>
 
-      {/* Featured photo + thumbnail strip (was a uniform NxN grid matching
-          the main Gallery, then a featured photo + static supporting row) -
-          now a real product-gallery pattern: every photo appears as a
-          thumbnail below, clicking one swaps it into the large slot above
-          (an index swap, not a navigation - the FadeImage `key` forces a
-          clean remount per photo rather than fighting its own loaded
-          state), and the currently-selected thumbnail gets a visible ring
-          so the relationship between the two rows is obvious. The
-          lightbox now lives on the featured photo alone - a thumbnail
-          click selects, it doesn't jump straight to full-screen, so the
-          two clicks do two different things instead of both opening the
-          same modal. This also breaks the section out of the "centered
-          heading + paragraph + even photo grid" shape it used to share
-          with Water Day/Dry Day Schedule below - those stay genuine card
-          grids (each tile is a distinct scheduled event with its own
-          time/title), while this is one place, browsed from a few
-          angles. Alt text is descriptive per photo (was alt="" on every
-          tile, before the featured-row version). */}
-      {images.length > 0 && (
-        // Desktop only: hero photo on the left, thumbnails stacked in a
-        // column on the right (was featured-photo-on-top + thumbnail-row-
-        // below, each with its own overlap treatment). No overlap on the
-        // column now (was pulled up over each other with -mt-10) - a plain
-        // gap-2 stack instead, and md:items-stretch makes the column match
-        // the photo's full height, with every tile flex-1 so they divide
-        // that height evenly regardless of how many there are. Sized with
-        // 5 tiles in mind (aspect-video would make 5 stacked tiles taller
-        // than the photo; flex-1 fill avoids that by construction). Mobile
-        // keeps the original stacked layout (photo on top, thumbnail row
-        // below) but no longer overlaps either - was fanned with -ml-6,
-        // now the same plain gap-2 spacing as the desktop column, just
-        // laid out as a row instead of a column.
-        //
-        // mt-6 md:mt-10 added on top of the section's own gap-10 - the
-        // paragraph above is dense multi-line body copy, and gap-10 alone
-        // (the same gap used between the eyebrow and the heading above it)
-        // read as too tight a jump from "last line of text" to "top edge
-        // of a big photo." This only pushes the photo block down, so the
-        // eyebrow/heading/paragraph stack above keeps its own tighter
-        // rhythm.
-        <div
-          className="relative z-10 mt-6 flex w-full flex-col gap-2 md:mt-10 md:h-[85vh] md:flex-row md:items-stretch md:gap-4"
-        >
-          {/* Desktop: the whole gallery is capped to 85% of the screen
-              height (same as the lightbox photo) so photo, arrows and thumbnails are all
-              visible at once - it used to be a full-width 16:9 photo that
-              ran taller than the viewport. Mobile keeps aspect-video. */}
-          <div
-            className="relative aspect-video w-full md:aspect-auto md:min-w-0 md:flex-1"
-            onKeyDown={onArrowKeys}
-          >
+        {images.length > 0 && (
+          <div className="mt-6 grid grid-cols-1 gap-6 md:mt-0 md:grid-cols-[minmax(0,1fr)_minmax(0,min(40rem,42vw))] md:items-start md:gap-x-0 md:gap-y-3" onKeyDown={onArrowKeys}>
             <button
               type="button"
               onClick={() => openLightbox(urls, selected)}
               aria-label={`View facility photo ${selected + 1} of ${count}, full size`}
-              className="group absolute inset-0 cursor-zoom-in overflow-hidden rounded-lg"
+              className="relative aspect-[4/3] min-h-[20rem] w-full cursor-zoom-in overflow-hidden rounded-lg md:col-start-1 md:row-start-1 md:w-auto md:-ml-16 md:aspect-auto md:h-[300px] lg:h-[460px] md:min-h-0 md:rounded-l-none"
             >
               <FadeImage
                 key={images[selected].url}
@@ -157,77 +84,50 @@ export default function OurFacility({
                 style={{ objectPosition: images[selected].position }}
               />
             </button>
+
             {count > 1 && (
-              <>
-                <button
-                  type="button"
-                  onClick={goPrev}
-                  aria-label="Previous photo"
-                  className="absolute left-8 top-1/2 hidden -translate-y-1/2 items-center justify-center rounded-full text-white drop-shadow-[0_1px_6px_rgba(0,0,0,0.55)] transition hover:bg-white/15 md:flex md:size-14 [&_svg]:size-8"
-                >
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="size-6">
-                    <path d="M15 6l-6 6 6 6" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                </button>
-                <button
-                  type="button"
-                  onClick={goNext}
-                  aria-label="Next photo"
-                  className="absolute right-8 top-1/2 hidden -translate-y-1/2 items-center justify-center rounded-full text-white drop-shadow-[0_1px_6px_rgba(0,0,0,0.55)] transition hover:bg-white/15 md:flex md:size-14 [&_svg]:size-8"
-                >
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="size-6">
-                    <path d="M9 6l6 6-6 6" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                </button>
-                <span
-                  aria-hidden
-                  className="pointer-events-none absolute bottom-4 right-4 rounded-full bg-dark-ocean-blue/50 px-3 py-1 font-switzer text-xs font-medium tabular-nums text-white backdrop-blur-md"
-                >
-                  {String(selected + 1).padStart(2, "0")} / {String(count).padStart(2, "0")}
-                </span>
-              </>
+              <div className="flex gap-2 md:col-start-1 md:row-start-2 md:justify-end md:gap-3 md:overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+                {images.map((photo, i) => (
+                  <button
+                    key={`${i}-${photo.url}`}
+                    type="button"
+                    onClick={() => setSelected(i)}
+                    aria-label={`Show facility photo ${i + 1} of ${count}`}
+                    aria-pressed={i === selected}
+                    className={`relative aspect-[4/3] flex-1 overflow-hidden rounded-md transition duration-200 md:w-28 md:flex-none ${
+                      i === selected
+                        ? "ring-2 ring-inset ring-cta shadow-[0_0_16px_rgba(0,191,255,0.45)]"
+                        : "opacity-40 hover:opacity-100"
+                    }`}
+                  >
+                    <FadeImage
+                      src={photo.url}
+                      alt={`Touchdown Freediving facility, thumbnail ${i + 1} of ${count}`}
+                      wrapperClassName="h-full w-full"
+                      className="h-full w-full object-cover"
+                      style={{ objectPosition: photo.position }}
+                    />
+                  </button>
+                ))}
+              </div>
             )}
-          </div>
-          {count > 1 && (
-            // Mobile: horizontal row of equal tiles. Desktop: fixed width
-            // column matching the photo's height that scrolls inside
-            // itself, fixed 16:9 tiles, inactive ones dimmed, the selected
-            // one gets a thin inset ring (inset so the column's overflow
-            // never clips it).
-            <div
-              ref={thumbColRef}
-              onKeyDown={onArrowKeys}
-              className="relative z-20 flex w-full gap-2 md:min-h-0 md:w-48 md:flex-none md:flex-col md:overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-            >
-              {images.map((photo, i) => (
-                <button
-                  key={`${i}-${photo.url}`}
-                  ref={(el) => {
-                    thumbRefs.current[i] = el;
-                  }}
-                  type="button"
-                  onClick={() => setSelected(i)}
-                  aria-label={`Show facility photo ${i + 1} of ${count}`}
-                  aria-pressed={i === selected}
-                  className={`relative aspect-video flex-1 overflow-hidden rounded-lg transition duration-200 md:w-full md:flex-none ${
-                    i === selected
-                      ? "ring-2 ring-inset ring-white/80"
-                      : "opacity-45 grayscale-[50%] hover:opacity-100 hover:grayscale-0"
-                  }`}
-                >
-                  <FadeImage
-                    src={photo.url}
-                    alt={`Touchdown Freediving facility, thumbnail ${i + 1} of ${count}`}
-                    wrapperClassName="h-full w-full"
-                    className="h-full w-full object-cover"
-                    style={{ objectPosition: photo.position }}
-                  />
-                </button>
-              ))}
+
+            <div className="flex flex-col gap-5 md:col-start-2 md:row-span-2 md:row-start-1 md:ml-16 md:gap-6">
+              <p className="hidden font-switzer text-xs font-semibold uppercase tracking-[0.2em] text-cta md:block">
+                The facility
+              </p>
+              <h2 className="hidden font-switzer text-5xl font-extralight leading-[0.95] tracking-tighter text-white md:block lg:text-6xl">
+                {heading}
+              </h2>
+              <div className="flex flex-col gap-4 text-left font-switzer text-[15px] font-light leading-relaxed text-white/70">
+                {paragraphs.map((p, i) => (
+                  <p key={i}>{p}</p>
+                ))}
+              </div>
             </div>
-          )}
-        </div>
-      )}
+          </div>
+        )}
+      </div>
     </section>
   );
 }

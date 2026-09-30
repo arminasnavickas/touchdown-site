@@ -73,18 +73,35 @@ function ReviewCard({
     // different, self-contained job (quoting someone else's words, not
     // presenting the brand's own content).
     <div
-      className="flex h-full w-full flex-col gap-5 rounded-2xl border border-white/10 p-7 [backdrop-filter:blur(12px)_saturate(125%)] transition duration-300 shadow-[inset_0_1px_0_rgba(255,255,255,0.07),0_6px_24px_rgba(0,20,40,0.18)] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.07),0_12px_40px_rgba(0,20,40,0.4)]"
+      className="flex h-full w-full flex-col gap-5 rounded-[6px] border border-white/10 p-7 [backdrop-filter:blur(12px)_saturate(125%)] transition duration-300 shadow-[inset_0_1px_0_rgba(255,255,255,0.07),0_6px_24px_rgba(0,20,40,0.18)] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.07),0_12px_40px_rgba(0,20,40,0.4)]"
       style={{
         backgroundImage:
           "linear-gradient(135deg, rgba(255,255,255,0.10) 0%, rgba(255,255,255,0.03) 50%, rgba(101,206,230,0.02) 100%)",
       }}
     >
-      <div className="flex items-center justify-between">
-        <StarRating rating={review.rating} />
+      <div className="flex items-center gap-3.5 border-b border-white/10 pb-4">
+        <FadeImage
+          src={review.image}
+          alt={review.name}
+          wrapperClassName="size-14 shrink-0 rounded-full"
+          className="h-full w-full object-cover"
+          style={{ objectPosition: review.imagePosition ?? "50% 50%" }}
+        />
+        <div className="flex min-w-0 flex-1 flex-col gap-0.5">
+          <p className="font-switzer text-lg font-normal leading-tight text-white">
+            {review.name}
+          </p>
+          {review.role && (
+            <p className="font-switzer text-sm text-white/60">{review.role}</p>
+          )}
+          <div className="mt-1">
+            <StarRating rating={review.rating} />
+          </div>
+        </div>
       </div>
       <p
         ref={quoteRef}
-        className="line-clamp-6 font-switzer text-[16px] font-light leading-relaxed text-white/90"
+        className="line-clamp-6 font-switzer text-[15px] font-light leading-relaxed text-white/70"
       >
         {review.quote}
       </p>
@@ -92,29 +109,11 @@ function ReviewCard({
         <button
           type="button"
           onClick={() => onOpen(index)}
-          className="group relative inline-block w-fit self-end font-switzer text-sm font-medium text-aquatic transition hover:text-cta"
+          className="mt-auto w-fit self-end font-switzer text-sm font-medium text-cta transition hover:text-white"
         >
           Read more
-          <span className="absolute -bottom-1 left-0 h-[2px] w-0 bg-cta transition-all duration-300 group-hover:w-full" />
         </button>
       )}
-      <div className="mt-auto flex items-center gap-3.5 border-t border-white/10 pt-5">
-        <FadeImage
-          src={review.image}
-          alt={review.name}
-          wrapperClassName="size-12 shrink-0 rounded-full"
-          className="h-full w-full object-cover"
-          style={{ objectPosition: review.imagePosition ?? "50% 50%" }}
-        />
-        <div className="flex flex-1 flex-col gap-0.5">
-          <p className="font-switzer text-base font-medium leading-tight text-white">
-            {review.name}
-          </p>
-          {review.role && (
-            <p className="font-switzer text-sm text-white/50">{review.role}</p>
-          )}
-        </div>
-      </div>
     </div>
   );
 }

@@ -22,7 +22,7 @@ import type { HowItWorksStep } from "@/lib/content";
 // gets its own (smaller-but-still-escalating) heights, not the desktop
 // values shrunk down.
 const IMAGE_HEIGHT_BY_INDEX = ["h-[140px] md:h-[160px]", "h-[160px] md:h-[185px]", "h-[180px] md:h-[210px]", "h-[200px] md:h-[240px]"];
-const TITLE_SIZE_BY_INDEX = ["text-xl md:text-[26px]", "text-xl md:text-[28px]", "text-2xl md:text-[31px]", "text-2xl md:text-[34px]"];
+const TITLE_SIZE_BY_INDEX = ["text-2xl md:text-3xl", "text-2xl md:text-3xl", "text-2xl md:text-3xl", "text-2xl md:text-3xl"];
 // Desktop-only crop nudges so the default center-crop doesn't cut off
 // people's heads in these particular photos. md: prefix keeps mobile on
 // the original center crop untouched. Lower Y% reveals more of the top
@@ -75,7 +75,7 @@ function ProgressionStep({
       </div>
 
       <div className="flex flex-1 flex-col gap-4 pb-2 md:gap-5 md:pb-0">
-        <p className={`font-switzer font-medium tracking-tight text-white ${TITLE_SIZE_BY_INDEX[index]}`}>
+        <p className={`font-switzer font-medium leading-none tracking-tight text-white ${TITLE_SIZE_BY_INDEX[index]}`}>
           {title}
         </p>
 

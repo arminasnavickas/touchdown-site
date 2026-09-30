@@ -62,10 +62,10 @@ export default function WaterDaySchedule({
           Dry Day's two) and the page's biggest glow already marks it as
           the main event, so the layout now carries that same weight
           instead of every card reading as interchangeable. */}
-      <div className="relative z-10 grid w-full grid-cols-1 gap-6 md:grid-cols-3">
+      <div className="relative z-10 grid w-full grid-cols-1 gap-10 md:grid-cols-2 md:gap-x-0 md:gap-y-12">
         {cards.map((card, i) => (
-          <Reveal key={card.title} delay={i * 100} className={i === 0 ? "md:col-span-3" : ""}>
-            <ScheduleCard {...card} index={i} featured={i === 0} />
+          <Reveal key={card.title} delay={i * 100} className={i % 2 === 0 ? "md:pr-8" : "md:border-l md:border-white/10 md:pl-8"}>
+            <ScheduleCard {...card} index={i} />
           </Reveal>
         ))}
       </div>

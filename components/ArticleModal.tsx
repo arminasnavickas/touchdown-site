@@ -393,11 +393,11 @@ export default function ArticleModal({
                   style={{ objectPosition: content.avatarPosition ?? "50% 50%" }}
                 />
                 <div className="flex min-w-0 flex-1 flex-col gap-0.5">
-                  <h3 className="font-switzer text-2xl md:text-[26px] font-normal leading-tight text-white">
+                  <h3 className="font-switzer text-[26px] md:text-[30px] font-normal leading-tight text-white">
                     {content.title}
                   </h3>
                   {content.kicker && (
-                    <p className="font-switzer text-base text-white/60 md:text-[15px]">{content.kicker}</p>
+                    <p className="font-switzer text-lg text-white/60 md:text-[18px]">{content.kicker}</p>
                   )}
                   {content.rating && (
                     <div className="mt-1.5">

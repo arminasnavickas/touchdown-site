@@ -76,7 +76,7 @@ export default function ScheduleCard({
     >
       <div
         className={`relative w-full overflow-hidden rounded-md ${
-          featured ? "h-[260px] md:h-[420px]" : "h-[220px] md:h-[280px]"
+          featured ? "h-[260px] md:h-[420px] lg:h-[280px]" : "h-[220px] md:h-[280px]"
         }`}
       >
         <button
@@ -123,9 +123,7 @@ export default function ScheduleCard({
         {/* Step number removed - just the title sits on the photo now. */}
         <div className="pointer-events-none absolute inset-x-5 bottom-4 flex flex-col gap-0.5">
           <span
-            className={`font-switzer font-medium tracking-tight text-white ${
-              featured ? "text-3xl md:text-5xl" : "text-2xl md:text-3xl"
-            }`}
+            className={`font-switzer text-2xl font-medium leading-none tracking-tight text-white md:text-3xl`}
           >
             {title}
           </span>
@@ -136,9 +134,7 @@ export default function ScheduleCard({
           replaces the filled gradient box. */}
       <div className="flex flex-1 flex-col border-t border-white/10 pt-4">
         <p
-          className={`font-switzer text-[15px] font-light leading-relaxed text-white/70 ${
-            featured ? "max-w-2xl" : ""
-          }`}
+          className={`font-switzer text-[15px] font-light leading-relaxed text-white/70`}
         >
           {copy}
         </p>

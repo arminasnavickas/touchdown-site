@@ -71,7 +71,7 @@ export default function WhoWeAre({
         <BookInButton className="mx-auto hidden w-fit lg:mx-0 lg:inline-flex">Dive with us</BookInButton>
       </div>
 
-      <div className="order-2 flex flex-1 lg:order-none">
+      <div className="order-2 flex flex-1 lg:order-none lg:-mr-16">
         {/* data-fab-avoid: the fixed bottom-right "Book now" pill (see
             FloatingActions) can otherwise land right on top of this photo -
             most noticeable on short/wide viewports like a landscape phone,
@@ -81,15 +81,18 @@ export default function WhoWeAre({
           type="button"
           data-fab-avoid
           onClick={() => openLightbox([image], 0)}
-          className="relative z-10 h-[250px] w-full flex-1 cursor-zoom-in md:h-[320px] lg:h-[560px]"
+          className="relative z-10 h-[250px] w-full flex-1 cursor-zoom-in md:h-[300px] lg:h-[460px]"
           aria-label="View full image"
         >
           <FadeImage
             src={image}
             alt="The Touchdown team together in Dahab"
-            wrapperClassName="h-full w-full rounded-lg"
+            wrapperClassName="h-full w-full rounded-lg lg:rounded-r-none"
             className="h-full w-full object-cover"
-            style={{ objectPosition: imagePosition }}
+            // Vertical crop nudged down (shows more of the lower part) so the
+            // people sit higher in the shorter frame; horizontal keeps the
+            // Sanity hotspot.
+            style={{ objectPosition: `${imagePosition.split(" ")[0]} 100%` }}
           />
         </button>
       </div>
